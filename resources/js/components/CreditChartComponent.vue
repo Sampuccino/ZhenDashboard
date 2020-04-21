@@ -12,6 +12,7 @@
     mounted() {
       let ctx = document.getElementById('myChart').getContext('2d');
       let myChart = new Chart(ctx, {
+        // type: 'horizontalBar',
         type: 'bar',
         data: {
           labels: ['Total Credits', 'Credits Filed', 'Credits Recieved'],
