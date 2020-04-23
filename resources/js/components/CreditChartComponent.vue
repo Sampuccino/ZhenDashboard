@@ -3,15 +3,15 @@
     <div class="row">
       <div class="col-4 text-center my-auto">
         <h6 class="font-weight-bold">Total Credits</h6>
-        <h4>{{ returnTotalCompanyCreditsAvailable }}</h4>
+        <h4>{{ returnFormattedCompanyCreditsAvailable }}</h4>
       </div>
       <div class="col-4 text-center my-auto">
         <h6 class="font-weight-bold">Credits Filed</h6>
-        <h4>{{ returnTotalCompanyCreditsClaimed }}</h4>
+        <h4>{{ returnFormattedCompanyCreditsClaimed }}</h4>
       </div>
       <div class="col-4 text-center my-auto">
         <h6 class="font-weight-bold">Credits Received</h6>
-        <h4>{{ returnTotalCompanyCreditsReceived }}</h4>
+        <h4>{{ returnFormattedCompanyCreditsReceived }}</h4>
       </div>
     </div>
 
@@ -23,6 +23,7 @@
 <script>
   import {Bar} from 'vue-chartjs'
   import {mapGetters} from "vuex";
+  import NumberFormatter from "../../utilities/NumberFormatter";
 
   export default {
     extends: Bar,
@@ -38,6 +39,15 @@
       ...mapGetters(['returnTotalCompanyCreditsAvailable',
         'returnTotalCompanyCreditsClaimed',
         'returnTotalCompanyCreditsReceived']),
+      returnFormattedCompanyCreditsAvailable(){
+        return NumberFormatter.convertToStringAndAddDecimal(this.returnTotalCompanyCreditsAvailable)
+      },
+      returnFormattedCompanyCreditsClaimed(){
+        return NumberFormatter.convertToStringAndAddDecimal(this.returnTotalCompanyCreditsClaimed)
+      },
+      returnFormattedCompanyCreditsReceived(){
+        return NumberFormatter.convertToStringAndAddDecimal(this.returnTotalCompanyCreditsReceived)
+      },
     },
     methods: {
       renderBarChart() {

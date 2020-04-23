@@ -40,8 +40,9 @@ export default new Vuex.Store({
       const creditsArr = state.companyRaD.forEach( c => { creditsReceivedArr.push(parseFloat(c.credit_received)) });
       return creditsReceivedArr.reduce((a,b) => a+b,0) || 1;
     },
-    returnThreeChartDataPieces: () => {
-      return [this.returnTotalCompanyCreditsAvailable, this.returnTotalCompanyCreditsClaimed, this.returnTotalCompanyCreditsReceived]
+    returnLastYearClaimablePayroll: state => {
+      // console.warn('returnLastYearClaimablePayroll ', state.company);
+      return state.company.final_date_payroll_claim;
     }
   },
   mutations: {
@@ -52,13 +53,15 @@ export default new Vuex.Store({
       state.companies = payload;
     },
     handleSelectedCompany: (state, payload) => {
-      /* Filtering done based on ein payload */
-      state.company = state.companies.filter( c => {
+      /* Filtering done based on ein payload. Returns a Array with object inside */
+      const c = state.companies.filter( c => {
         return c.ein === payload;
       });
 
+      state.company = c[0];
+
       // Set company R&D
-      state.companyRaD = state.company[0].research_and_development;
+      state.companyRaD = state.company.research_and_development;
 
       console.warn('Mutation handleSelectedCompany ', state.company)
 

@@ -1,12 +1,18 @@
 <template>
   <div class="text-center no-gutters bg-white p-4">
-    The last year you can claim payroll is <b class="text-primary">12/12/2012</b>
+    The last year you can claim payroll is <br>
+    <b class="text-primary">{{ returnLastYearClaimablePayroll || 'n/a' }}</b>
   </div>
 </template>
 
 <script>
+  import {mapGetters} from "vuex";
+
   export default {
-    name: "LastYearYouCanClaimPayrollComponent"
+    name: "LastYearYouCanClaimPayrollComponent",
+    computed: {
+      ...mapGetters(['returnLastYearClaimablePayroll'])
+    }
   }
 </script>
 
