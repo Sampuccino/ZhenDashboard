@@ -1,24 +1,61 @@
 <template>
   <div>
-    <canvas id="myChart" width="400" height="400"></canvas>
+    <div class="row">
+      <div class="col-4 text-center my-auto">
+        <h6 class="font-weight-bold">Total Credits</h6>
+        <h4>{{ returnFormattedCompanyCreditsAvailable }}</h4>
+      </div>
+      <div class="col-4 text-center my-auto">
+        <h6 class="font-weight-bold">Credits Filed</h6>
+        <h4>{{ returnFormattedCompanyCreditsClaimed }}</h4>
+      </div>
+      <div class="col-4 text-center my-auto">
+        <h6 class="font-weight-bold">Credits Received</h6>
+        <h4>{{ returnFormattedCompanyCreditsReceived }}</h4>
+      </div>
+    </div>
+
+    <canvas ref="canvas" id="myChart" width="400" height="400"></canvas>
+
   </div>
 </template>
 
 <script>
-  import Chart from "chart.js";
+  import {Bar} from 'vue-chartjs'
+  import {mapGetters} from "vuex";
+  import NumberFormatter from "../../utilities/NumberFormatter";
 
   export default {
+    extends: Bar,
     name: "CreditsChartComponent",
     mounted() {
-      let ctx = document.getElementById('myChart').getContext('2d');
-      let myChart = new Chart(ctx, {
-        // type: 'horizontalBar',
-        type: 'bar',
-        data: {
+      this.renderBarChart()
+    },
+    beforeUpdate(){
+      this.$data._chart.destroy();
+      this.renderBarChart()
+    },
+    computed: {
+      ...mapGetters(['returnTotalCompanyCreditsAvailable',
+        'returnTotalCompanyCreditsClaimed',
+        'returnTotalCompanyCreditsReceived']),
+      returnFormattedCompanyCreditsAvailable(){
+        return NumberFormatter.convertToStringAndAddDecimal(this.returnTotalCompanyCreditsAvailable)
+      },
+      returnFormattedCompanyCreditsClaimed(){
+        return NumberFormatter.convertToStringAndAddDecimal(this.returnTotalCompanyCreditsClaimed)
+      },
+      returnFormattedCompanyCreditsReceived(){
+        return NumberFormatter.convertToStringAndAddDecimal(this.returnTotalCompanyCreditsReceived)
+      },
+    },
+    methods: {
+      renderBarChart() {
+        this.renderChart({
           labels: ['Total Credits', 'Credits Filed', 'Credits Recieved'],
-          datasets: [{
+            datasets: [{
             label: '# of Votes',
-            data: [19, 12, 3],
+            data: [this.returnTotalCompanyCreditsAvailable, this.returnTotalCompanyCreditsClaimed, this.returnTotalCompanyCreditsReceived],
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
               'rgba(54, 162, 235, 0.2)',
@@ -31,17 +68,11 @@
             ],
             borderWidth: 1
           }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }
-      });
+        },{
+          responsive: false,
+          maintainAspectRatio: true
+        })
+      }
     }
   }
 </script>

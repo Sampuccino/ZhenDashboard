@@ -14,7 +14,10 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+      //      return response()->json(Company::find(1));
+      //      return response()->json(Company::where('id',1)->with('researchAndDevelopmentCredits')->get());
+      //      return response()->json(Company::find(1)->researchAndDevelopmentCredits);
+      return response()->json(Company::findOrFail(1)->with(['research_and_development', 'forms'])->get());
     }
 
     /**

@@ -16,4 +16,13 @@ class Company extends Model
 //    'name', 'email', 'password',
 //  ];
   protected $table = 'company';
+
+  public function research_and_development(){
+    return $this->hasMany(RDCredit::class);
+  }
+
+  public function forms(){
+    return $this->hasMany(Form::class);
+  }
+
 }
