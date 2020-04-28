@@ -17,9 +17,14 @@ class CreateAlertsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('company_name', 125);
+            $table->string('company_ein', 9);
             $table->string('title', 125);
             $table->string('body', 256);
         });
+
+      Schema::table('alerts', function($table) {
+        $table->foreign('company_ein')->references('ein')->on('company');
+      });
 
     }
 

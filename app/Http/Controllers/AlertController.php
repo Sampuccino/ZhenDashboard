@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Alert;
+use Exception;
 use Illuminate\Http\Request;
 
 class AlertController extends Controller
@@ -15,6 +16,7 @@ class AlertController extends Controller
     public function index()
     {
         //
+      return Alert::orderBy('id', 'desc')->paginate(10);
     }
 
     /**
@@ -35,7 +37,27 @@ class AlertController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+          $alert = Alert::create([
+            'company_name' => $request->company_name,
+            'company_ein' => $request->company_ein,
+            'title' => $request->title,
+            'body' => $request->body,
+          ]);
+
+          return response()->json([
+            'status' => 200,
+            'message' => 'Successfully stored event',
+            'data' => $alert
+          ]);
+        } catch (Exception $e) {
+          return response()->json([
+            'status' => 404,
+            'message' => 'Failed to save event',
+            'data' => [$e->getMessage()]
+          ]);
+        }
     }
 
     /**

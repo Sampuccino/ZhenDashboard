@@ -54,7 +54,7 @@
         this.renderChart({
           labels: ['Total Credits', 'Credits Filed', 'Credits Recieved'],
             datasets: [{
-            label: '# of Votes',
+            label: 'dollar amount',
             data: [this.returnTotalCompanyCreditsAvailable, this.returnTotalCompanyCreditsClaimed, this.returnTotalCompanyCreditsReceived],
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
