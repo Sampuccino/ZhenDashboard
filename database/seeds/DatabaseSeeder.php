@@ -57,6 +57,7 @@ class DatabaseSeeder extends Seeder
 
             Alert::create([
               'company_name' => $company_name,
+              'company_ein' => $company->ein,
               'title' => $faker->title,
               'body' => $faker->sentence
             ]);

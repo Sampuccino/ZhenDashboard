@@ -22,9 +22,9 @@ Route::get('/user', function (Request $request) {
 Route::prefix('company')->group(function () {
 
   Route::get('/', 'CompanyController@index');
+  Route::post('/', 'CompanyController@store');
+  Route::post('/claim-calculation/{date}/{endDate}', 'CompanyController@claimCalculation');
+  Route::get('/events', 'AlertController@index');
+  Route::post('/events', 'AlertController@store');
 
 });
-
-//Route::resource([
-//  'company' => 'CompanyController'
-//]);
