@@ -27,6 +27,15 @@ export default new Vuex.Store({
     returnSelectedMenu: state => {
       return state.selectedMenu;
     },
+    returnCurrentActiveCompany: state => {
+      return (Object.keys(state.company).length === 0) ? null : state.company;
+    },
+    returnCurrentActiveCompanyAsArray: state => {
+      return (Object.keys(state.company).length === 0) ? null : [state.company];
+    },
+    returnAllCompanies: state => {
+      return state.companies;
+    },
     returnCompanyNameAndEID: state => {
       return (Object.keys(state.company).length === 0) ? [] : [state.company.name, state.company.ein] ;
     },
@@ -134,6 +143,13 @@ export default new Vuex.Store({
     },
     storeNewSingleCompanyAlert: (state, payload) => {
       state.allCompanyEvents.data.unshift(payload);
+    },
+    updateExistingCompanyObject: (state, payload) => {
+      // companies
+      // company
+      state.company = payload;
+      const currentCompanyIndex = state.companies.findIndex(( obj => obj.id === payload.id));
+      state.companies.splice(currentCompanyIndex,1,payload);
     }
   },
   actions: {
@@ -154,25 +170,6 @@ export default new Vuex.Store({
       context.commit('storeNewCompanySetup', payload);
     },
     requestLatestCompanyEvents: async (context) => {
-      /*
-      * Endpoint return paginated data with the following keys
-      * current_page	3
-      data	[{
-      * company_name
-      * title
-      * body
-      * }]
-      first_page_url	"https://zhendash.dev/api/company/events?page=1"
-      from	21
-      last_page	3
-      last_page_url	"https://zhendash.dev/api/company/events?page=3"
-      next_page_url	null
-      path	"https://zhendash.dev/api/company/events"
-      per_page	10
-      prev_page_url	"https://zhendash.dev/api/company/events?page=2"
-      to	25
-      total	25
-      * */
       const requestedEvents = await axios.get('/api/company/events');
       console.log('requestLatestCompanyEvents ', requestedEvents.data);
       context.commit('requestLatestCompanyEvents', requestedEvents.data);
@@ -183,6 +180,10 @@ export default new Vuex.Store({
     },
     storeNewSingleCompanyAlert: (context, payload) => {
       context.commit('storeNewSingleCompanyAlert', payload);
+    },
+    updateExistingCompanyObject: (context, payload) => {
+      console.warn('Action updateExistingCompanyObject ', payload);
+      context.commit('updateExistingCompanyObject', payload);
     }
   }
 })

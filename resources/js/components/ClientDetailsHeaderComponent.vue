@@ -1,6 +1,5 @@
 <template>
   <div class="row bg-white p-4 mb-3">
-
     <div class="col-5">
       <el-dropdown @command="handleCommand">
         <span class="btn-link">
@@ -28,7 +27,7 @@
 
 <script>
   import axios from 'axios';
-  import {mapActions} from "vuex";
+  import {mapActions, mapGetters} from "vuex";
 
   export default {
     name: "ClientDetailsHeaderComponent",
@@ -47,6 +46,9 @@
       this.companies = companyList.data;
       this.setCompaniesList(companyList.data);
     },
+    computed: {
+      ...mapGetters(['returnCurrentActiveCompany'])
+    },
     methods: {
       ...mapActions(['setCompaniesList', 'handleSelectedCompany']),
       handleCommand(command) {
@@ -54,7 +56,14 @@
         this.phone = command[2];
         this.email = command[3];
         this.handleSelectedCompany(command[0]);
+      },
+    },
+    updated() {
+      console.warn('ClientDetailsHeaderComponent Updated');
+      if (this.returnCurrentActiveCompany !== null) {
+        this.companyName = this.returnCurrentActiveCompany.name;
       }
+
     }
   }
 </script>

@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
                     'final_date_payroll_claim' => $faker->date('Y-m-d'),
                     'company_type' => 'C',
                     'email' => $faker->email,
-                    'phone' => $faker->phoneNumber,
+                    'phone' => $faker->randomNumber(9),
                     'officer' => $faker->firstName,
                   ]);
 

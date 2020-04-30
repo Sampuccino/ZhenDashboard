@@ -16,7 +16,7 @@
       timeFormat: String,
       id: String,
       fontSize: String,
-
+      default: String
     },
     data(){
       return {
@@ -24,7 +24,7 @@
       }
     },
     mounted() {
-      flatpickr(`#${this.id}`, { enableTime: false, dateFormat: this.timeFormat});
+      flatpickr(`#${this.id}`, { enableTime: false, dateFormat: this.timeFormat, defaultDate: (this.default !== "") ? this.default : Date.now()});
     },
     methods: {
       updateCalendarInputValue: function(event) {

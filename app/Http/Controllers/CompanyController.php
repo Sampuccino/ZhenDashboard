@@ -98,16 +98,39 @@ class CompanyController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Company  $company
-     * @return \Illuminate\Http\Response
-     */
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param \Illuminate\Http\Request $request
+   * @param Company $company
+   * @return \Illuminate\Http\Response
+   */
     public function update(Request $request, Company $company)
     {
-        //
+      try {
+        // Update company here
+        // Make sure to Carbon::parse dates as they will be required
+        if ($request->has('business_start_date')) {
+          $request->business_start_date = Carbon::parse($request->business_start_date)->toDateString();
+        }
+
+        if ($request->has('business_first_year_end_date')) {
+          $request->business_first_year_end_date = Carbon::parse($request->business_first_year_end_date)->toDateString();
+        }
+
+        if ($request->has('final_date_payroll_claim')) {
+          $request->final_date_payroll_claim = Carbon::parse($request->final_date_payroll_claim)->toDateString();
+        }
+
+        if ($request->has('first_income_year')) {
+          $request->first_income_year = Carbon::parse($request->first_income_year)->toDateString();
+        }
+        $company->update($request->all());
+        return response()->json($company, 200);
+      } catch (Exception $e) {
+        return response()->json(['message' => $e->getMessage()], 404);
+      }
+
     }
 
     /**
