@@ -5,10 +5,13 @@
     <client-details-header-component/>
 
     <!--Dashboard-->
-    <dashboard-component v-show="returnSelectedMenu === 2"/>
+    <dashboard-component v-if="this.returnSelectedMenu === 2"/>
+
+    <!--Profile-->
+    <profile-company-component v-if="this.returnSelectedMenu === 5 && this.returnCurrentActiveCompany !== null"/>
 
     <!--Setup-->
-    <setup-company-component v-show="returnSelectedMenu === 6"/>
+    <setup-company-component v-if="this.returnSelectedMenu === 6"/>
 
   </section>
 </template>
@@ -16,12 +19,15 @@
 <script>
   import {mapGetters} from "vuex";
   import SetupCompanyComponent from "./SetupCompanyComponent";
+  import ProfileCompanyComponent from "./ProfileCompanyComponent";
+  import DashboardComponent from "./DashboardComponent";
+  import ClientDetailsHeaderComponent from "./ClientDetailsHeaderComponent";
 
   export default {
     name: "ApplicationContainer",
-    components: {SetupCompanyComponent},
+    components: {ClientDetailsHeaderComponent, DashboardComponent, ProfileCompanyComponent, SetupCompanyComponent},
     computed: {
-      ...mapGetters(['returnIntro', 'returnSelectedMenu'])
+      ...mapGetters(['returnIntro', 'returnSelectedMenu', 'returnCurrentActiveCompany'])
     }
   }
 </script>
