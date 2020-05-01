@@ -63,7 +63,6 @@
       if (this.returnCurrentActiveCompany !== null) {
         this.companyName = this.returnCurrentActiveCompany.name;
       }
-
     }
   }
 </script>

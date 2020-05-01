@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\RDCredit;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-      return response()->json(Company::findOrFail(1)->with(['research_and_development', 'forms'])->get());
+      return response()->json(Company::findOrFail(1)->with(['research_and_development', 'forms'])->get(), 200);
     }
 
     /**
@@ -132,6 +133,25 @@ class CompanyController extends Controller
       }
 
     }
+
+  /**
+   * Create the specified resource in storage.
+   *
+   * @param \Illuminate\Http\Request $request
+   * @param Company $company
+   * @return \Illuminate\Http\Response
+   */
+  public function newCredit(Request $request){
+    try {
+      $request->period = Carbon::parse($request->period)->toDateString();
+      $request->date_return_filed = Carbon::parse($request->date_return_filed)->toDateString();
+      $credit = RDCredit::create($request->all());
+      return response()->json($credit, 200);
+    } catch (Exception $e) {
+      return response()->json(['message' => $e->getMessage()], 200);
+    }
+  }
+
 
     /**
      * Remove the specified resource from storage.

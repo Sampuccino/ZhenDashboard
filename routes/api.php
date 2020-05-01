@@ -30,5 +30,6 @@ Route::prefix('company')->group(function () {
   Route::post('/events', 'AlertController@store');
 
   Route::put('/update/{company}', 'CompanyController@update');
+  Route::post('/new-credit', 'CompanyController@newCredit');
 
 });

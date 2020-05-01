@@ -39,12 +39,15 @@ export default new Vuex.Store({
     returnCompanyNameAndEID: state => {
       return (Object.keys(state.company).length === 0) ? [] : [state.company.name, state.company.ein] ;
     },
+    returnActiveCompanyResearchAndDevelopmentData: state => {
+      return state.companyRaD;
+    },
     returnTotalCompanyCreditsAvailable: state => {
       if (state.companyRaD.length) {
         console.log('You have credits!');
         // credit_available:
         const creditsAvailableArr = [];
-        const creditsArr = state.companyRaD.forEach( c => { creditsAvailableArr.push(parseFloat(c.credit_available)) });
+        const creditsArr = state.companyRaD.forEach( c => { (parseFloat(c.credit_available)) ? creditsAvailableArr.push(parseFloat(c.credit_available)) : '' });
         return creditsAvailableArr.reduce((a,b) => a+b,0) || 0.00;
       }
 
@@ -55,7 +58,7 @@ export default new Vuex.Store({
       if (state.companyRaD.length) {
       // credit_claimed:
         const creditsClaimedArr = [];
-        const creditsArr = state.companyRaD.forEach( c => { creditsClaimedArr.push(parseFloat(c.credit_claimed)) });
+        const creditsArr = state.companyRaD.forEach( c => {  (parseFloat(c.credit_claimed)) ? creditsClaimedArr.push(parseFloat(c.credit_claimed)) : '' });
         return creditsClaimedArr.reduce((a,b) => a+b,0) || 0.00;
       }
 
@@ -65,7 +68,7 @@ export default new Vuex.Store({
       if (state.companyRaD.length) {
       // credit_received:
         const creditsReceivedArr = [];
-        const creditsArr = state.companyRaD.forEach( c => { creditsReceivedArr.push(parseFloat(c.credit_received)) });
+        const creditsArr = state.companyRaD.forEach( c => { (parseFloat(c.credit_received)) ? creditsReceivedArr.push(parseFloat(c.credit_received)) : '' });
         return creditsReceivedArr.reduce((a,b) => a+b,0) || 0.00;
       }
 
@@ -150,6 +153,10 @@ export default new Vuex.Store({
       state.company = payload;
       const currentCompanyIndex = state.companies.findIndex(( obj => obj.id === payload.id));
       state.companies.splice(currentCompanyIndex,1,payload);
+    },
+    updateCompanyWithNewCredit: (state, payload) => {
+      console.log('Mutation updateCompanyWithNewCredit ', payload);
+      state.companyRaD.push(payload);
     }
   },
   actions: {
@@ -157,6 +164,7 @@ export default new Vuex.Store({
       context.commit('setSelectedMenu', {selected: parseInt(payload)})
     },
     setCompaniesList: (context, payload) => {
+      console.warn('Action setCompaniesList ', payload);
       context.commit('setCompaniesList', payload);
     },
     handleSelectedCompany: (context, payload) => {
@@ -184,6 +192,9 @@ export default new Vuex.Store({
     updateExistingCompanyObject: (context, payload) => {
       console.warn('Action updateExistingCompanyObject ', payload);
       context.commit('updateExistingCompanyObject', payload);
+    },
+    updateCompanyWithNewCredit: (context, payload) => {
+      context.commit('updateCompanyWithNewCredit', payload);
     }
   }
 })
