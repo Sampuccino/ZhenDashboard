@@ -5,14 +5,15 @@
 
       <section>
         <article v-for="(ev, index) in companyEvents.data" :key="index">
-          <h5>
+          <u><i>{{ new Date(ev.created_at).toDateString() }}</i></u>
+          <h6>
           <span>
             <b>Company: </b>
           </span>
             <u>
               {{ ev.company_name }}
             </u>
-          </h5>
+          </h6>
 
           <h6>{{ ev.title }}</h6>
           {{ ev.body }}
@@ -48,6 +49,12 @@
     },
     created(){
       this.requestLatestCompanyEvents();
+    },
+    updated() {
+      if (this.returnCurrentActiveCompany !== null) {
+        this.companyEvents = this.returnStoredCompanyEvents;
+        this.setNextAndPreviousButtons(this.returnStoredCompanyEvents);
+      }
     },
      mounted() {
       // Get all events
