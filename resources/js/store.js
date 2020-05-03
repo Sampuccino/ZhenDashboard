@@ -154,9 +154,17 @@ export default new Vuex.Store({
       const currentCompanyIndex = state.companies.findIndex(( obj => obj.id === payload.id));
       state.companies.splice(currentCompanyIndex,1,payload);
     },
-    updateCompanyWithNewCredit: (state, payload) => {
-      console.log('Mutation updateCompanyWithNewCredit ', payload);
-      state.companyRaD.push(payload);
+    updateCompanyWithNewCreditAndForm: (state, payload) => {
+      console.log('Mutation updateCompanyWithNewCreditAndForm & Form ', payload);
+      state.companyRaD.push(payload[0]);
+      state.companyForms.push(payload[1]);
+    },
+    updateCompanyFormsWithUpdatedCompany: (state, payload) => {
+      // Filter for Form Index,
+      // Replace @ index
+      const currentFormIndex = state.companyForms.findIndex(( obj => obj.id === payload.id));
+      console.log('updateCompanyFormsWithUpdatedCompany ', currentFormIndex);
+      state.companyForms.splice(currentFormIndex,1,payload);
     }
   },
   actions: {
@@ -193,8 +201,11 @@ export default new Vuex.Store({
       console.warn('Action updateExistingCompanyObject ', payload);
       context.commit('updateExistingCompanyObject', payload);
     },
-    updateCompanyWithNewCredit: (context, payload) => {
-      context.commit('updateCompanyWithNewCredit', payload);
+    updateCompanyWithNewCreditAndForm: (context, payload) => {
+      context.commit('updateCompanyWithNewCreditAndForm', payload);
+    },
+    updateCompanyFormsWithUpdatedCompany: (context, payload) => {
+      context.commit('updateCompanyFormsWithUpdatedCompany', payload); // Form Object
     }
   }
 })

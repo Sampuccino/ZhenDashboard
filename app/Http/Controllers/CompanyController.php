@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Form;
 use App\RDCredit;
 use Carbon\Carbon;
 use Exception;
@@ -146,7 +147,14 @@ class CompanyController extends Controller
       $request->period = Carbon::parse($request->period)->toDateString();
       $request->date_return_filed = Carbon::parse($request->date_return_filed)->toDateString();
       $credit = RDCredit::create($request->all());
-      return response()->json($credit, 200);
+      $form = Form::create([
+        'company_id' => $request->company_id,
+        'quarter' => $request->quarter,
+        'year' => $request->year,
+        'form_type' => $request->return_type,
+        'period' => Carbon::parse($request->period)->toDateString()
+      ]);
+      return response()->json([$credit, $form], 200);
     } catch (Exception $e) {
       return response()->json(['message' => $e->getMessage()], 200);
     }

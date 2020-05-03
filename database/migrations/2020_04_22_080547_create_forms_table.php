@@ -18,8 +18,11 @@ class CreateFormsTable extends Migration
             $table->timestamps();
             $table->unsignedInteger('company_id');
             $table->string('form_type',5);
+            $table->string('quarter', 2);
+            $table->string('year');
             $table->date('period');
-            $table->text('file_url');
+            $table->text('file_one_url')->nullable($value = true);
+            $table->text('file_two_url')->nullable($value = true);
         });
 
       Schema::table('forms', function($table) {

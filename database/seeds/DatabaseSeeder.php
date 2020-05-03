@@ -40,6 +40,8 @@ class DatabaseSeeder extends Seeder
             RDCredit::create([
               'company_id' => $company->id,
               'return_type' => '1040',
+              'quarter' => 'Q1',
+              'year' => '2020',
               'period' => $faker->date(),
               'date_return_filed' => $faker->date(),
               'credit_amount' => $faker->numberBetween(1000,25000),
@@ -50,9 +52,10 @@ class DatabaseSeeder extends Seeder
 
             Form::create([
               'company_id' => $company->id,
+              'quarter' => 'Q1',
+              'year' => '2020',
               'form_type' => '1040',
               'period' => $faker->date(),
-              'file_url' => 'http://file-url-goes-here.com',
             ]);
 
             Alert::create([
