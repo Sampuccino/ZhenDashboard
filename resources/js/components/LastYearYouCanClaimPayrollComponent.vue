@@ -1,7 +1,9 @@
 <template>
   <div class="text-center no-gutters bg-white p-4">
     The last year you can claim payroll is <br>
-    <b class="text-primary">{{ lastPayrollDate || 'n/a' }}</b>
+    <div class="alert alert-success" role="alert">
+      <b>{{ lastPayrollDate || 'n/a' }}</b>
+    </div>
   </div>
 </template>
 
@@ -14,7 +16,7 @@
     computed: {
       ...mapGetters(['returnLastYearClaimablePayroll']),
       lastPayrollDate() {
-        return moment(this.returnLastYearClaimablePayroll).format('YYYY-MM-DD');
+        return moment(this.returnLastYearClaimablePayroll).format('MM-DD-YYYY');
       }
     }
   }

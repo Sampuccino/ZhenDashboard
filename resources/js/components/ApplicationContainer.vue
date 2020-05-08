@@ -1,7 +1,5 @@
 <template>
   <section>
-    <h2>Current Selected Menu {{ returnSelectedMenu }}</h2>
-    <h6>{{ returnIntro || 'No intro found' }}</h6>
     <client-details-header-component/>
 
     <!--Dashboard-->
@@ -38,7 +36,7 @@
       ResearchAndDevelopmentCreditsComponent,
       ClientDetailsHeaderComponent, DashboardComponent, ProfileCompanyComponent, SetupCompanyComponent},
     computed: {
-      ...mapGetters(['returnIntro', 'returnSelectedMenu', 'returnCurrentActiveCompany'])
+      ...mapGetters(['returnSelectedMenu', 'returnCurrentActiveCompany'])
     }
   }
 </script>

@@ -24,7 +24,9 @@ Route::prefix('company')->group(function () {
   Route::get('/', 'CompanyController@index');
   Route::post('/', 'CompanyController@store');
 
-  Route::post('/claim-calculation/{date}/{endDate}', 'CompanyController@claimCalculation');
+  // Claim Calculation
+//  Route::post('/claim-calculation/{date}/{endDate}', 'CompanyController@claimCalculation');
+  Route::post('/claim-calculation', 'CompanyController@claimCalculation');
 
   Route::get('/events', 'AlertController@index');
   Route::post('/events', 'AlertController@store');

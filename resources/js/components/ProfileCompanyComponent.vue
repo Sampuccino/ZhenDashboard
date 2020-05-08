@@ -3,7 +3,7 @@
     <div>
 
         <div class="row justify-content-between">
-          <div class="col-md-6 pr-md-1">
+          <div class="col-12">
 
             <div class="bg-white p-4">
 
@@ -24,29 +24,19 @@
 
               <div class="form-group">
                 <label>Business Start Date</label>
-                <flatpickr timeFormat="d-m-Y" v-model="businessStartDate.date" id="calendar_year_bsd"/>
+                <flatpickr class="minimalMarginTop" timeFormat="d-m-Y" v-model="businessStartDate.date" id="calendar_year_bsd"/>
               </div>
 
               <div class="form-group">
                 <label>Year End</label>
                 <br>
-                {{ returnFiscalYearEnd }}
-                <flatpickr timeFormat="d-m-Y" v-model="yearEndDate.date" id="calendar_year_ye"/>
+                <flatpickr  class="minimalMarginTop"timeFormat="m-d-Y" v-model="yearEndDate.date" id="calendar_year_ye"/>
               </div>
-
-              <el-button type="primary" class="mb-2" @click="handleCalculation">Calculate Calendar / Fiscal</el-button>
 
               <div class="form-group">
                 <label>1st Income Year</label>
                 <br>
-                {{ returnFirstIncomeYear }}
-                <!--<flatpickr timeFormat="Y" v-model="firstIncomeYear.year" id="calendar_year_fiy"/>-->
-              </div>
-
-              <div class="form-group">
-                <label>Final Year Payroll Claimable</label>
-                <br>
-                <b class="font-weight-bolder text-primary">{{ returnFinalYearPayrollClaimable }}</b>
+                <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="firstIncomeYear.date" id="calendar_year_fiy"/>
               </div>
 
               <div class="form-group">
@@ -91,68 +81,6 @@
             </div>
 
           </div>
-          <div class="col-md-6 pl-md-2">
-            <div class="bg-white p-4 mb-4">
-              <h6 class="font-weight-bolder">Current Company Details</h6>
-              <div v-for="(company, index) in this.returnCurrentActiveCompanyAsArray" :key="index">
-
-                <table class="table table-striped">
-                  <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Detail</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td scope="row">Name</td>
-                    <td>{{ company.name }}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">Tax ID</td>
-                    <td>{{ company.ein }}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">Business Start Date</td>
-                    <td>{{ company.business_start_date }}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">Year End Date</td>
-                    <td>{{ company.business_first_year_end_date }}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">1st Income Year Date</td>
-                    <td>{{ company.first_income_year }}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">Final Payroll Year Date</td>
-                    <td>{{ company.final_date_payroll_claim }}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">Company Type</td>
-                    <td>{{ company.company_type }}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">Email</td>
-                    <td>{{ company.email }}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">Phone</td>
-                    <td>{{ company.phone }}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">Officer</td>
-                    <td>{{ company.officer }}</td>
-                  </tr>
-                  </tbody>
-                </table>
-
-              </div>
-            </div>
-            <div class="bg-white p-4">
-              <last-year-you-can-claim-payroll-calculator-component/>
-            </div>
-          </div>
         </div>
       </div>
   </div>
@@ -188,8 +116,12 @@
           date: '',
           error: false
         },
+        // firstIncomeYear: {
+        //   date: this.returnFirstIncomeYear,
+        //   error: false
+        // },
         firstIncomeYear: {
-          date: this.returnFirstIncomeYear,
+          date: '',
           error: false
         },
         finalPayrollDate: {
@@ -231,16 +163,30 @@
         this.setCalendarYearCalculation({date: this.businessStartDate.date, endDate : this.yearEndDate.date});
       },
       returnRearrangedDate(date) {
-        let d = date.split('-');
-        const arranged = `${d[2]}-${d[1]}-${d[0]}`;
-       return (d[0].length === 4) ? date :  arranged;
+        console.log('returnRearrangedDate ', date);
+
+        const blacklist = ['n/a', null, undefined, "undefined", ""];
+        if (!blacklist.includes(date)) {
+          let d = date.split('-');
+          const arranged = `${d[2]}-${d[1]}-${d[0]}`;
+          return (d[0].length === 4) ? date :  arranged;
+        } else {
+          return null
+        }
       },
       onSubmit() {
+        console.log('onSubmit');
+
+        // Set data for dates
+        this.businessStartDate.date = this.returnRearrangedDate(document.getElementById('calendar_year_bsd').value);
+        this.yearEndDate.date = this.returnRearrangedDate(document.getElementById('calendar_year_ye').value);
+        this.firstIncomeYear.date = this.returnRearrangedDate(document.getElementById('calendar_year_fiy').value);
 
         const income = {
+          modified: this.firstIncomeYear.date,
           calculated: this.returnFirstIncomeYear,
           current: this.returnCurrentActiveCompany.first_income_year,
-          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.first_income_year, this.returnFirstIncomeYear),
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.first_income_year, this.firstIncomeYear.date),
         };
         const payroll = {
           calculated: this.returnFinalYearPayrollClaimable,
@@ -251,16 +197,16 @@
         // Date is not correct formate yyyy-mm-dd when passing to server.
 
         const startDate = {
-          modified: document.getElementById('calendar_year_bsd').value,
+          modified: this.businessStartDate.date,
           calculated: this.returnFiscalTypeCalculations.start_date,
           current: this.returnCurrentActiveCompany.business_start_date,
-          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.business_start_date, this.returnRearrangedDate(this.returnFiscalTypeCalculations.start_date)),
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.business_start_date, this.businessStartDate.date),
         };
         const endDate = {
-          modified: document.getElementById('calendar_year_ye').value,
+          modified: this.yearEndDate.date,
           calculated: this.returnFiscalYearEnd,
           current: this.returnCurrentActiveCompany.business_first_year_end_date,
-          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.business_first_year_end_date, this.returnFiscalYearEnd),
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.business_first_year_end_date, this.yearEndDate.date),
         };
         const compType = {
           current: this.returnCurrentActiveCompany.company_type,
@@ -310,7 +256,7 @@
           business_start_date: startDate.equal,
           business_first_year_end_date: endDate.equal,
           first_income_year: income.equal,
-          final_date_payroll_claim: payroll.equal,
+          // final_date_payroll_claim: payroll.equal,
           company_type: compType.equal,
           email: compEmail.equal,
           phone: compPhone.equal,
@@ -341,6 +287,7 @@
               message: 'Could not save company',
               type: 'error'
             });
+
             this.recordError.duplicate = true;
           }
 
@@ -354,6 +301,7 @@
         * No Null, Empty, Undefined, n/a
         * */
         const blacklist = ['n/a', null, undefined, "undefined", ""];
+        console.log('returnValueToBeUpdated Blacklist ', blacklist.includes(modified), ' Current ', current, '  Modified ', modified);
         return (blacklist.includes(modified)) ? current : modified;
       }
     }

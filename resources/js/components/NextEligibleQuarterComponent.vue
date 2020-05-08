@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h6>Next eligible quarter <b class="text-success"><u>{{ determineNextEligibleQuarter.neq }}</u></b></h6>
+    <h6>Next eligible quarter <b class="font-weight-bolder"><u>{{ determineNextEligibleQuarter.neq }}</u></b></h6>
     <h6 class="text-danger">Due date <b><u>{{ determineNextEligibleQuarter.dd }}</u></b></h6>
   </section>
 </template>
@@ -24,8 +24,8 @@
         const currentYear = moment(Date.now()).year();
         const currentYearMonth = moment(Date.now()).month();
         const nextEligibleQuarter = moment(Date.now()).add(1,'year').year();
-        const dueDateNext = moment(this.returnLastYearClaimablePayroll.toString().replace(/^.{4}/g, nextEligibleQuarter.toString())).format('YYYY-MM-DD');
-        const dueDateCurrent = moment(this.returnLastYearClaimablePayroll).format('YYYY-MM-DD');
+        const dueDateNext = moment(this.returnLastYearClaimablePayroll.toString().replace(/^.{4}/g, nextEligibleQuarter.toString())).format('MM-DD-YYYY');
+        const dueDateCurrent = moment(this.returnLastYearClaimablePayroll).format('MM-DD-YYYY');
 
         // console.log({
         //   finalYear,
