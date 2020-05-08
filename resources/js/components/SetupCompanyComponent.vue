@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-content-between">
-    <div class="col-md-6 pr-md-1">
+    <div class="col-12">
 
       <div class="bg-white p-4">
 
@@ -21,29 +21,19 @@
 
         <div class="form-group">
           <label>Business Start Date</label>
-          <flatpickr timeFormat="d-m-Y" v-model="businessStartDate.date" id="calendar_year_bsd"/>
+          <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="businessStartDate.date" id="calendar_year_bsd"/>
         </div>
 
         <div class="form-group">
           <label>Year End</label>
           <br>
-          {{ returnFiscalYearEnd }}
-          <flatpickr timeFormat="d-m-Y" v-model="yearEndDate.date" id="calendar_year_ye"/>
+          <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="yearEndDate.date" id="calendar_year_ye"/>
         </div>
-
-        <el-button type="primary" class="mb-2" @click="handleCalculation">Calculate Calendar / Fiscal</el-button>
 
         <div class="form-group">
           <label>1st Income Year</label>
           <br>
-          {{ returnFirstIncomeYear }}
-          <!--<flatpickr timeFormat="Y" v-model="firstIncomeYear.year" id="calendar_year_fiy"/>-->
-        </div>
-
-        <div class="form-group">
-          <label>Final Year Payroll Claimable</label>
-          <br>
-          <b class="font-weight-bolder text-primary">{{ returnFinalYearPayrollClaimable }}</b>
+          <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="firstIncomeYear.date" id="calendar_year_fiy"/>
         </div>
 
         <div class="form-group">
@@ -88,11 +78,6 @@
       </div>
 
     </div>
-    <div class="col-md-6 pl-md-2">
-      <div class="bg-white p-4">
-      <last-year-you-can-claim-payroll-calculator-component/>
-      </div>
-    </div>
   </div>
 
 </template>
@@ -126,8 +111,12 @@
           date: '',
           error: false
         },
+        // firstIncomeYear: {
+        //   date: this.returnFirstIncomeYear,
+        //   error: false
+        // },
         firstIncomeYear: {
-          date: this.returnFirstIncomeYear,
+          date: '',
           error: false
         },
         finalPayrollDate: {
@@ -156,20 +145,22 @@
       handleCommand(command) {
         this.companyType = command;
       },
-      handleCalculation() {
+      onSubmit() {
+        // Update models with values
         this.businessStartDate.date = document.getElementById('calendar_year_bsd').value;
         this.yearEndDate.date = document.getElementById('calendar_year_ye').value;
-        this.setCalendarYearCalculation({date: this.businessStartDate.date, endDate : this.yearEndDate.date});
-        console.log('handleCalculation ', this.businessStartDate.date, '   ', this.yearEndDate.date);
-      },
-      onSubmit() {
+        this.firstIncomeYear.date = document.getElementById('calendar_year_fiy').value;
+
+        /*
+        * Run calculation @ backend
+        * */
         axios.post('/api/company', {
           companyName: this.companyName.name,
           taxID: this.taxID.id,
           businessStartDate: this.businessStartDate.date,
-          yearEndDate: this.returnFiscalYearEnd,
-          firstIncomeYear: this.returnFirstIncomeYear,
-          finalPayrollDate: this.returnFinalYearPayrollClaimable,
+          yearEndDate: this.yearEndDate.date,
+          firstIncomeYear: this.firstIncomeYear.date,
+          // finalPayrollDate: this.returnFinalYearPayrollClaimable,
           companyType: this.companyType,
           email: this.email.input,
           phone: this.phone.input,
@@ -183,17 +174,19 @@
             * Add company to Store
             * */
             console.log('Request success');
+
             // Add blank Company R&D and Forms
             this.$notify({
               title: 'Success',
               message: 'Company was saved',
               type: 'success'
             });
+
             this.storeNewCompanySetup(res.data.company);
             this.recordError.duplicate = false;
           } else if (res.data.status === 400) {
             // Duplicate entry.
-            console.log('Request failed');
+            console.log('Request failed ', res);
             this.$notify({
               title: 'Failed',
               message: 'Could not save company',
@@ -210,6 +203,8 @@
   }
 </script>
 
-<style scoped>
-
+<style>
+  .minimalMarginTop {
+    margin-top: -1rem !important;
+  }
 </style>

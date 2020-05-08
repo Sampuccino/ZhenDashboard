@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Form;
 use App\RDCredit;
 use Carbon\Carbon;
 use Exception;
@@ -54,10 +55,11 @@ class CompanyController extends Controller
         $c = Company::create([
           'name' => $request->companyName,
           'ein' => $request->taxID,
-          'business_start_date' => Carbon::parse($request->businessStartDate)->toDateString(),
-          'business_first_year_end_date' => Carbon::parse($request->yearEndDate)->toDateString(),
-          'first_income_year' => Carbon::parse($request->firstIncomeYear)->toDateString(),
-          'final_date_payroll_claim' => Carbon::parse($request->finalPayrollDate)->toDateString(),
+          'business_start_date' => Carbon::parse(str_replace('-','/',$request->businessStartDate))->toDateString(),
+          'business_first_year_end_date' => Carbon::parse(str_replace('-','/',$request->yearEndDate))->toDateString(),
+          'first_income_year' => Carbon::parse(str_replace('-','/',$request->firstIncomeYear))->toDateString(),
+//          'final_date_payroll_claim' => Carbon::parse($request->finalPayrollDate)->toDateString(),
+          'final_date_payroll_claim' => $this->claimCalculation($request),
           'company_type' => $request->companyType,
           'email' => $request->email,
           'phone' => $request->phone,
@@ -112,19 +114,21 @@ class CompanyController extends Controller
         // Update company here
         // Make sure to Carbon::parse dates as they will be required
         if ($request->has('business_start_date')) {
-          $request->business_start_date = Carbon::parse($request->business_start_date)->toDateString();
+          $request->business_start_date = Carbon::parse(str_replace('-','/',$request->business_start_date))->toDateString();
         }
 
         if ($request->has('business_first_year_end_date')) {
-          $request->business_first_year_end_date = Carbon::parse($request->business_first_year_end_date)->toDateString();
+          $request->business_first_year_end_date = Carbon::parse(str_replace('-','/',$request->business_first_year_end_date))->toDateString();
         }
 
         if ($request->has('final_date_payroll_claim')) {
-          $request->final_date_payroll_claim = Carbon::parse($request->final_date_payroll_claim)->toDateString();
+          $request->final_date_payroll_claim = Carbon::parse(str_replace('-','/',$request->final_date_payroll_claim))->toDateString();
         }
 
         if ($request->has('first_income_year')) {
-          $request->first_income_year = Carbon::parse($request->first_income_year)->toDateString();
+          // Update final claim payroll here
+          $request->first_income_year = Carbon::parse(str_replace('-','/',$request->first_income_year))->toDateString();
+          $company->final_date_payroll_claim = $this->claimCalculation($request);
         }
         $company->update($request->all());
         return response()->json($company, 200);
@@ -146,7 +150,14 @@ class CompanyController extends Controller
       $request->period = Carbon::parse($request->period)->toDateString();
       $request->date_return_filed = Carbon::parse($request->date_return_filed)->toDateString();
       $credit = RDCredit::create($request->all());
-      return response()->json($credit, 200);
+      $form = Form::create([
+        'company_id' => $request->company_id,
+        'quarter' => $request->quarter,
+        'year' => $request->year,
+        'form_type' => $request->return_type,
+        'period' => Carbon::parse($request->period)->toDateString()
+      ]);
+      return response()->json([$credit, $form], 200);
     } catch (Exception $e) {
       return response()->json(['message' => $e->getMessage()], 200);
     }
@@ -166,29 +177,39 @@ class CompanyController extends Controller
 
       /****/
   /**
-   * @param $date
-   * @param $endDate
+   * @param Request $request
    * @return mixed|\Symfony\Component\HttpFoundation\ParameterBag
    */
-    public function claimCalculation($date, $endDate)
+//    public function claimCalculation($date, $endDate)
+    public function claimCalculation(Request $request)
     {
-
       /* claim-calculation */
       try {
+
         /*
-          Rules
-          1. If Year End is not 12/31 (default) it will be considered Fiscal Year so long as Start and End are within the same Month else 12/31.
+         * UPDATE 05-07-2020
+         * Business Start/Year End/1st Income Dates are all provided
+         * Year 0 is Start Date to Year End
+         * 5 Year limit is calculated from Year End +1 month to Year End
          * */
 
-        $year_end_date = (Carbon::parse($date)->month !== Carbon::parse($endDate)->month) ? Carbon::parse($date)->endOfYear() : Carbon::parse($date)->endOfMonth();
-        $first_income_year = (Carbon::parse($date)->month !== Carbon::parse($endDate)->month) ? Carbon::parse($date)->endOfYear()->addYear() : Carbon::parse($date)->endOfMonth();
-        /* This is the Year 1 Starting point. We already have the year end in the variable year_end_date */
-        $year_one_start = (Carbon::parse($date)->month !== Carbon::parse($endDate)->month) ? Carbon::parse($date)->endOfYear()->addDay() : Carbon::parse($date)->endOfMonth()->addDay();
+        //$start_date = Carbon::parse(str_replace('-','/', $request->businessStartDate))->subDay()->format('m-d-Y');
+        $start_date = Carbon::parse(str_replace('-','/', $request->businessStartDate));
 
-        return response()->json([
+//        $year_end_date = (Carbon::parse($date)->month !== Carbon::parse($endDate)->month) ? Carbon::parse($date)->endOfYear() : Carbon::parse($date)->endOfMonth();
+        $year_end_date = Carbon::parse(str_replace('-','/', $request->yearEndDate));
+
+        //        $first_income_year = (Carbon::parse($date)->month !== Carbon::parse($endDate)->month) ? Carbon::parse($date)->endOfYear()->addYear() : Carbon::parse($date)->endOfMonth();
+        $first_income_year = Carbon::parse(str_replace('-','/',$request->firstIncomeYear));
+
+        /* This is the Year 1 Starting point. We already have the year end in the variable year_end_date */
+//        $year_one_start = (Carbon::parse($date)->month !== Carbon::parse($endDate)->month) ? Carbon::parse($date)->endOfYear()->addDay() : Carbon::parse($date)->endOfMonth()->addDay();
+        $year_one_start = Carbon::parse(str_replace('-','/',$year_end_date))->addDay();
+
+/*        return response()->json([
           'status' => 201,
           'message' => 'success',
-          'start_date' => $date,
+          'start_date' => $start_date->toDateString(),
           'year_end_date' => (clone $year_end_date)->toDateString(),
           'first_income_year' => (clone $first_income_year)->toDateString(),
           'year_one' => (clone $year_one_start)->toDateString() . ' - ' . (clone $year_end_date)->addYear()->toDateString(),
@@ -197,12 +218,18 @@ class CompanyController extends Controller
           'year_four' => (clone $year_one_start)->addYears(3)->toDateString() . ' - ' . (clone $year_end_date)->addYears(4)->toDateString(),
           'year_five' => (clone $year_one_start)->addYears(4)->toDateString() . ' - ' . (clone $year_end_date)->addYears(5)->toDateString(),
           'last_year_payroll_claimable' => (clone $year_end_date)->addYears(5)->toDateString()
-        ]);
-      } catch (Exception $exception) {
+        ]);*/
+
+        if ($request->has('first_income_year')) {
+          $incYearNew = Carbon::parse(str_replace('-','/',$request->first_income_year));
+          return (clone $incYearNew)->addYears(4)->toDateString();
+        } else
+          return (clone $year_end_date)->addYears(5)->toDateString();
+      } catch (Exception $e) {
         return response()->json([
           'status' => 400,
           'message' => 'Invalid data!',
-          'data' => []
+          'data' => $e->getMessage()
         ]);
       }
 

@@ -18,6 +18,8 @@ class CreateRdcreditsTable extends Migration
             $table->timestamps();
             $table->unsignedInteger('company_id');
             $table->string('return_type', 5);
+            $table->string('quarter', 2);
+            $table->string('year');
             $table->date('period');
             $table->date('date_return_filed');
             $table->string('credit_amount');

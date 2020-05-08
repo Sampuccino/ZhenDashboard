@@ -1,20 +1,6 @@
 <template>
   <div class="row bg-white p-4">
 
-    <!--
-    company_id:1
-created_at:"2020-04-29T04:57:04.000000Z"
-credit_amount:"22425"
-credit_available:"3816"
-credit_claimed:"9490"
-credit_received:"24650"
-date_return_filed:"1974-03-15"
-id:1
-period:"2001-05-16"
-return_type:"1040"
-updated_at:"2020-04-29T04:57:04.000000Z"
-    -->
-
     <div class="col-12">
       <table class="table table-striped text-center">
         <thead>
@@ -23,6 +9,8 @@ updated_at:"2020-04-29T04:57:04.000000Z"
           <th>Period</th>
           <th>Date Return Filed</th>
           <th>Form Amount</th>
+          <th>Quarter</th>
+          <th>Year</th>
           <th class="text-danger">Credit Available</th>
           <th class="text-primary">Claimed</th>
           <th class="text-success">Credits Received</th>
@@ -34,6 +22,8 @@ updated_at:"2020-04-29T04:57:04.000000Z"
           <td>{{ rad.period }}</td>
           <td>{{ rad.date_return_filed }}</td>
           <td>{{ rad.credit_amount }}</td>
+          <td>{{ rad.quarter }}</td>
+          <td>{{ rad.year }}</td>
           <td class="text-danger font-weight-bolder">{{ rad.credit_available }}</td>
           <td class="text-primary font-weight-bolder">{{ rad.credit_claimed }}</td>
           <td class="text-success font-weight-bolder">{{ rad.credit_received }}</td>
@@ -54,7 +44,7 @@ updated_at:"2020-04-29T04:57:04.000000Z"
       <div class="form-group col-2">
         <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">
-            Selected Return Type <h4>{{ returnType }}</h4> <i class="el-icon-arrow-down el-icon--right"></i>
+            Selected Return Type <h4>{{ returnType.selected }}</h4> <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item :command="companyTypeToFormConversion(this.returnCurrentActiveCompany.company_type)">{{ companyTypeToFormConversion(this.returnCurrentActiveCompany.company_type) }}</el-dropdown-item>
@@ -62,24 +52,37 @@ updated_at:"2020-04-29T04:57:04.000000Z"
             <el-dropdown-item command="941X">941X</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
+        <small v-if="returnType.error" class="text-danger d-block">Select a return type</small>
       </div>
 
-<!--      <div class="form-group col-2 text-center">
-        <label>Return Type</label>
-        <h2>
-          {{ this.returnCurrentActiveCompany.company_type }}
-          <br>
-          {{companyTypeToFormConversion(this.returnCurrentActiveCompany.company_type)}}
-        </h2>
-      </div>-->
+      <div class="col-2">
+        <el-dropdown @command="handleQuarterCommand">
+          <span class="el-dropdown-link">
+            Select Quarter | <h4>{{ quarter.selected }}</h4> <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="Q1">Q1</el-dropdown-item>
+            <el-dropdown-item command="Q2">Q2</el-dropdown-item>
+            <el-dropdown-item command="Q3">Q3</el-dropdown-item>
+            <el-dropdown-item command="Q4">Q4</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <small v-if="quarter.error" class="text-danger d-block">Select a quarter</small>
+      </div>
 
-      <div class="form-group col-5">
+      <div class="form-group col-2">
+        <label>Year</label>
+        <flatpickr timeFormat="Y" v-on:updatedDate="updateYear" id="rad_year"/>
+        <small v-if="year.error" class="text-danger d-block">Select a year</small>
+      </div>
+
+      <div class="form-group col-3">
         <label>Period</label>
         <flatpickr timeFormat="d-m-Y" v-on:updatedDate="updatePeriod" id="rad_period"/>
         <small v-if="period.error" class="text-danger d-block">Select a date</small>
       </div>
 
-      <div class="form-group col-5">
+      <div class="form-group col-3">
         <label>Date Return Filed</label>
         <flatpickr timeFormat="d-m-Y" v-on:updatedDate="updateDateReturnFiled" id="rad_date_filed"/>
         <small v-if="dateReturnedFiled.error" class="text-danger d-block">Select a date</small>
@@ -127,6 +130,14 @@ updated_at:"2020-04-29T04:57:04.000000Z"
     components: {Flatpickr},
     data(){
       return {
+        quarter: {
+          selected: '',
+          error: false
+        },
+        year: {
+          year: '',
+          error: false
+        },
         period: {
           date: '',
           error: false
@@ -151,13 +162,16 @@ updated_at:"2020-04-29T04:57:04.000000Z"
           input: '',
           error: false
         },
-        returnType: ''
+        returnType: {
+          selected: '',
+          error: false
+        }
       }
     },
     updated() {
       if (this.returnCurrentActiveCompany !== null) {
-        if (this.returnCurrentActiveCompany.company_type === this.returnType) {
-          this.returnType = this.companyTypeToFormConversion(this.returnCurrentActiveCompany.company_type);
+        if (this.returnCurrentActiveCompany.company_type === this.returnType.selected) {
+          this.returnType.selected = this.companyTypeToFormConversion(this.returnCurrentActiveCompany.company_type);
         }
       }
     },
@@ -165,7 +179,7 @@ updated_at:"2020-04-29T04:57:04.000000Z"
       ...mapGetters(['returnActiveCompanyResearchAndDevelopmentData', 'returnCurrentActiveCompany']),
     },
     methods: {
-      ...mapActions(['updateCompanyWithNewCredit']),
+      ...mapActions(['updateCompanyWithNewCreditAndForm']),
       companyTypeToFormConversion(type){
         switch (type) {
           case 'C':
@@ -184,7 +198,9 @@ updated_at:"2020-04-29T04:57:04.000000Z"
 
           axios.post(`api/company/new-credit`, {
             company_id: this.returnCurrentActiveCompany.id,
-            return_type: this.returnType,
+            return_type: this.returnType.selected,
+            quarter: this.quarter.selected,
+            year: this.year.year,
             period: this.reformatDate(this.period.date),
             date_return_filed: this.reformatDate(this.dateReturnedFiled.date),
             credit_amount: this.amount.input,
@@ -202,7 +218,7 @@ updated_at:"2020-04-29T04:57:04.000000Z"
               * Add check in store for 'n/a' values
               * */
               console.log(res.data);
-              this.updateCompanyWithNewCredit(res.data);
+              this.updateCompanyWithNewCreditAndForm(res.data);
               this.$notify({
                 title: 'Success',
                 message: `New Credit added to Company ${this.returnCurrentActiveCompany.name}`,
@@ -241,6 +257,25 @@ updated_at:"2020-04-29T04:57:04.000000Z"
         return `${_d[2]}-${_d[1]}-${_d[0]}`
       },
       validation(){
+
+        /* Return Type */
+        if (this.returnType.selected === '') {
+          this.returnType.error = true;
+          return false;
+        } else this.returnType.error = false;
+
+        /* Quarter */
+        if (this.quarter.selected === '') {
+          this.quarter.error = true;
+          return false;
+        } else this.quarter.error = false;
+
+        /* Year */
+        if (this.year.year === '') {
+          this.year.error = true;
+          return false;
+        } else this.year.error = false;
+
         /* Period */
         if (this.period.date === '') {
           this.period.error = true;
@@ -281,7 +316,13 @@ updated_at:"2020-04-29T04:57:04.000000Z"
       },
       handleCommand(command) {
         console.log('R&D handleCommand ', command );
-        this.returnType = command;
+        this.returnType.selected = command;
+      },
+      updateYear(event) {
+        this.year.year = event;
+      },
+      handleQuarterCommand(command) {
+        this.quarter.selected = command;
       }
     }
   }
