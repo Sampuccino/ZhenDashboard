@@ -52,6 +52,7 @@ class CompanyController extends Controller
         officer
        * */
       try {
+        // Date format is Y-m-d
         $c = Company::create([
           'name' => $request->companyName,
           'ein' => $request->taxID,
@@ -147,15 +148,15 @@ class CompanyController extends Controller
    */
   public function newCredit(Request $request){
     try {
-      $request->period = Carbon::parse($request->period)->toDateString();
-      $request->date_return_filed = Carbon::parse($request->date_return_filed)->toDateString();
+      $request->period = Carbon::parse(str_replace('-','/', $request->period))->toDateString();
+      $request->date_return_filed = Carbon::parse(str_replace('-','/', $request->date_return_filed))->toDateString();
       $credit = RDCredit::create($request->all());
       $form = Form::create([
         'company_id' => $request->company_id,
         'quarter' => $request->quarter,
         'year' => $request->year,
         'form_type' => $request->return_type,
-        'period' => Carbon::parse($request->period)->toDateString()
+        'period' => $request->period
       ]);
       return response()->json([$credit, $form], 200);
     } catch (Exception $e) {

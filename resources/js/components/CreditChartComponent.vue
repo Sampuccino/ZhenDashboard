@@ -2,16 +2,16 @@
   <div>
     <div class="row">
       <div class="col-4 text-center my-auto">
-        <h6 class="font-weight-bold">Total Credits</h6>
-        <h4>{{ returnFormattedCompanyCreditsAvailable }}</h4>
+        <h6 class="font-weight-bold text-danger">Total Credits</h6>
+        <h4 class="text-danger">{{ returnFormattedCompanyCreditsAvailable }}</h4>
       </div>
       <div class="col-4 text-center my-auto">
-        <h6 class="font-weight-bold">Credits Filed</h6>
-        <h4>{{ returnFormattedCompanyCreditsClaimed }}</h4>
+        <h6 class="font-weight-bold text-primary">Credits Filed</h6>
+        <h4 class="text-primary">{{ returnFormattedCompanyCreditsClaimed }}</h4>
       </div>
       <div class="col-4 text-center my-auto">
-        <h6 class="font-weight-bold">Credits Received</h6>
-        <h4>{{ returnFormattedCompanyCreditsReceived }}</h4>
+        <h6 class="font-weight-bold text-success">Credits Received</h6>
+        <h4 class="text-success">{{ returnFormattedCompanyCreditsReceived }}</h4>
       </div>
     </div>
 
@@ -38,9 +38,10 @@
     computed: {
       ...mapGetters(['returnTotalCompanyCreditsAvailable',
         'returnTotalCompanyCreditsClaimed',
-        'returnTotalCompanyCreditsReceived']),
+        'returnTotalCompanyCreditsReceived',
+        'returnTotalCompanyCreditsAmount']),
       returnFormattedCompanyCreditsAvailable(){
-        return NumberFormatter.convertToStringAndAddDecimal(this.returnTotalCompanyCreditsAvailable)
+        return NumberFormatter.convertToStringAndAddDecimal(this.returnTotalCompanyCreditsAmount)
       },
       returnFormattedCompanyCreditsClaimed(){
         return NumberFormatter.convertToStringAndAddDecimal(this.returnTotalCompanyCreditsClaimed)
@@ -54,8 +55,8 @@
         this.renderChart({
           labels: ['Total Credits', 'Credits Filed', 'Credits Recieved'],
             datasets: [{
-            label: 'dollar amount',
-            data: [this.returnTotalCompanyCreditsAvailable, this.returnTotalCompanyCreditsClaimed, this.returnTotalCompanyCreditsReceived],
+            label: 'Dollar Amount',
+            data: [this.returnTotalCompanyCreditsAmount, this.returnTotalCompanyCreditsClaimed, this.returnTotalCompanyCreditsReceived, 0],
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
               'rgba(54, 162, 235, 0.2)',
@@ -67,8 +68,9 @@
               'rgba(75, 192, 192, 1)',
             ],
             borderWidth: 1
-          }]
-        },{
+          }],
+        },
+        {
           responsive: false,
           maintainAspectRatio: true
         })
@@ -76,7 +78,3 @@
     }
   }
 </script>
-
-<style scoped>
-
-</style>

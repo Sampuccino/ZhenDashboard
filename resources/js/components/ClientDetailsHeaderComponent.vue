@@ -62,6 +62,9 @@
       console.warn('ClientDetailsHeaderComponent Updated');
       if (this.returnCurrentActiveCompany !== null) {
         this.companyName = this.returnCurrentActiveCompany.name;
+        document.getElementById('calendar_year_bsd').value = "";
+        document.getElementById('calendar_year_ye').value = "";
+        document.getElementById('calendar_year_fiy').value = "";
       }
     }
   }

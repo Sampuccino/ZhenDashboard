@@ -4,6 +4,9 @@
 
         <div class="row justify-content-between">
           <div class="col-12">
+            <last-year-you-can-claim-payroll-component/>
+          </div>
+          <div class="col-12">
 
             <div class="bg-white p-4">
 
@@ -24,13 +27,13 @@
 
               <div class="form-group">
                 <label>Business Start Date</label>
-                <flatpickr class="minimalMarginTop" timeFormat="d-m-Y" v-model="businessStartDate.date" id="calendar_year_bsd"/>
+                <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="businessStartDate.date" id="calendar_year_bsd"/>
               </div>
 
               <div class="form-group">
                 <label>Year End</label>
                 <br>
-                <flatpickr  class="minimalMarginTop"timeFormat="m-d-Y" v-model="yearEndDate.date" id="calendar_year_ye"/>
+                <flatpickr  class="minimalMarginTop" timeFormat="m-d-Y" v-model="yearEndDate.date" id="calendar_year_ye"/>
               </div>
 
               <div class="form-group">
@@ -91,10 +94,11 @@
   import axios from 'axios';
   import LastYearYouCanClaimPayrollCalculatorComponent from "./LastYearYouCanClaimPayrollCalculatorComponent";
   import Flatpickr from "./Calendar/Flatpickr";
+  import LastYearYouCanClaimPayrollComponent from "./LastYearYouCanClaimPayrollComponent";
 
   export default {
     name: "ProfileCompanyComponent",
-    components: {Flatpickr, LastYearYouCanClaimPayrollCalculatorComponent},
+    components: {LastYearYouCanClaimPayrollComponent, Flatpickr, LastYearYouCanClaimPayrollCalculatorComponent},
     data(){
       return {
         recordError: {
@@ -148,19 +152,15 @@
         'returnFinalYearPayrollClaimable',
         'returnFiscalYearEnd',
         'returnFirstIncomeYear',
-        'returnFiscalTypeCalculations'
+        'returnFiscalTypeCalculations',
+        'checkIfDOMNodeExist'
       ])
     },
     methods: {
-      ...mapActions(['setCalendarYearCalculation', 'updateExistingCompanyObject']),
+      ...mapActions(['updateExistingCompanyObject']),
       handleCommand(command) {
         console.log('handleCommand ', command);
         this.companyType = command;
-      },
-      handleCalculation() {
-        this.businessStartDate.date = document.getElementById('calendar_year_bsd').value;
-        this.yearEndDate.date = document.getElementById('calendar_year_ye').value;
-        this.setCalendarYearCalculation({date: this.businessStartDate.date, endDate : this.yearEndDate.date});
       },
       returnRearrangedDate(date) {
         console.log('returnRearrangedDate ', date);
@@ -168,7 +168,7 @@
         const blacklist = ['n/a', null, undefined, "undefined", ""];
         if (!blacklist.includes(date)) {
           let d = date.split('-');
-          const arranged = `${d[2]}-${d[1]}-${d[0]}`;
+          const arranged = `${d[2]}-${d[0]}-${d[1]}`;
           return (d[0].length === 4) ? date :  arranged;
         } else {
           return null
@@ -177,7 +177,7 @@
       onSubmit() {
         console.log('onSubmit');
 
-        // Set data for dates
+        // Set data for dates but only grab if the value is different
         this.businessStartDate.date = this.returnRearrangedDate(document.getElementById('calendar_year_bsd').value);
         this.yearEndDate.date = this.returnRearrangedDate(document.getElementById('calendar_year_ye').value);
         this.firstIncomeYear.date = this.returnRearrangedDate(document.getElementById('calendar_year_fiy').value);
@@ -187,11 +187,6 @@
           calculated: this.returnFirstIncomeYear,
           current: this.returnCurrentActiveCompany.first_income_year,
           equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.first_income_year, this.firstIncomeYear.date),
-        };
-        const payroll = {
-          calculated: this.returnFinalYearPayrollClaimable,
-          current: this.returnCurrentActiveCompany.final_date_payroll_claim,
-          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.final_date_payroll_claim, this.returnFinalYearPayrollClaimable),
         };
 
         // Date is not correct formate yyyy-mm-dd when passing to server.
@@ -240,7 +235,6 @@
         };
 
         console.log('First Income Year ', income);
-        console.log('Final Payroll Year ', payroll);
         console.log('Start Date ', startDate);
         console.log('Year End Date ', endDate);
         console.log('Company Type ', compType);
@@ -304,7 +298,7 @@
         console.log('returnValueToBeUpdated Blacklist ', blacklist.includes(modified), ' Current ', current, '  Modified ', modified);
         return (blacklist.includes(modified)) ? current : modified;
       }
-    }
+    },
   }
 </script>
 

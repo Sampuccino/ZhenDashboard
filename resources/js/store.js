@@ -74,6 +74,18 @@ export default new Vuex.Store({
 
       return 0;
     },
+    returnTotalCompanyCreditsAmount: state => {
+      if (state.companyRaD.length) {
+        console.log('You have credits!');
+        // credit_available:
+        const creditsAmountArr = [];
+        const creditsArr = state.companyRaD.forEach( c => { (parseFloat(c.credit_amount)) ? creditsAmountArr.push(parseFloat(c.credit_amount)) : '' });
+        return creditsAmountArr.reduce((a,b) => a+b,0) || 0.00;
+      }
+
+      console.log('NO Total Credits!');
+      return 0;
+    },
     returnLastYearClaimablePayroll: state => {
       // console.warn('returnLastYearClaimablePayroll ', state.company);
       return state.company.final_date_payroll_claim || Date.now();

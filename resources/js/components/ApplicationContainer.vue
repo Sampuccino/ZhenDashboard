@@ -12,7 +12,7 @@
     <forms-component v-if="this.returnSelectedMenu === 4 && this.returnCurrentActiveCompany !== null"/>
 
     <!--Profile-->
-    <profile-company-component v-if="this.returnSelectedMenu === 5 && this.returnCurrentActiveCompany !== null"/>
+    <profile-company-component v-show="this.returnSelectedMenu === 5 && this.returnCurrentActiveCompany !== null"/>
 
     <!--Setup-->
     <setup-company-component v-if="this.returnSelectedMenu === 6"/>
@@ -36,7 +36,7 @@
       ResearchAndDevelopmentCreditsComponent,
       ClientDetailsHeaderComponent, DashboardComponent, ProfileCompanyComponent, SetupCompanyComponent},
     computed: {
-      ...mapGetters(['returnSelectedMenu', 'returnCurrentActiveCompany'])
+      ...mapGetters(['returnSelectedMenu', 'returnCurrentActiveCompany']),
     }
   }
 </script>
