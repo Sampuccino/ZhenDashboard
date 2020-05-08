@@ -8,11 +8,11 @@
           <th>Return Type</th>
           <th>Period</th>
           <th>Date Return Filed</th>
-          <th>Form Amount</th>
           <th>Quarter</th>
           <th>Year</th>
-          <th class="text-danger">Credit Available</th>
+          <th class="text-danger" >Form Amount</th>
           <th class="text-primary">Claimed</th>
+          <th >Credit Available</th>
           <th class="text-success">Credits Received</th>
         </tr>
         </thead>
@@ -21,30 +21,27 @@
           <td>{{ rad.return_type }}</td>
           <td>{{ rad.period }}</td>
           <td>{{ rad.date_return_filed }}</td>
-          <td>{{ rad.credit_amount }}</td>
           <td>{{ rad.quarter }}</td>
           <td>{{ rad.year }}</td>
-          <td class="text-danger font-weight-bolder">{{ rad.credit_available }}</td>
+          <td class="text-danger font-weight-bolder" >{{ rad.credit_amount }}</td>
           <td class="text-primary font-weight-bolder">{{ rad.credit_claimed }}</td>
+          <td>{{ rad.credit_available }}</td>
           <td class="text-success font-weight-bolder">{{ rad.credit_received }}</td>
         </tr>
         </tbody>
       </table>
     </div>
 
-    <div class="row mt-3">
+    <div class="row mt-5 bg-light p-2">
 
-      <div class="form-group col-12">
-        <el-alert
-          title="Enter n/a on inputs which don't have a value."
-          type="warning">
-        </el-alert>
+      <div class="col-12">
+        <h6>This Company has a total of {{ returnTotalCompanyCreditsAvailable }} Credits Available</h6>
       </div>
 
       <div class="form-group col-2">
         <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">
-            Selected Return Type <h4>{{ returnType.selected }}</h4> <i class="el-icon-arrow-down el-icon--right"></i>
+            Return <h4>{{ returnType.selected }}</h4> <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item :command="companyTypeToFormConversion(this.returnCurrentActiveCompany.company_type)">{{ companyTypeToFormConversion(this.returnCurrentActiveCompany.company_type) }}</el-dropdown-item>
@@ -58,7 +55,7 @@
       <div class="col-2">
         <el-dropdown @command="handleQuarterCommand">
           <span class="el-dropdown-link">
-            Select Quarter | <h4>{{ quarter.selected }}</h4> <i class="el-icon-arrow-down el-icon--right"></i>
+            Quarter <h4>{{ quarter.selected }}</h4> <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="Q1">Q1</el-dropdown-item>
@@ -72,25 +69,26 @@
 
       <div class="form-group col-2">
         <label>Year</label>
-        <flatpickr timeFormat="Y" v-on:updatedDate="updateYear" id="rad_year"/>
+        <flatpickr class="minimalMarginTop" timeFormat="Y" v-on:updatedDate="updateYear" id="rad_year"/>
         <small v-if="year.error" class="text-danger d-block">Select a year</small>
       </div>
 
       <div class="form-group col-3">
         <label>Period</label>
-        <flatpickr timeFormat="d-m-Y" v-on:updatedDate="updatePeriod" id="rad_period"/>
+        <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-on:updatedDate="updatePeriod" id="rad_period"/>
         <small v-if="period.error" class="text-danger d-block">Select a date</small>
       </div>
 
       <div class="form-group col-3">
         <label>Date Return Filed</label>
-        <flatpickr timeFormat="d-m-Y" v-on:updatedDate="updateDateReturnFiled" id="rad_date_filed"/>
+        <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-on:updatedDate="updateDateReturnFiled" id="rad_date_filed"/>
         <small v-if="dateReturnedFiled.error" class="text-danger d-block">Select a date</small>
       </div>
 
       <div class="form-group col-3">
         <label>Form Amount</label>
-        <el-input v-model="amount.input"/>
+        <el-input v-if="returnType.selected !== '941' && returnType.selected !== '941X' " v-model="amount.input"/>
+        <b class="d-block" v-else>n/a</b>
         <small v-if="amount.error" class="text-danger d-block">Enter a value</small>
       </div>
 
@@ -102,18 +100,18 @@
 
       <div class="form-group col-3">
         <label>Credit Available</label>
-        <el-input v-model="available.input"/>
-        <small v-if="available.error" class="text-danger d-block">Enter a value</small>
+        <br>
+        <b>{{ returnCalculatedCreditsAvailable }}</b>
       </div>
 
       <div class="form-group col-3">
         <label>Credits Received</label>
-        <el-input v-model="received.input"/>
-        <small v-if="received.error" class="text-danger d-block">Enter a value</small>
+        <br>
+        <b>{{ parseFloat(claimed.input).toFixed(2) }}</b>
       </div>
 
       <div class="col-12">
-        <el-button type="primary" @click="onNewCredit">Post new credit</el-button>
+        <el-button type="success" @click="onNewCredit">Add Credit</el-button>
       </div>
     </div>
 
@@ -154,14 +152,6 @@
           input: '',
           error: false
         },
-        available: {
-          input: '',
-          error: false
-        },
-        received: {
-          input: '',
-          error: false
-        },
         returnType: {
           selected: '',
           error: false
@@ -176,11 +166,19 @@
       }
     },
     computed: {
-      ...mapGetters(['returnActiveCompanyResearchAndDevelopmentData', 'returnCurrentActiveCompany']),
+      ...mapGetters(['returnActiveCompanyResearchAndDevelopmentData', 'returnCurrentActiveCompany', 'returnTotalCompanyCreditsAvailable']),
+      returnCalculatedCreditsAvailable(){
+        const blacklist = ['941', '941X'];
+        const n1 = (blacklist.includes(this.returnType.selected)) ? parseFloat(this.returnTotalCompanyCreditsAvailable) : parseFloat(this.amount.input);
+        const n2 = parseFloat(this.claimed.input);
+        const calculation = (blacklist.includes(this.returnType.selected)) ? (n1 - n2) : (n1 - n2);
+        return (isNaN(calculation)) ? 0 : calculation.toFixed(2);
+      }
     },
     methods: {
       ...mapActions(['updateCompanyWithNewCreditAndForm']),
       companyTypeToFormConversion(type){
+        console.log('companyTypeToFormConversion ', type);
         switch (type) {
           case 'C':
             return '1120';
@@ -205,8 +203,8 @@
             date_return_filed: this.reformatDate(this.dateReturnedFiled.date),
             credit_amount: this.amount.input,
             credit_claimed: this.claimed.input,
-            credit_available: this.available.input,
-            credit_received: this.received.input
+            credit_available: this.returnCalculatedCreditsAvailable,
+            credit_received: this.claimed.input
           }).then( res => {
 
             if (res.status === 200) {
@@ -254,7 +252,7 @@
       },
       reformatDate(d){
         const _d = d.split('-');
-        return `${_d[2]}-${_d[1]}-${_d[0]}`
+        return `${_d[2]}-${_d[0]}-${_d[1]}`
       },
       validation(){
 
@@ -300,23 +298,21 @@
           return false;
         } else this.claimed.error = false;
 
-        /* Available */
-        if (this.available.input === '') {
-          this.available.error = true;
-          return false;
-        } else this.available.error = false;
-
-        /* Received */
-        if (this.received.input === '') {
-          this.received.error = true;
-          return false;
-        } else this.received.error = false;
-
         return true;
       },
       handleCommand(command) {
         console.log('R&D handleCommand ', command );
         this.returnType.selected = command;
+        switch (command) {
+          case '941':
+          case '941X':
+            this.quarter.selected = '';
+            this.amount.input = 'n/a';
+            break;
+          default:
+            this.quarter.selected = '--';
+            this.amount.input = '';
+        }
       },
       updateYear(event) {
         this.year.year = event;

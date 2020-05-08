@@ -16,6 +16,8 @@
     computed: {
       ...mapGetters(['returnLastYearClaimablePayroll']),
       lastPayrollDate() {
+        // let split = this.returnLastYearClaimablePayroll.split('-');
+        // return `${split[2]}-${split[1]}-${split[0]}`;
         return moment(this.returnLastYearClaimablePayroll).format('MM-DD-YYYY');
       }
     }
