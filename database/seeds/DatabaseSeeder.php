@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(UserSeeder::class);
       // Company
 
-      for ($i=0; $i < 5; $i++) {
+      for ($i=0; $i < 1; $i++) {
         $company_name = $faker->company;
           $company = Company::create([
                     'name' => $company_name,

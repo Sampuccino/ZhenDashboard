@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
-Route::get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 Route::prefix('company')->group(function () {
 
@@ -34,6 +33,11 @@ Route::prefix('company')->group(function () {
   Route::put('/update/{company}', 'CompanyController@update');
   Route::post('/new-credit', 'CompanyController@newCredit');
 
-//  Route::put('/form-upload/{form}', 'FormController@store');
+  //Delete credit
+  Route::delete('/delete-credit/{credit}', 'RDCreditsController@destroy');
+
+  // Update Credit Recieved
+  Route::put('/update-rdc-received/{credit}', 'RDCreditsController@update');
+
   Route::post('/form-upload/{form}', 'FormController@store');
 });

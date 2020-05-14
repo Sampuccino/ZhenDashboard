@@ -23,7 +23,7 @@ class CreateAlertsTable extends Migration
         });
 
       Schema::table('alerts', function($table) {
-        $table->foreign('company_ein')->references('ein')->on('company');
+        $table->foreign('company_ein')->references('ein')->on('company')->onDelete('cascade');
       });
 
     }

@@ -54,6 +54,13 @@ export default new Vuex.Store({
       console.log('NO! credits!');
       return 0;
     },
+    returnTotalCompanyCreditsRemaining: state => {
+      if (state.companyRaD.length) {
+        console.log('Getter returnTotalCompanyCreditsRemaining!');
+        return parseFloat(state.companyRaD[state.companyRaD.length - 1].credit_available).toFixed(2);
+      }
+      return 0;
+    },
     returnTotalCompanyCreditsClaimed: state => {
       if (state.companyRaD.length) {
       // credit_claimed:
@@ -177,6 +184,15 @@ export default new Vuex.Store({
       const currentFormIndex = state.companyForms.findIndex(( obj => obj.id === payload.id));
       console.log('updateCompanyFormsWithUpdatedCompany ', currentFormIndex);
       state.companyForms.splice(currentFormIndex,1,payload);
+    },
+    deleteResearchRecord: (state, payload) => {
+      // Use payload to remove R&D record from State
+      const currentRDIndex = state.companyRaD.findIndex(( obj => obj.id === payload.id));
+      state.companyRaD.splice(currentRDIndex,1);
+    },
+    onUpdateResearchAndDevelopmentCreditReceived: (state, payload) => {
+      const currentFormIndex = state.companyRaD.findIndex(( obj => obj.id === payload.id));
+      state.companyRaD.splice(currentFormIndex,1,payload);
     }
   },
   actions: {
@@ -218,6 +234,15 @@ export default new Vuex.Store({
     },
     updateCompanyFormsWithUpdatedCompany: (context, payload) => {
       context.commit('updateCompanyFormsWithUpdatedCompany', payload); // Form Object
+    },
+    deleteResearchRecord: async (context, payload) => {
+      const deletedRecord = await axios.delete(`/api/company/delete-credit/${payload}`);
+      context.commit('deleteResearchRecord', payload); // Form Object
+    },
+    onUpdateResearchAndDevelopmentCreditReceived: async (context, payload) => {
+      const record = await axios.put(`/api/company/update-rdc-received/${payload.id}`, {credit_received: payload.received});
+      context.commit('onUpdateResearchAndDevelopmentCreditReceived', record.data); // Form Object
     }
+
   }
 })
