@@ -18,7 +18,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-      return response()->json(Company::findOrFail(1)->with(['research_and_development', 'forms'])->get(), 200);
+        return response()->json(Company::with(['research_and_development', 'forms', 'alerts'])->get(), 200);
     }
 
     /**
@@ -173,7 +173,12 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+      try {
+        $company->delete();
+        return response()->json(['message' => 'company deleted'], 201);
+      } catch (Exception $e) {
+        return response()->json(['message' => $e->getMessage()], 404);
+      }
     }
 
       /****/
