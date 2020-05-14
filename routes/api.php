@@ -22,6 +22,7 @@ Route::prefix('company')->group(function () {
 
   Route::get('/', 'CompanyController@index');
   Route::post('/', 'CompanyController@store');
+  Route::delete('/{company}', 'CompanyController@destroy');
 
   // Claim Calculation
 //  Route::post('/claim-calculation/{date}/{endDate}', 'CompanyController@claimCalculation');

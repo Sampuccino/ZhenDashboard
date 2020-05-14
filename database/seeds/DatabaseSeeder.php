@@ -20,12 +20,11 @@ class DatabaseSeeder extends Seeder
         // $this->call(UserSeeder::class);
       // Company
 
-      for ($i=0; $i < 1; $i++) {
+      for ($i=0; $i < 5; $i++) {
         $company_name = $faker->company;
           $company = Company::create([
                     'name' => $company_name,
                     'ein' => $faker->numberBetween(100000000,999999999),
-//                    'business_start_date' => $faker->date(),
                     'business_start_date' => $faker->date('Y-m-d'),
                     'business_first_year_end_date' => $faker->date('Y-m-d'),
                     'first_income_year' => $faker->date('Y-m-d'),
@@ -59,6 +58,7 @@ class DatabaseSeeder extends Seeder
             ]);
 
             Alert::create([
+              'company_id' => $company->id,
               'company_name' => $company_name,
               'company_ein' => $company->ein,
               'title' => $faker->title,

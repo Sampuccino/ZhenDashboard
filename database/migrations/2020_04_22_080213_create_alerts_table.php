@@ -16,6 +16,7 @@ class CreateAlertsTable extends Migration
         Schema::create('alerts', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->unsignedInteger('company_id');
             $table->string('company_name', 125);
             $table->string('company_ein', 9);
             $table->string('title', 125);
@@ -23,7 +24,7 @@ class CreateAlertsTable extends Migration
         });
 
       Schema::table('alerts', function($table) {
-        $table->foreign('company_ein')->references('ein')->on('company')->onDelete('cascade');
+        $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
       });
 
     }

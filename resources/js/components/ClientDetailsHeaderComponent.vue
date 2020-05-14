@@ -1,9 +1,9 @@
 <template>
   <div class="row bg-white p-4 mb-3">
-    <div class="col-5">
+    <div class="col-3">
       <el-dropdown @command="handleCommand">
         <span class="btn-link">
-          {{ companyName || 'Company List' }} <i class="el-icon-arrow-down el-icon--right"></i>
+          <b id="activeName">{{ companyName || 'Company List' }}</b> <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item
@@ -21,9 +21,9 @@
     <div class="col-4 my-auto">
       <i class="el-icon-message"></i> {{ email || 'example@example.com' }}
     </div>
-<!--    <div class="col-2 my-auto">
+    <div class="col-2 my-auto">
       <el-button type="text" @click="deleteCompany" class="text-danger">Delete Company</el-button>
-    </div>-->
+    </div>
 
   </div>
 </template>
@@ -53,7 +53,7 @@
       ...mapGetters(['returnCurrentActiveCompany'])
     },
     methods: {
-      ...mapActions(['setCompaniesList', 'handleSelectedCompany']),
+      ...mapActions(['setCompaniesList', 'handleSelectedCompany', 'onDeleteCompany']),
       handleCommand(command) {
         this.companyName = command[1];
         this.phone = command[2];
@@ -70,17 +70,21 @@
           type: 'warning'
         }).then(() => {
 
-          // Commit to Store & Request
-
           this.$message({
             type: 'success',
             message: 'Delete completed'
           });
-        }).catch(() => {
+
+          // Commit to Store & Request
+          this.onDeleteCompany(this.returnCurrentActiveCompany);
+
+        }).catch((err) => {
           this.$message({
             type: 'info',
             message: 'Delete canceled'
           });
+
+          console.error(err);
         });
       }
     },

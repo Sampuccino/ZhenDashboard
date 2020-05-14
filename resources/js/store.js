@@ -42,6 +42,9 @@ export default new Vuex.Store({
     returnActiveCompanyResearchAndDevelopmentData: state => {
       return state.companyRaD;
     },
+    returnActiveCompanyAlerts: state => {
+      return state.allCompanyEvents;
+    },
     returnTotalCompanyCreditsAvailable: state => {
       if (state.companyRaD.length) {
         console.log('You have credits!');
@@ -141,6 +144,12 @@ export default new Vuex.Store({
       //Set company Forms
       state.companyForms = c[0].forms || [];
 
+      //Set company Alerts
+      state.allCompanyEvents = c[0].alerts || [];
+
+      // Update Header Name
+      document.getElementById('activeName').innerText = state.company.name;
+
       console.warn('Mutation handleSelectedCompany ', state.company)
     },
     setCalendarYearCalculation: (state, payload) => {
@@ -193,6 +202,21 @@ export default new Vuex.Store({
     onUpdateResearchAndDevelopmentCreditReceived: (state, payload) => {
       const currentFormIndex = state.companyRaD.findIndex(( obj => obj.id === payload.id));
       state.companyRaD.splice(currentFormIndex,1,payload);
+    },
+    onDeleteCompany: (state, payload) => {
+      console.warn('Now Deleting Company ', payload);
+      const currentCompanyIndex = state.companies.findIndex(( obj => obj.id === payload.id));
+      state.companies.splice(currentCompanyIndex,1);
+      // Reset State
+      state.company = {};
+      state.companyRaD = [];
+      state.companyForms = [];
+      state.creditsAvailable = 0;
+      state.creditsClaimed = 0;
+      state.creditsReceived = 0;
+      state.allCompanyEvents = [];
+      // Update Header Name
+      document.getElementById('activeName').innerText = 'John Doe Incorporated'
     }
   },
   actions: {
@@ -242,6 +266,11 @@ export default new Vuex.Store({
     onUpdateResearchAndDevelopmentCreditReceived: async (context, payload) => {
       const record = await axios.put(`/api/company/update-rdc-received/${payload.id}`, {credit_received: payload.received});
       context.commit('onUpdateResearchAndDevelopmentCreditReceived', record.data); // Form Object
+    },
+    onDeleteCompany: async (context, payload) => {
+      // Delete Request
+      await axios.delete(`/api/company/${payload.id}`);
+      context.commit('onDeleteCompany', payload);
     }
 
   }

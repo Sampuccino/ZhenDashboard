@@ -34,4 +34,8 @@ class Company extends Model
     return $this->hasMany(Form::class);
   }
 
+  public function alerts(){
+    return $this->hasMany(Alert::class);
+  }
+
 }
