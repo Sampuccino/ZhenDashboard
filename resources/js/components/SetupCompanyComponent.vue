@@ -21,19 +21,19 @@
 
         <div class="form-group">
           <label>Business Start Date</label>
-          <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="businessStartDate.date" id="calendar_year_bsd"/>
+          <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="businessStartDate.date" id="calendar_year_bsd_setup"/>
         </div>
 
         <div class="form-group">
           <label>Year End</label>
           <br>
-          <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="yearEndDate.date" id="calendar_year_ye"/>
+          <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="yearEndDate.date" id="calendar_year_ye_setup"/>
         </div>
 
         <div class="form-group">
           <label>1st Income Year</label>
           <br>
-          <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="firstIncomeYear.date" id="calendar_year_fiy"/>
+          <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="firstIncomeYear.date" id="calendar_year_fiy_setup"/>
         </div>
 
         <div class="form-group">
@@ -147,9 +147,9 @@
       },
       onSubmit() {
         // Update models with values
-        this.businessStartDate.date = document.getElementById('calendar_year_bsd').value;
-        this.yearEndDate.date = document.getElementById('calendar_year_ye').value;
-        this.firstIncomeYear.date = document.getElementById('calendar_year_fiy').value;
+        this.businessStartDate.date = document.getElementById('calendar_year_bsd_setup').value;
+        this.yearEndDate.date = document.getElementById('calendar_year_ye_setup').value;
+        this.firstIncomeYear.date = document.getElementById('calendar_year_fiy_setup').value;
 
         /*
         * Run calculation @ backend
@@ -160,7 +160,6 @@
           businessStartDate: this.businessStartDate.date,
           yearEndDate: this.yearEndDate.date,
           firstIncomeYear: this.firstIncomeYear.date,
-          // finalPayrollDate: this.returnFinalYearPayrollClaimable,
           companyType: this.companyType,
           email: this.email.input,
           phone: this.phone.input,

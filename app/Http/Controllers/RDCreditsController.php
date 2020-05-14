@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\RDCredit;
+use Exception;
 use Illuminate\Http\Request;
 
 class RDCreditsController extends Controller
@@ -60,26 +61,39 @@ class RDCreditsController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RDCredit  $rDCredits
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, RDCredit $rDCredits)
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param \Illuminate\Http\Request $request
+   * @param RDCredit $credit
+   * @return void
+   */
+    public function update(Request $request, RDCredit $credit)
     {
-        //
+        try{
+          $credit->update($request->all());
+          return response()->json($credit, 201);
+        } catch (Exception $e) {
+          return response()->json($e->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\RDCredit  $rDCredits
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(RDCredit $rDCredits)
+      /****/
+        public function delete(RDCredit $credit)
+        {
+          return response()->json($credit);
+        }
+
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param RDCredit $credit
+   * @return \Illuminate\Http\Response
+   * @throws \Exception
+   */
+    public function destroy(RDCredit $credit)
     {
-        //
+      $credit->delete();
+      return response()->json($credit, 201);
     }
 }

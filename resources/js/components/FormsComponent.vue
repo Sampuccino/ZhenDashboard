@@ -40,7 +40,7 @@
             </el-collapse-item>
           </el-collapse>
         </td>
-        <td v-if="form.form_type === '941'">
+        <td v-if="form.form_type === '941' || form.form_type === '941X'">
           <a v-if="form.file_two_url !== null" :href="form.file_two_url" target="_blank">View file in browser</a>
           <i v-else>No file found</i>
           <br>
@@ -62,7 +62,7 @@
             </el-collapse-item>
           </el-collapse>
         </td>
-        <td v-else class="bg-black"></td>
+        <td v-else></td>
       </tr>
       </tbody>
     </table>

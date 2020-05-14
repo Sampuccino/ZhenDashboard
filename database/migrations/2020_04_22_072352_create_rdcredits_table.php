@@ -31,7 +31,7 @@ class CreateRdcreditsTable extends Migration
         });
 
         Schema::table('rdcredits', function($table) {
-          $table->foreign('company_id')->references('id')->on('company');
+          $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
         });
 
     }

@@ -26,7 +26,7 @@ class CreateFormsTable extends Migration
         });
 
       Schema::table('forms', function($table) {
-        $table->foreign('company_id')->references('id')->on('company');
+        $table->foreign('company_id')->references('id')->on('company')->onDelete('cascade');
       });
     }
 

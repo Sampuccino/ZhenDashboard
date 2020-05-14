@@ -12,7 +12,7 @@
 
               <div class="form-group">
                 <label>Company Name</label>
-                <el-input placeholder="Please input" v-model="companyName.name"></el-input>
+                <el-input placeholder="Please input" v-model="companyName.name" id="profile-cn"></el-input>
               </div>
 
               <div class="form-group">
@@ -22,7 +22,8 @@
                   placeholder="Please input"
                   maxlength="9"
                   show-word-limit
-                  v-model="taxID.id"/>
+                  v-model="taxID.id"
+                  id="profile-taxid"/>
               </div>
 
               <div class="form-group">
@@ -45,7 +46,7 @@
               <div class="form-group">
                 <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              Company Type <b class="alert-primary p-1">{{ companyType }}</b> <i class="el-icon-arrow-down el-icon--right"></i>
+              Company Type <b class="alert-primary p-1" id="profile-company">{{ companyType }}</b> <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="C">C - Corporation</el-dropdown-item>
@@ -58,7 +59,7 @@
 
               <div class="form-group">
                 <label>Email</label>
-                <el-input type="email" placeholder="Please input" v-model="email.input"></el-input>
+                <el-input type="email" placeholder="Please input" v-model="email.input" id="profile-email"></el-input>
               </div>
 
               <div class="form-group">
@@ -69,17 +70,17 @@
                   maxlength="10"
                   minlength="10"
                   show-word-limit
-                  v-model="phone.input"/>
+                  v-model="phone.input" id="profile-phone"/>
               </div>
 
               <div class="form-group">
                 <label>Officer</label>
-                <el-input placeholder="Please input" v-model="officer.input"></el-input>
+                <el-input placeholder="Please input" v-model="officer.input" id="profile-officer"></el-input>
               </div>
 
               <p v-show="recordError.duplicate" class="text-danger font-weight-bolder mb-2 mt-2">No duplicate companies allowed (Name or TaxID already taken). Change Company Name / TaxID and try again.</p>
 
-              <el-button type="primary" @click="onSubmit">Submit</el-button>
+              <el-button type="primary" @click="onSubmit">Update</el-button>
 
             </div>
 
@@ -297,7 +298,7 @@
         const blacklist = ['n/a', null, undefined, "undefined", ""];
         console.log('returnValueToBeUpdated Blacklist ', blacklist.includes(modified), ' Current ', current, '  Modified ', modified);
         return (blacklist.includes(modified)) ? current : modified;
-      }
+      },
     },
   }
 </script>
