@@ -173,7 +173,7 @@ export default new Vuex.Store({
       state.allCompanyEvents = payload;
     },
     storeNewSingleCompanyAlert: (state, payload) => {
-      state.allCompanyEvents.data.unshift(payload);
+      state.allCompanyEvents.unshift(payload);
     },
     updateExistingCompanyObject: (state, payload) => {
       // companies

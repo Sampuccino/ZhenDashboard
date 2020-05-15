@@ -39,12 +39,7 @@ class AlertController extends Controller
     {
         try {
 
-          $alert = Alert::create([
-            'company_name' => $request->company_name,
-            'company_ein' => $request->company_ein,
-            'title' => $request->title,
-            'body' => $request->body,
-          ]);
+          $alert = Alert::create($request->all());
 
           return response()->json([
             'status' => 200,

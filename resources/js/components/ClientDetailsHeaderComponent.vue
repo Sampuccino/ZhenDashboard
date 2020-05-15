@@ -1,30 +1,32 @@
 <template>
-  <div class="row bg-white p-4 mb-3">
-    <div class="col-3">
-      <el-dropdown @command="handleCommand">
+  <div class="col-12">
+    <div class="row bg-white p-4 mb-3">
+      <div class="col-3">
+        <el-dropdown @command="handleCommand" class="mt-2">
         <span class="btn-link">
           <b id="activeName">{{ companyName || 'Company List' }}</b> <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item
-            v-for="(company, index) in companies"
-            :key="index"
-            :command="[company.ein, company.name, company.phone, company.email]">
-            {{ company.name || 'Company Name Here' }}
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
-    <div class="col-3 my-auto">
-      <i class="el-icon-phone"></i> {{ phone || '(111) 111-1111' }}
-    </div>
-    <div class="col-4 my-auto">
-      <i class="el-icon-message"></i> {{ email || 'example@example.com' }}
-    </div>
-    <div class="col-2 my-auto">
-      <el-button type="text" @click="deleteCompany" class="text-danger">Delete Company</el-button>
-    </div>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item
+              v-for="(company, index) in companies"
+              :key="index"
+              :command="[company.ein, company.name, company.phone, company.email]">
+              {{ company.name || 'Company Name Here' }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+      <div class="col-3 my-auto">
+        <i class="el-icon-phone"></i> {{ phone || '(111) 111-1111' }}
+      </div>
+      <div class="col-4 my-auto">
+        <i class="el-icon-message"></i> {{ email || 'example@example.com' }}
+      </div>
+      <div class="col-2 my-auto">
+        <el-button type="text" @click="deleteCompany" class="text-danger">Delete Company</el-button>
+      </div>
 
+    </div>
   </div>
 </template>
 

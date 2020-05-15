@@ -8,5 +8,5 @@ class Alert extends Model
 {
     //
   protected $table = 'alerts';
-  protected $fillable = ['company_id', 'company_name', 'title', 'body'];
+  protected $fillable = ['company_id', 'company_ein', 'company_name', 'title', 'body'];
 }

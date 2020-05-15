@@ -1,14 +1,14 @@
 <template>
-  <div class="row bg-white p-4">
+  <div class="row bg-white p-4 m-1">
 
     <div class="col-12">
       <table class="table table-striped text-center">
         <thead>
         <tr>
           <th>Return Type</th>
+          <th>Quarter</th>
           <th>Period</th>
           <th>Date Return Filed</th>
-          <th>Quarter</th>
           <th>Year</th>
           <th class="text-danger" >Form Amount</th>
           <th class="text-primary">Claimed</th>
@@ -19,19 +19,35 @@
         </thead>
         <tbody>
         <tr v-for="(rad, index) in this.returnActiveCompanyResearchAndDevelopmentData" :key="index">
-          <td>{{ rad.return_type }}</td>
-          <td>{{ rad.period }}</td>
-          <td>{{ rad.date_return_filed }}</td>
-          <td>{{ rad.quarter }}</td>
-          <td>{{ rad.year }}</td>
-          <td class="text-danger font-weight-bolder" >{{ rad.credit_amount }}</td>
-          <td class="text-primary font-weight-bolder">{{ rad.credit_claimed }}</td>
-          <td>{{ rad.credit_available }}</td>
+          <td>
+            <p class="mt-2">{{ rad.return_type }}</p>
+          </td>
+          <td>
+            <p class="mt-2">{{ rad.quarter }}</p>
+          </td>
+          <td>
+            <p class="mt-2">{{ rad.period }}</p>
+          </td>
+          <td>
+            <p class="mt-2">{{ rad.date_return_filed }}</p>
+          </td>
+          <td>
+            <p class="mt-2">{{ rad.year }}</p>
+          </td>
+          <td class="text-danger font-weight-bolder" >
+            <p class="mt-2">{{ parseFloat(rad.credit_amount).toFixed(2) }}</p>
+          </td>
+          <td class="text-primary font-weight-bolder">
+            <p class="mt-2">{{ parseFloat(rad.credit_claimed).toFixed(2) }}</p>
+          </td>
+          <td>
+            <p class="mt-2">{{ parseFloat(rad.credit_available).toFixed(2) }}</p>
+          </td>
           <td>
             <!--{{ rad.credit_received }}-->
             <div class="input-group mb-3">
               <input :id="`updatedReceived_${rad.id}`" type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2"
-                     v-bind:value="rad.credit_received">
+                     v-bind:value="parseFloat(rad.credit_received).toFixed(2)">
               <div class="input-group-append">
                 <button class="btn btn-outline-secondary"
                         type="button"
@@ -62,7 +78,6 @@
           <th>Form Amount</th>
           <th>Claimed</th>
           <th>Credit Available</th>
-          <th>Credits Received</th>
         </tr>
         </thead>
         <tbody>
@@ -118,11 +133,7 @@
             <small v-if="claimed.error" class="text-danger d-block">Enter a value</small>
           </td>
           <td>
-            <b>{{ returnCalculatedCreditsAvailable }}</b>
-          </td>
-          <td>
-            <el-input v-model="received.input"/>
-            <small v-if="received.error" class="text-danger d-block">Enter a value</small>
+            <p class="mt-2">{{ returnCalculatedCreditsAvailable }}</p>
           </td>
         </tr>
         </tbody>
@@ -172,7 +183,7 @@
           error: false
         },
         received: {
-          input: '',
+          input: '0',
           error: false
         },
         returnType: {
@@ -323,12 +334,6 @@
           this.claimed.error = true;
           return false;
         } else this.claimed.error = false;
-
-        /* Received */
-        if (this.received.input === '') {
-          this.received.error = true;
-          return false;
-        } else this.received.error = false;
 
         return true;
       },

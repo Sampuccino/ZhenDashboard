@@ -7,9 +7,6 @@
         <article v-for="(ev, index) in this.returnActiveCompanyAlerts" :key="index">
           <u><i>{{ new Date(ev.created_at).toDateString() }}</i></u>
           <h6>
-          <span>
-            <b>Company: </b>
-          </span>
             <u>
               {{ ev.company_name }}
             </u>
@@ -21,9 +18,6 @@
         </article>
       </section>
     </section>
-
-    <el-button v-show="!this.prevPage.empty" type="primary" plain @click="requestPaginatedLatestCompanyEvents('p')">Previous</el-button>
-    <el-button v-show="!this.nextPage.empty" type="primary" @click="requestPaginatedLatestCompanyEvents('n')">Next</el-button>
 
   </div>
 </template>
