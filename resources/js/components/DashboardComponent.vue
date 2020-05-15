@@ -1,29 +1,21 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
 
-    <div class="row justify-content-between align-content-around">
+    <div class="row">
       <div class="col-7 bg-white p-4 mb-3">
         <credits-chart-component/>
       </div>
-      <div class="col-5 mb-3 no-gutters">
+
+      <div class="col-5 mb-3 mr-0 pr-0">
         <last-year-you-can-claim-payroll-component/>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-12 bg-white p-4 mb-3">
-        <next-eligible-quarter-component/>
-      </div>
-    </div>
-
-    <div class="row justify-content-between">
-      <div class="col-md-7 pr-md-1">
-        <section class="bg-white p-4">
+        <section class="bg-white p-4 mt-3">
           <recent-events-component/>
         </section>
+
       </div>
 
-      <div class="col-md-5 pl-md-2">
+      <div class="col-12 ml-0 pl-0 mr-0 pr-0">
         <section class="bg-white p-4">
           <new-event-component/>
         </section>
@@ -31,8 +23,7 @@
 
     </div>
 
-
-  </div>
+    </div>
 </template>
 
 <script>

@@ -1,18 +1,6 @@
 <template>
   <div>
 
-    <section class="text-right">
-      <h6>Current Company</h6>
-      <p class="mb-2">
-        <b>{{ returnCompanyNameAndEID[0] || 'No active company' }}</b>
-      </p>
-
-      <h6>Tax ID / EIN</h6>
-      <p class="mb-2">
-        <b>{{ returnCompanyNameAndEID[1] || 'No active company' }}</b>
-      </p>
-    </section>
-
     <div class="form-group">
       <label for="title">Title</label>
       <el-input
@@ -63,20 +51,18 @@
       }
     },
     computed: {
-      ...mapGetters(['returnCompanyNameAndEID'])
+      ...mapGetters(['returnCompanyNameAndEID', 'returnCurrentActiveCompany'])
     },
     methods: {
       ...mapActions(['storeNewSingleCompanyAlert']),
       async handleNewCompanyEvent() {
-        // Post & Await
-        // Add to state
-        // Notify
 
         if (this.returnCompanyNameAndEID.length !== 0) {
           console.log('Async handleNewCompanyEvent');
           await axios.post('/api/company/events', {
             company_name: this.returnCompanyNameAndEID[0],
             company_ein: this.returnCompanyNameAndEID[1],
+            company_id: this.returnCurrentActiveCompany.id,
             title: this.title.input,
             body: this.body.input
           }).then(res => {
