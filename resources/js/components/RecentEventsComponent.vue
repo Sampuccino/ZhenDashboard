@@ -6,12 +6,6 @@
       <section>
         <article v-for="(ev, index) in this.returnActiveCompanyAlerts" :key="index">
           <u><i>{{ new Date(ev.created_at).toDateString() }}</i></u>
-          <h6>
-            <u>
-              {{ ev.company_name }}
-            </u>
-          </h6>
-
           <h6>{{ ev.title }}</h6>
           {{ ev.body }}
           <hr>

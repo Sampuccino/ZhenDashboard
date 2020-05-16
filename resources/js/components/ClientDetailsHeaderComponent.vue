@@ -106,9 +106,11 @@
           const bsd = this.reformatDate(this.returnCurrentActiveCompany.business_start_date);
           const ye = this.reformatDate(this.returnCurrentActiveCompany.business_first_year_end_date);
           const fiy = this.reformatDate(this.returnCurrentActiveCompany.first_income_year);
+          // const od = this.reformatDate(this.returnCurrentActiveCompany.override_date);
           document.getElementById('calendar_year_bsd').value = `${bsd[1]}-${bsd[2]}-${bsd[0]}`;
           document.getElementById('calendar_year_ye').value = `${ye[1]}-${ye[2]}-${ye[0]}`;
           document.getElementById('calendar_year_fiy').value = `${fiy[1]}-${fiy[2]}-${fiy[0]}`;
+          document.getElementById('calendar_year_od').value = '';
           document.getElementById('profile-email').value = this.returnCurrentActiveCompany.email;
           document.getElementById('profile-phone').value = this.returnCurrentActiveCompany.phone;
           document.getElementById('profile-officer').value = this.returnCurrentActiveCompany.officer;

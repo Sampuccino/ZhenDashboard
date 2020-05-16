@@ -41,7 +41,8 @@
             <p class="mt-2">{{ parseFloat(rad.credit_claimed).toFixed(2) }}</p>
           </td>
           <td>
-            <p class="mt-2">{{ parseFloat(rad.credit_available).toFixed(2) }}</p>
+            <!--<p class="mt-2">{{ parseFloat(rad.credit_available).toFixed(2) }}</p>-->
+            <p class="mt-2">{{ parseFloat(returnTotalCompanyCreditsAvailable).toFixed(2) }}</p>
           </td>
           <td>
             <!--{{ rad.credit_received }}-->
@@ -125,7 +126,7 @@
           </td>
           <td>
             <el-input v-if="returnType.selected !== '941' && returnType.selected !== '941X' " v-model="amount.input"/>
-            <b class="d-block" v-else>n/a</b>
+            <b class="d-block" v-else>0</b>
             <small v-if="amount.error" class="text-danger d-block">Enter a value</small>
           </td>
           <td>

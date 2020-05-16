@@ -44,6 +44,12 @@
               </div>
 
               <div class="form-group">
+                <label class="text-danger">Override Date</label>
+                <br>
+                <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="overrideDate.date" id="calendar_year_od"/>
+              </div>
+
+              <div class="form-group">
                 <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
               Company Type <b class="alert-primary p-1" id="profile-company">{{ companyType }}</b> <i class="el-icon-arrow-down el-icon--right"></i>
@@ -121,10 +127,10 @@
           date: '',
           error: false
         },
-        // firstIncomeYear: {
-        //   date: this.returnFirstIncomeYear,
-        //   error: false
-        // },
+        overrideDate: {
+          date: '',
+          error: false
+        },
         firstIncomeYear: {
           date: '',
           error: false
@@ -182,6 +188,7 @@
         this.businessStartDate.date = this.returnRearrangedDate(document.getElementById('calendar_year_bsd').value);
         this.yearEndDate.date = this.returnRearrangedDate(document.getElementById('calendar_year_ye').value);
         this.firstIncomeYear.date = this.returnRearrangedDate(document.getElementById('calendar_year_fiy').value);
+        this.overrideDate.date = this.returnRearrangedDate(document.getElementById('calendar_year_od').value);
 
         const income = {
           modified: this.firstIncomeYear.date,
@@ -204,6 +211,13 @@
           current: this.returnCurrentActiveCompany.business_first_year_end_date,
           equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.business_first_year_end_date, this.yearEndDate.date),
         };
+
+        const override = {
+          modified: this.overrideDate.date,
+          current: this.returnCurrentActiveCompany.override_date,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.override_date, this.overrideDate.date),
+        };
+
         const compType = {
           current: this.returnCurrentActiveCompany.company_type,
           modified: this.companyType,
@@ -250,8 +264,8 @@
           ein: compTax.equal,
           business_start_date: startDate.equal,
           business_first_year_end_date: endDate.equal,
+          override_date: override.equal,
           first_income_year: income.equal,
-          // final_date_payroll_claim: payroll.equal,
           company_type: compType.equal,
           email: compEmail.equal,
           phone: compPhone.equal,

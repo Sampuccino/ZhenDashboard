@@ -23,6 +23,7 @@ class Company extends Model
     'email',
     'phone',
     'officer',
+    'override_date'
   ];
   protected $table = 'company';
 
