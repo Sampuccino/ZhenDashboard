@@ -28,8 +28,10 @@ Route::prefix('company')->group(function () {
 //  Route::post('/claim-calculation/{date}/{endDate}', 'CompanyController@claimCalculation');
   Route::post('/claim-calculation', 'CompanyController@claimCalculation');
 
+  // Alerts
   Route::get('/events', 'AlertController@index');
   Route::post('/events', 'AlertController@store');
+  Route::delete('/events/{alert}', 'AlertController@destroy');
 
   Route::put('/update/{company}', 'CompanyController@update');
   Route::post('/new-credit', 'CompanyController@newCredit');

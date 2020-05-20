@@ -42,7 +42,7 @@
           </td>
           <td>
             <!--<p class="mt-2">{{ parseFloat(rad.credit_available).toFixed(2) }}</p>-->
-            <p class="mt-2">{{ parseFloat(returnTotalCompanyCreditsAvailable).toFixed(2) }}</p>
+            <p class="mt-2" v-once>{{ rowByRowCalculation(index) }}</p>
           </td>
           <td>
             <!--{{ rad.credit_received }}-->
@@ -204,12 +204,17 @@
       ...mapGetters(['returnActiveCompanyResearchAndDevelopmentData',
         'returnCurrentActiveCompany',
         'returnTotalCompanyCreditsAvailable',
-        'returnTotalCompanyCreditsRemaining']),
+        'returnTotalCompanyCreditsRemaining',
+        'returnTotalCompanyCreditsAmount', 'returnTotalCompanyCreditsClaimed']),
       returnCalculatedCreditsAvailable(){
         const blacklist = ['941', '941X'];
-        const n1 = (blacklist.includes(this.returnType.selected)) ? parseFloat(this.returnTotalCompanyCreditsRemaining) : parseFloat(this.amount.input);
+        const current = (blacklist.includes(this.returnType.selected)) ? (parseFloat(this.returnTotalCompanyCreditsAmount) - parseFloat(this.returnTotalCompanyCreditsClaimed) - parseFloat(this.amount.input)).toFixed(2) : (parseFloat(this.returnTotalCompanyCreditsAmount) - parseFloat(this.returnTotalCompanyCreditsClaimed) + parseFloat(this.amount.input)).toFixed(2);
+        console.warn('returnCalculatedCreditsAvailable ', this.returnTotalCompanyCreditsAmount, this.returnTotalCompanyCreditsClaimed, this.amount.input);
+        // const n1 = (blacklist.includes(this.returnType.selected)) ? current : parseFloat(this.amount.input);
+        const n1 = current;
         const n2 = parseFloat(this.claimed.input);
-        const calculation = (blacklist.includes(this.returnType.selected)) ? (n1 - n2) : (n1 - n2);
+        // const calculation = (blacklist.includes(this.returnType.selected)) ? (n1 - n2) : (n1 - n2);
+        const calculation = (n1 - n2);
         return (isNaN(calculation)) ? 0 : calculation.toFixed(2);
       }
     },
@@ -346,7 +351,7 @@
           case '941X':
             this.quarter.selected = '';
             this.quarter.display = true;
-            this.amount.input = 'n/a';
+            this.amount.input = 0;
             break;
           default:
             this.quarter.selected = '--';
@@ -375,7 +380,37 @@
         // rad is the R&D Object
         const ur = parseFloat(document.getElementById(`updatedReceived_${rID}`).value).toFixed(2);
         this.onUpdateResearchAndDevelopmentCreditReceived({id: rID, received: ur});
-      }
+      },
+      rowByRowCalculation(index){
+        const amountArr = [];
+        const claimedArr = [];
+        if (index === 0) {
+          amountArr.push(this.returnActiveCompanyResearchAndDevelopmentData[index].credit_amount);
+          claimedArr.push(this.returnActiveCompanyResearchAndDevelopmentData[index].credit_claimed);
+          return amountArr[0];
+        } else {
+          //Add in Previous & Current
+          for (let i = 0; i <= index; i++ ) {
+            amountArr.push(this.returnActiveCompanyResearchAndDevelopmentData[i].credit_amount);
+            claimedArr.push(this.returnActiveCompanyResearchAndDevelopmentData[i].credit_claimed);
+          }
+
+          // Calculate Each
+          const totalAmount = [];
+          amountArr.forEach( c => { (parseFloat(c)) ? totalAmount.push(parseFloat(c)) : 0 });
+
+          const totalClaimed = [];
+          claimedArr.forEach( c => { (parseFloat(c)) ? totalClaimed.push(parseFloat(c)) : 0 });
+
+          const runningAmount = totalAmount.reduce((a,b) => a+b,0);
+          const runningClaimed = totalClaimed.reduce((a,b) => a+b,0);
+
+          // console.warn('rowByRowCalculation 2nd Iteration + ', {a: amountArr, t: runningAmount}, {c: claimedArr, t: runningClaimed});
+
+          return (runningAmount - runningClaimed).toFixed(2);
+        }
+
+      },
     }
   }
 </script>

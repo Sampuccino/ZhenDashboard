@@ -40,7 +40,8 @@ class AlertController extends Controller
     {
         try {
           // Update created_at
-          $request->created_at = Carbon::parse(str_replace('-','/', $request->created_at))->toDateTimeString();
+          // Returns INT if found ELSE FALSE
+          $request->created_at = (strpos($request->created_at, '-') === false ) ? now()->toDateTimeString() : Carbon::parse(str_replace('-','/', $request->created_at))->toDateTimeString();
           $alert = Alert::create($request->all());
 
           return response()->json([
@@ -101,5 +102,11 @@ class AlertController extends Controller
     public function destroy(Alert $alert)
     {
         //
+      try {
+        $alert->delete();
+        return response()->json($alert , 200);
+      } catch (Exception $e) {
+        return response()->json($e->getMessage() , 404);
+      }
     }
 }

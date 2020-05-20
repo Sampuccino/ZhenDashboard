@@ -217,6 +217,11 @@ export default new Vuex.Store({
       state.allCompanyEvents = [];
       // Update Header Name
       document.getElementById('activeName').innerText = 'John Doe Incorporated'
+    },
+    onDeleteCompanyMessage: (state, payload) => {
+      // Delete from state
+      const currentEvIndex = state.allCompanyEvents.findIndex(( obj => obj.id === payload.id));
+      state.allCompanyEvents.splice(currentEvIndex,1);
     }
   },
   actions: {
@@ -271,6 +276,10 @@ export default new Vuex.Store({
       // Delete Request
       await axios.delete(`/api/company/${payload.id}`);
       context.commit('onDeleteCompany', payload);
+    },
+    onDeleteCompanyMessage: async (context, payload) => {
+      await axios.delete(`/api/company/events/${payload.id}`, payload);
+      context.commit('onDeleteCompanyMessage', payload); // Form Object
     }
 
   }

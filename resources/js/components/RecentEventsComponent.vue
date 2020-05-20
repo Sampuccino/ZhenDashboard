@@ -8,6 +8,8 @@
           <u><i>{{ new Date(ev.created_at).toDateString() }}</i></u>
           <h6>{{ ev.title }}</h6>
           {{ ev.body }}
+          <br>
+          <el-button type="text" @click="deleteAlert(ev)" class="text-danger">delete</el-button>
           <hr>
         </article>
       </section>
@@ -38,7 +40,10 @@
       ...mapGetters(['returnStoredCompanyEvents', 'returnActiveCompanyAlerts'])
     },
     methods: {
-      ...mapActions(['requestLatestCompanyEvents', 'requestPaginatedLatestCompanyEvents']),
+      ...mapActions(['requestLatestCompanyEvents', 'requestPaginatedLatestCompanyEvents', 'onDeleteCompanyMessage']),
+      deleteAlert(ev) {
+        this.onDeleteCompanyMessage(ev);
+      }
     }
   }
 </script>
