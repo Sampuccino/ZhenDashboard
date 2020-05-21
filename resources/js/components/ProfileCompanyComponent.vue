@@ -3,8 +3,15 @@
     <div>
 
         <div class="row justify-content-between">
-          <div class="col-12">
-            <last-year-you-can-claim-payroll-component/>
+          <div class="col-8 pr-0">
+            <div class="bg-white p-4 mb-3">
+              <last-year-you-can-claim-payroll-component/>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="bg-white p-4 mb-3">
+              <el-button type="danger" @click="deleteCompany">Delete Company</el-button>
+            </div>
           </div>
           <div class="col-12">
 
@@ -164,10 +171,11 @@
       ])
     },
     methods: {
-      ...mapActions(['updateExistingCompanyObject']),
+      ...mapActions(['updateExistingCompanyObject', 'onDeleteCompany']),
       handleCommand(command) {
         console.log('handleCommand ', command);
         this.companyType = command;
+        document.getElementById('profile-company').innerText = command;
       },
       returnRearrangedDate(date) {
         console.log('returnRearrangedDate ', date);
@@ -313,6 +321,30 @@
         console.log('returnValueToBeUpdated Blacklist ', blacklist.includes(modified), ' Current ', current, '  Modified ', modified);
         return (blacklist.includes(modified)) ? current : modified;
       },
+      deleteCompany() {
+        this.$confirm('This will permanently delete the company. Continue?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+
+          this.$message({
+            type: 'success',
+            message: 'Delete completed'
+          });
+
+          // Commit to Store & Request
+          this.onDeleteCompany(this.returnCurrentActiveCompany);
+
+        }).catch((err) => {
+          this.$message({
+            type: 'info',
+            message: 'Delete canceled'
+          });
+
+          console.error(err);
+        });
+      }
     },
   }
 </script>

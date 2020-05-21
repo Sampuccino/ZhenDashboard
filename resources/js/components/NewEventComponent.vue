@@ -32,7 +32,7 @@
           show-word-limit
         />
 
-        <el-button type="primary" class="d-block" @click="handleNewCompanyEvent">
+        <el-button type="primary" class="d-block mt-3" @click="handleNewCompanyEvent">
           Post New Event
         </el-button>
 

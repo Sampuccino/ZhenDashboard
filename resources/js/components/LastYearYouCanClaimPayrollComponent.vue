@@ -1,16 +1,21 @@
 <template>
   <div class="text-center no-gutters bg-white p-4">
+    <article v-if="overrideDate === 'No override date found'">
+
     The last year you can claim payroll is<br>
     <div class="alert alert-success" role="alert">
       <b>{{ lastPayrollDate }}</b>
     </div>
 
-    <br>
+    </article>
+
+    <article v-else>
     Override Date<br>
     <div class="alert alert-primary" role="alert">
       <b>{{ overrideDate }}</b>
     </div>
-
+    </article>
+    
   </div>
 </template>
 

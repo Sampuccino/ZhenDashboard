@@ -40,7 +40,9 @@ Route::prefix('company')->group(function () {
   Route::delete('/delete-credit/{credit}', 'RDCreditsController@destroy');
 
   // Update Credit Recieved
-  Route::put('/update-rdc-received/{credit}', 'RDCreditsController@update');
+  Route::put('/update-rdc/{credit}', 'RDCreditsController@update');
 
   Route::post('/form-upload/{form}', 'FormController@store');
+  // Delete
+  Route::post('/form/{form}', 'FormController@destroyFile');
 });

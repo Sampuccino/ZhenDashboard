@@ -19,7 +19,16 @@
         <td>{{ form.year }}</td>
         <td>{{ form.period }}</td>
         <td>
-          <a v-if="form.file_one_url !== null" :href="form.file_one_url" target="_blank">View file in browser</a>
+          <section v-if="form.file_one_url !== null">
+          <a :href="form.file_one_url" target="_blank">
+            {{ clipFileName(form.file_one_url) }}
+          </a>
+            <el-button type="text"
+                       icon="el-icon-delete"
+                       class="ml-5 text-danger"
+                       @click="onDeleteF1(form)"/>
+          </section>
+
           <i v-else>No file found</i>
           <br>
           <el-collapse>
@@ -40,8 +49,16 @@
             </el-collapse-item>
           </el-collapse>
         </td>
-        <td v-if="form.form_type === '941' || form.form_type === '941X'">
-          <a v-if="form.file_two_url !== null" :href="form.file_two_url" target="_blank">View file in browser</a>
+        <td v-if="form.form_type === '941' || form.form_type === '941X' || form.form_type === '1120'">
+          <section v-if="form.file_two_url !== null">
+            <a :href="form.file_two_url" target="_blank">
+              {{ clipFileName(form.file_two_url) }}
+            </a>
+            <el-button type="text"
+                       icon="el-icon-delete"
+                       class="ml-5 text-danger"
+                       @click="onDeleteF2(form)"/>
+          </section>
           <i v-else>No file found</i>
           <br>
           <el-collapse>
@@ -75,10 +92,10 @@
   export default {
     name: "FormsComponent",
     computed: {
-      ...mapGetters(['returnCompanyForms']),
+      ...mapGetters(['returnCompanyForms'])
     },
     methods: {
-      ...mapActions(['updateCompanyFormsWithUpdatedCompany']),
+      ...mapActions(['updateCompanyFormsWithUpdatedCompany', 'onDeleteCompanyForm']),
       handlePreview() {
       },
       handleRemove() {
@@ -101,6 +118,17 @@
         type: 'success'
       });
 
+      },
+      clipFileName(file) {
+        return file.substring(76);
+      },
+      onDeleteF1(form) {
+        console.warn('onDeleteF1');
+        this.onDeleteCompanyForm({id: form.id, file_one_url: form.file_one_url.substr(66), selected: 1});
+      },
+      onDeleteF2(form) {
+        console.warn('onDeleteF2');
+        this.onDeleteCompanyForm({id: form.id, file_two_url: form.file_two_url.substr(66), selected: 2});
       }
     }
   }

@@ -199,7 +199,7 @@ export default new Vuex.Store({
       const currentRDIndex = state.companyRaD.findIndex(( obj => obj.id === payload.id));
       state.companyRaD.splice(currentRDIndex,1);
     },
-    onUpdateResearchAndDevelopmentCreditReceived: (state, payload) => {
+    onUpdateResearchAndDevelopmentCredit: (state, payload) => {
       const currentFormIndex = state.companyRaD.findIndex(( obj => obj.id === payload.id));
       state.companyRaD.splice(currentFormIndex,1,payload);
     },
@@ -222,6 +222,11 @@ export default new Vuex.Store({
       // Delete from state
       const currentEvIndex = state.allCompanyEvents.findIndex(( obj => obj.id === payload.id));
       state.allCompanyEvents.splice(currentEvIndex,1);
+    },
+    onDeleteCompanyForm: (state, payload) => {
+      // Remove file from state
+      const currentCompanyIndex = state.companyForms.findIndex(( obj => obj.id === payload.id));
+      state.companyForms.splice(currentCompanyIndex,1, payload);
     }
   },
   actions: {
@@ -269,8 +274,16 @@ export default new Vuex.Store({
       context.commit('deleteResearchRecord', payload); // Form Object
     },
     onUpdateResearchAndDevelopmentCreditReceived: async (context, payload) => {
-      const record = await axios.put(`/api/company/update-rdc-received/${payload.id}`, {credit_received: payload.received});
-      context.commit('onUpdateResearchAndDevelopmentCreditReceived', record.data); // Form Object
+      const record = await axios.put(`/api/company/update-rdc/${payload.id}`, {credit_received: payload.received});
+      context.commit('onUpdateResearchAndDevelopmentCredit', record.data); // Form Object
+    },
+    onUpdateResearchAndDevelopmentCreditAmount: async (context, payload) => {
+      const record = await axios.put(`/api/company/update-rdc/${payload.id}`, {credit_amount: payload.amount});
+      context.commit('onUpdateResearchAndDevelopmentCredit', record.data); // Form Object
+    },
+    onUpdateResearchAndDevelopmentCreditClaimed: async (context, payload) => {
+      const record = await axios.put(`/api/company/update-rdc/${payload.id}`, {credit_claimed: payload.claimed});
+      context.commit('onUpdateResearchAndDevelopmentCredit', record.data); // Form Object
     },
     onDeleteCompany: async (context, payload) => {
       // Delete Request
@@ -280,6 +293,15 @@ export default new Vuex.Store({
     onDeleteCompanyMessage: async (context, payload) => {
       await axios.delete(`/api/company/events/${payload.id}`, payload);
       context.commit('onDeleteCompanyMessage', payload); // Form Object
+    },
+    onDeleteCompanyForm: async (context, payload) => {
+      let key = (!('file_one_url' in payload)) ? payload.file_two_url : payload.file_one_url;
+      console.log('Action: onDeleteCompanyForm ', key);
+      const record = await axios.post(`/api/company/form/${payload.id}`, {
+        selected: payload.selected,
+        f: key
+      });
+      context.commit('onDeleteCompanyForm', record.data);
     }
 
   }
