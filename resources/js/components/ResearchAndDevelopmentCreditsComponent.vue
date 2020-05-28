@@ -2,7 +2,7 @@
   <div class="row bg-white p-4 m-1">
 
     <div class="col-12">
-      <table class="table table-striped text-center">
+      <table class="table table-responsive table-striped text-center">
         <thead>
         <tr>
           <th>Return Type</th>
@@ -13,7 +13,7 @@
           <th class="text-danger" >Form Amount</th>
           <th class="text-primary">Claimed</th>
           <th >Credit Available</th>
-          <th class="text-success">Credits Received</th>
+          <th class="text-success col-2">Credits Received</th>
           <th></th>
         </tr>
         </thead>
@@ -35,16 +35,36 @@
             <p class="mt-2">{{ rad.year }}</p>
           </td>
           <td class="text-danger font-weight-bolder" >
-            <p class="mt-2">{{ parseFloat(rad.credit_amount).toFixed(2) }}</p>
+            <div class="input-group mb-3">
+              <input :id="`updatedAmount_${rad.id}`" type="text" class="form-control" aria-describedby="basic-addon2"
+                     v-bind:value="parseFloat(rad.credit_amount).toFixed(2)">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary"
+                        type="button"
+                        @click="onUpdateAmountReceived(rad.id)">
+                  <i class="el-icon-edit"></i>
+                </button>
+              </div>
+            </div>
           </td>
           <td class="text-primary font-weight-bolder">
-            <p class="mt-2">{{ parseFloat(rad.credit_claimed).toFixed(2) }}</p>
+            <div class="input-group mb-3">
+              <input :id="`updatedClaimed_${rad.id}`" type="text" class="form-control" aria-describedby="basic-addon2"
+                     v-bind:value="parseFloat(rad.credit_claimed).toFixed(2)">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary"
+                        type="button"
+                        @click="onUpdateAmountClaimed(rad.id)">
+                  <i class="el-icon-edit"></i>
+                </button>
+              </div>
+            </div>
           </td>
           <td>
-            <p class="mt-2">{{ parseFloat(rad.credit_available).toFixed(2) }}</p>
+            <!--Available-->
+            <p class="mt-2">{{ rowByRowCalculation(index) }}</p>
           </td>
           <td>
-            <!--{{ rad.credit_received }}-->
             <div class="input-group mb-3">
               <input :id="`updatedReceived_${rad.id}`" type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2"
                      v-bind:value="parseFloat(rad.credit_received).toFixed(2)">
@@ -52,7 +72,7 @@
                 <button class="btn btn-outline-secondary"
                         type="button"
                         @click="onUpdateCreditReceived(rad.id)">
-                  save
+                  <i class="el-icon-edit"></i>
                 </button>
               </div>
             </div>
@@ -125,7 +145,7 @@
           </td>
           <td>
             <el-input v-if="returnType.selected !== '941' && returnType.selected !== '941X' " v-model="amount.input"/>
-            <b class="d-block" v-else>n/a</b>
+            <b class="d-block" v-else>0</b>
             <small v-if="amount.error" class="text-danger d-block">Enter a value</small>
           </td>
           <td>
@@ -203,17 +223,21 @@
       ...mapGetters(['returnActiveCompanyResearchAndDevelopmentData',
         'returnCurrentActiveCompany',
         'returnTotalCompanyCreditsAvailable',
-        'returnTotalCompanyCreditsRemaining']),
+        'returnTotalCompanyCreditsRemaining',
+        'returnTotalCompanyCreditsAmount', 'returnTotalCompanyCreditsClaimed']),
       returnCalculatedCreditsAvailable(){
         const blacklist = ['941', '941X'];
-        const n1 = (blacklist.includes(this.returnType.selected)) ? parseFloat(this.returnTotalCompanyCreditsRemaining) : parseFloat(this.amount.input);
+        const current = (blacklist.includes(this.returnType.selected)) ? (parseFloat(this.returnTotalCompanyCreditsAmount) - parseFloat(this.returnTotalCompanyCreditsClaimed) - parseFloat(this.amount.input)).toFixed(2) : (parseFloat(this.returnTotalCompanyCreditsAmount) - parseFloat(this.returnTotalCompanyCreditsClaimed) + parseFloat(this.amount.input)).toFixed(2);
+        console.warn('returnCalculatedCreditsAvailable ', this.returnTotalCompanyCreditsAmount, this.returnTotalCompanyCreditsClaimed, this.amount.input);
+        // const n1 = (blacklist.includes(this.returnType.selected)) ? current : parseFloat(this.amount.input);
+        const n1 = current;
         const n2 = parseFloat(this.claimed.input);
-        const calculation = (blacklist.includes(this.returnType.selected)) ? (n1 - n2) : (n1 - n2);
+        const calculation = (n1 - n2);
         return (isNaN(calculation)) ? 0 : calculation.toFixed(2);
       }
     },
     methods: {
-      ...mapActions(['updateCompanyWithNewCreditAndForm', 'deleteResearchRecord', 'onUpdateResearchAndDevelopmentCreditReceived']),
+      ...mapActions(['updateCompanyWithNewCreditAndForm', 'deleteResearchRecord', 'onUpdateResearchAndDevelopmentCreditReceived', 'onUpdateResearchAndDevelopmentCreditAmount', 'onUpdateResearchAndDevelopmentCreditClaimed']),
       companyTypeToFormConversion(type){
         console.log('companyTypeToFormConversion ', type);
         switch (type) {
@@ -345,7 +369,7 @@
           case '941X':
             this.quarter.selected = '';
             this.quarter.display = true;
-            this.amount.input = 'n/a';
+            this.amount.input = 0;
             break;
           default:
             this.quarter.selected = '--';
@@ -374,7 +398,47 @@
         // rad is the R&D Object
         const ur = parseFloat(document.getElementById(`updatedReceived_${rID}`).value).toFixed(2);
         this.onUpdateResearchAndDevelopmentCreditReceived({id: rID, received: ur});
-      }
+      },
+      onUpdateAmountReceived(rID) {
+        // rad is the R&D Object
+        const ur = parseFloat(document.getElementById(`updatedAmount_${rID}`).value).toFixed(2);
+        this.onUpdateResearchAndDevelopmentCreditAmount({id: rID, amount: ur});
+      },
+      onUpdateAmountClaimed(rID) {
+        // rad is the R&D Object
+        const ur = parseFloat(document.getElementById(`updatedClaimed_${rID}`).value).toFixed(2);
+        this.onUpdateResearchAndDevelopmentCreditClaimed({id: rID, claimed: ur});
+      },
+      rowByRowCalculation(index){
+        const amountArr = [];
+        const claimedArr = [];
+        if (index === 0) {
+          amountArr.push(this.returnActiveCompanyResearchAndDevelopmentData[index].credit_amount);
+          claimedArr.push(this.returnActiveCompanyResearchAndDevelopmentData[index].credit_claimed);
+          return (amountArr[0] - claimedArr[0]);
+        } else {
+          //Add in Previous & Current
+          for (let i = 0; i <= index; i++ ) {
+            amountArr.push(this.returnActiveCompanyResearchAndDevelopmentData[i].credit_amount);
+            claimedArr.push(this.returnActiveCompanyResearchAndDevelopmentData[i].credit_claimed);
+          }
+
+          // Calculate Each
+          const totalAmount = [];
+          amountArr.forEach( c => { (parseFloat(c)) ? totalAmount.push(parseFloat(c)) : 0 });
+
+          const totalClaimed = [];
+          claimedArr.forEach( c => { (parseFloat(c)) ? totalClaimed.push(parseFloat(c)) : 0 });
+
+          const runningAmount = totalAmount.reduce((a,b) => a+b,0);
+          const runningClaimed = totalClaimed.reduce((a,b) => a+b,0);
+
+          // console.warn('rowByRowCalculation 2nd Iteration + ', {a: amountArr, t: runningAmount}, {c: claimedArr, t: runningClaimed});
+
+          return (runningAmount - runningClaimed).toFixed(2);
+        }
+
+      },
     }
   }
 </script>

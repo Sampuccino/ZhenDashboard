@@ -28,8 +28,10 @@ Route::prefix('company')->group(function () {
 //  Route::post('/claim-calculation/{date}/{endDate}', 'CompanyController@claimCalculation');
   Route::post('/claim-calculation', 'CompanyController@claimCalculation');
 
+  // Alerts
   Route::get('/events', 'AlertController@index');
   Route::post('/events', 'AlertController@store');
+  Route::delete('/events/{alert}', 'AlertController@destroy');
 
   Route::put('/update/{company}', 'CompanyController@update');
   Route::post('/new-credit', 'CompanyController@newCredit');
@@ -38,7 +40,9 @@ Route::prefix('company')->group(function () {
   Route::delete('/delete-credit/{credit}', 'RDCreditsController@destroy');
 
   // Update Credit Recieved
-  Route::put('/update-rdc-received/{credit}', 'RDCreditsController@update');
+  Route::put('/update-rdc/{credit}', 'RDCreditsController@update');
 
   Route::post('/form-upload/{form}', 'FormController@store');
+  // Delete
+  Route::post('/form/{form}', 'FormController@destroyFile');
 });

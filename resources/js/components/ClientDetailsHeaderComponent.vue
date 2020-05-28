@@ -1,7 +1,7 @@
 <template>
   <div class="col-12">
     <div class="row bg-white p-4 mb-3">
-      <div class="col-3">
+      <div class="col-5">
         <el-dropdown @command="handleCommand" class="mt-2">
         <span class="btn-link">
           <b id="activeName">{{ companyName || 'Company List' }}</b> <i class="el-icon-arrow-down el-icon--right"></i>
@@ -22,10 +22,6 @@
       <div class="col-4 my-auto">
         <i class="el-icon-message"></i> {{ email || 'example@example.com' }}
       </div>
-      <div class="col-2 my-auto">
-        <el-button type="text" @click="deleteCompany" class="text-danger">Delete Company</el-button>
-      </div>
-
     </div>
   </div>
 </template>
@@ -55,7 +51,7 @@
       ...mapGetters(['returnCurrentActiveCompany'])
     },
     methods: {
-      ...mapActions(['setCompaniesList', 'handleSelectedCompany', 'onDeleteCompany']),
+      ...mapActions(['setCompaniesList', 'handleSelectedCompany']),
       handleCommand(command) {
         this.companyName = command[1];
         this.phone = command[2];
@@ -65,30 +61,6 @@
       reformatDate(d) {
         return d.split('-');
       },
-      deleteCompany() {
-        this.$confirm('This will permanently delete the company. Continue?', 'Warning', {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-
-          this.$message({
-            type: 'success',
-            message: 'Delete completed'
-          });
-
-          // Commit to Store & Request
-          this.onDeleteCompany(this.returnCurrentActiveCompany);
-
-        }).catch((err) => {
-          this.$message({
-            type: 'info',
-            message: 'Delete canceled'
-          });
-
-          console.error(err);
-        });
-      }
     },
     updated() {
       console.warn('ClientDetailsHeaderComponent Updated');
@@ -106,9 +78,11 @@
           const bsd = this.reformatDate(this.returnCurrentActiveCompany.business_start_date);
           const ye = this.reformatDate(this.returnCurrentActiveCompany.business_first_year_end_date);
           const fiy = this.reformatDate(this.returnCurrentActiveCompany.first_income_year);
+          // const od = this.reformatDate(this.returnCurrentActiveCompany.override_date);
           document.getElementById('calendar_year_bsd').value = `${bsd[1]}-${bsd[2]}-${bsd[0]}`;
           document.getElementById('calendar_year_ye').value = `${ye[1]}-${ye[2]}-${ye[0]}`;
           document.getElementById('calendar_year_fiy').value = `${fiy[1]}-${fiy[2]}-${fiy[0]}`;
+          document.getElementById('calendar_year_od').value = '';
           document.getElementById('profile-email').value = this.returnCurrentActiveCompany.email;
           document.getElementById('profile-phone').value = this.returnCurrentActiveCompany.phone;
           document.getElementById('profile-officer').value = this.returnCurrentActiveCompany.officer;

@@ -3,8 +3,15 @@
     <div>
 
         <div class="row justify-content-between">
-          <div class="col-12">
-            <last-year-you-can-claim-payroll-component/>
+          <div class="col-8 pr-0">
+            <div class="bg-white p-4 mb-3">
+              <last-year-you-can-claim-payroll-component/>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="bg-white p-4 mb-3">
+              <el-button type="danger" @click="deleteCompany">Delete Company</el-button>
+            </div>
           </div>
           <div class="col-12">
 
@@ -41,6 +48,12 @@
                 <label>1st Income Year</label>
                 <br>
                 <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="firstIncomeYear.date" id="calendar_year_fiy"/>
+              </div>
+
+              <div class="form-group">
+                <label class="text-danger">Override Date</label>
+                <br>
+                <flatpickr class="minimalMarginTop" timeFormat="m-d-Y" v-model="overrideDate.date" id="calendar_year_od"/>
               </div>
 
               <div class="form-group">
@@ -121,10 +134,10 @@
           date: '',
           error: false
         },
-        // firstIncomeYear: {
-        //   date: this.returnFirstIncomeYear,
-        //   error: false
-        // },
+        overrideDate: {
+          date: '',
+          error: false
+        },
         firstIncomeYear: {
           date: '',
           error: false
@@ -158,10 +171,11 @@
       ])
     },
     methods: {
-      ...mapActions(['updateExistingCompanyObject']),
+      ...mapActions(['updateExistingCompanyObject', 'onDeleteCompany']),
       handleCommand(command) {
         console.log('handleCommand ', command);
         this.companyType = command;
+        document.getElementById('profile-company').innerText = command;
       },
       returnRearrangedDate(date) {
         console.log('returnRearrangedDate ', date);
@@ -182,6 +196,7 @@
         this.businessStartDate.date = this.returnRearrangedDate(document.getElementById('calendar_year_bsd').value);
         this.yearEndDate.date = this.returnRearrangedDate(document.getElementById('calendar_year_ye').value);
         this.firstIncomeYear.date = this.returnRearrangedDate(document.getElementById('calendar_year_fiy').value);
+        this.overrideDate.date = this.returnRearrangedDate(document.getElementById('calendar_year_od').value);
 
         const income = {
           modified: this.firstIncomeYear.date,
@@ -204,6 +219,13 @@
           current: this.returnCurrentActiveCompany.business_first_year_end_date,
           equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.business_first_year_end_date, this.yearEndDate.date),
         };
+
+        const override = {
+          modified: this.overrideDate.date,
+          current: this.returnCurrentActiveCompany.override_date,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.override_date, this.overrideDate.date),
+        };
+
         const compType = {
           current: this.returnCurrentActiveCompany.company_type,
           modified: this.companyType,
@@ -250,8 +272,8 @@
           ein: compTax.equal,
           business_start_date: startDate.equal,
           business_first_year_end_date: endDate.equal,
+          override_date: override.equal,
           first_income_year: income.equal,
-          // final_date_payroll_claim: payroll.equal,
           company_type: compType.equal,
           email: compEmail.equal,
           phone: compPhone.equal,
@@ -299,6 +321,30 @@
         console.log('returnValueToBeUpdated Blacklist ', blacklist.includes(modified), ' Current ', current, '  Modified ', modified);
         return (blacklist.includes(modified)) ? current : modified;
       },
+      deleteCompany() {
+        this.$confirm('This will permanently delete the company. Continue?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+
+          this.$message({
+            type: 'success',
+            message: 'Delete completed'
+          });
+
+          // Commit to Store & Request
+          this.onDeleteCompany(this.returnCurrentActiveCompany);
+
+        }).catch((err) => {
+          this.$message({
+            type: 'info',
+            message: 'Delete canceled'
+          });
+
+          console.error(err);
+        });
+      }
     },
   }
 </script>

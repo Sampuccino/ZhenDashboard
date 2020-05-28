@@ -59,7 +59,6 @@ class CompanyController extends Controller
           'business_start_date' => Carbon::parse(str_replace('-','/',$request->businessStartDate))->toDateString(),
           'business_first_year_end_date' => Carbon::parse(str_replace('-','/',$request->yearEndDate))->toDateString(),
           'first_income_year' => Carbon::parse(str_replace('-','/',$request->firstIncomeYear))->toDateString(),
-//          'final_date_payroll_claim' => Carbon::parse($request->finalPayrollDate)->toDateString(),
           'final_date_payroll_claim' => $this->claimCalculation($request),
           'company_type' => $request->companyType,
           'email' => $request->email,
@@ -131,6 +130,11 @@ class CompanyController extends Controller
           $request->first_income_year = Carbon::parse(str_replace('-','/',$request->first_income_year))->toDateString();
           $company->final_date_payroll_claim = $this->claimCalculation($request);
         }
+
+        if ($request->has('override_date')) {
+          $request->override_date = Carbon::parse(str_replace('-','/',$request->override_date))->toDateString();
+        }
+
         $company->update($request->all());
         return response()->json($company, 200);
       } catch (Exception $e) {

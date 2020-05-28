@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Alert;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -38,7 +39,9 @@ class AlertController extends Controller
     public function store(Request $request)
     {
         try {
-
+          // Update created_at
+          // Returns INT if found ELSE FALSE
+          $request->created_at = (strpos($request->created_at, '-') === false ) ? now()->toDateTimeString() : Carbon::parse(str_replace('-','/', $request->created_at))->toDateTimeString();
           $alert = Alert::create($request->all());
 
           return response()->json([
@@ -46,6 +49,7 @@ class AlertController extends Controller
             'message' => 'Successfully stored event',
             'data' => $alert
           ]);
+
         } catch (Exception $e) {
           return response()->json([
             'status' => 404,
@@ -98,5 +102,11 @@ class AlertController extends Controller
     public function destroy(Alert $alert)
     {
         //
+      try {
+        $alert->delete();
+        return response()->json($alert , 200);
+      } catch (Exception $e) {
+        return response()->json($e->getMessage() , 404);
+      }
     }
 }
