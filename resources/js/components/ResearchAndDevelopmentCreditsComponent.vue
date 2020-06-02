@@ -13,7 +13,7 @@
           <th class="text-danger" >Form Amount</th>
           <th class="text-primary">Claimed</th>
           <th >Credit Available</th>
-          <th class="text-success col-2">Credits Received</th>
+          <th class="text-success">Credits Received</th>
           <th></th>
         </tr>
         </thead>
