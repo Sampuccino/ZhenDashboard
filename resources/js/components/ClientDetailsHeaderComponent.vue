@@ -43,7 +43,6 @@
     },
     async created() {
       const companyList = await axios.get('/api/company');
-      console.log('Client Details Header Created ', companyList.data);
       this.companies = companyList.data;
       this.setCompaniesList(companyList.data);
     },
@@ -63,7 +62,6 @@
       },
     },
     updated() {
-      console.warn('ClientDetailsHeaderComponent Updated');
       if (this.returnCurrentActiveCompany !== null) {
         this.companyName = this.returnCurrentActiveCompany.name;
         // Empty the Setup Pickers

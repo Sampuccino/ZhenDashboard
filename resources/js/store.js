@@ -17,7 +17,34 @@ export default new Vuex.Store({
     creditsClaimed: 0,
     creditsReceived: 0,
     calculationStartDate: '1/1/1000',
-    fiscalCalendarCalculations: {}
+    fiscalCalendarCalculations: {},
+    // For Custom Form Uploading Info
+    formMeta: {
+      id: '',
+      fileColumn: ''
+    },
+
+    /* Interactive Form */
+    title: 'Welcome to our Multiform!',
+    employerIdentificationNumber: 'XXXXXXXXX',
+    name: '',
+    tradeName: '',
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    foreignCountryName: '',
+    foreignCountryProvince: '',
+    foreignCountryZip: '',
+    reportForThisQuarter: 1,
+    calendarYear: '',
+    form941Line5AColumn2: 0.00,
+    form941Line5BColumn2: 0.00,
+    form8974Line12: 0.00,
+    formScheduleBTaxLiabilityMonthOne: 0,
+    formScheduleBTaxLiabilityMonthTwo: 0,
+    formScheduleBTaxLiabilityMonthThree: 0,
+    formScheduleBTotalQuarterLiability: 0,
 
   },
   getters: {
@@ -47,19 +74,15 @@ export default new Vuex.Store({
     },
     returnTotalCompanyCreditsAvailable: state => {
       if (state.companyRaD.length) {
-        console.log('You have credits!');
-        // credit_available:
         const creditsAvailableArr = [];
         const creditsArr = state.companyRaD.forEach( c => { (parseFloat(c.credit_available)) ? creditsAvailableArr.push(parseFloat(c.credit_available)) : '' });
         return creditsAvailableArr.reduce((a,b) => a+b,0) || 0.00;
       }
 
-      console.log('NO! credits!');
       return 0;
     },
     returnTotalCompanyCreditsRemaining: state => {
       if (state.companyRaD.length) {
-        console.log('Getter returnTotalCompanyCreditsRemaining!');
         return parseFloat(state.companyRaD[state.companyRaD.length - 1].credit_available).toFixed(2);
       }
       return 0;
@@ -86,18 +109,14 @@ export default new Vuex.Store({
     },
     returnTotalCompanyCreditsAmount: state => {
       if (state.companyRaD.length) {
-        console.log('You have credits!');
-        // credit_available:
         const creditsAmountArr = [];
         const creditsArr = state.companyRaD.forEach( c => { (parseFloat(c.credit_amount)) ? creditsAmountArr.push(parseFloat(c.credit_amount)) : '' });
         return creditsAmountArr.reduce((a,b) => a+b,0) || 0.00;
       }
 
-      console.log('NO Total Credits!');
       return 0;
     },
     returnLastYearClaimablePayroll: state => {
-      // console.warn('returnLastYearClaimablePayroll ', state.company);
       return state.company.final_date_payroll_claim || Date.now();
     },
     returnCalculationStartDate: state => {
@@ -120,6 +139,69 @@ export default new Vuex.Store({
     },
     returnStoredCompanyEvents: state => {
       return state.allCompanyEvents;
+    },
+    returnTitle: state => {
+      return state.title;
+    },
+    returnEmployerIdentificationNumber: state => {
+      return state.employerIdentificationNumber;
+    },
+    returnName: state => {
+      return state.name;
+    },
+    returnTradeName: state => {
+      return state.tradeName;
+    },
+    returnAddress: state => {
+      return state.address;
+    },
+    returnCity: state => {
+      return state.city;
+    },
+    returnState: state => {
+      return state.state;
+    },
+    returnZip: state => {
+      return state.zip;
+    },
+    returnForeignName: state => {
+      return state.foreignCountryName;
+    },
+    returnForeignProvince: state => {
+      return state.foreignCountryProvince;
+    },
+    returnForeignZip: state => {
+      return state.foreignCountryZip;
+    },
+    returnCalendarYear: state => {
+      return state.calendarYear;
+    },
+    returnQuarterSelected: state => {
+      return parseInt(state.reportForThisQuarter);
+    },
+    returnForm941Line5AColumn2: state => {
+      return state.form941Line5AColumn2;
+    },
+    returnForm941Line5BColumn2: state => {
+      return state.form941Line5BColumn2;
+    },
+    returnForm8974Line12: state => {
+      return state.form8974Line12;
+    },
+    returnScheduleBMonthOneTaxLiability: state => {
+      return state.formScheduleBTaxLiabilityMonthOne
+    },
+    returnScheduleBMonthTwoTaxLiability: state => {
+      return state.formScheduleBTaxLiabilityMonthTwo
+    },
+    returnScheduleBMonthThreeTaxLiability: state => {
+      return state.formScheduleBTaxLiabilityMonthThree
+    },
+    returnScheduleBQuarterTotalTaxLiability: state => {
+      return state.formScheduleBTotalQuarterLiability
+    },
+    returnFormInitiatedMeta: state => {
+      return state.formMeta;
     }
 
   },
@@ -149,8 +231,6 @@ export default new Vuex.Store({
 
       // Update Header Name
       document.getElementById('activeName').innerText = state.company.name;
-
-      console.warn('Mutation handleSelectedCompany ', state.company)
     },
     setCalendarYearCalculation: (state, payload) => {
       // Store date selected to perform calculations on
@@ -158,10 +238,6 @@ export default new Vuex.Store({
       state.fiscalCalendarCalculations = payload.calculations; /* type Object */
     },
     storeNewCompanySetup: (state, payload) => {
-      // Add R&D & Forms Keys
-      // payload.research_and_development = payload.forms = [];
-      console.warn('New Company ', payload);
-
       state.companies.push(payload);
 
       // Set company R&D blank
@@ -183,7 +259,6 @@ export default new Vuex.Store({
       state.companies.splice(currentCompanyIndex,1,payload);
     },
     updateCompanyWithNewCreditAndForm: (state, payload) => {
-      console.log('Mutation updateCompanyWithNewCreditAndForm & Form ', payload);
       state.companyRaD.push(payload[0]);
       state.companyForms.push(payload[1]);
     },
@@ -191,7 +266,6 @@ export default new Vuex.Store({
       // Filter for Form Index,
       // Replace @ index
       const currentFormIndex = state.companyForms.findIndex(( obj => obj.id === payload.id));
-      console.log('updateCompanyFormsWithUpdatedCompany ', currentFormIndex);
       state.companyForms.splice(currentFormIndex,1,payload);
     },
     deleteResearchRecord: (state, payload) => {
@@ -204,7 +278,6 @@ export default new Vuex.Store({
       state.companyRaD.splice(currentFormIndex,1,payload);
     },
     onDeleteCompany: (state, payload) => {
-      console.warn('Now Deleting Company ', payload);
       const currentCompanyIndex = state.companies.findIndex(( obj => obj.id === payload.id));
       state.companies.splice(currentCompanyIndex,1);
       // Reset State
@@ -227,14 +300,73 @@ export default new Vuex.Store({
       // Remove file from state
       const currentCompanyIndex = state.companyForms.findIndex(( obj => obj.id === payload.id));
       state.companyForms.splice(currentCompanyIndex,1, payload);
-    }
+    },
+    updateEIN: (state, payload) => {
+      state.employerIdentificationNumber = payload.employerIdentificationNumber;
+    },
+    updateName: (state, payload) => {
+      state.name = payload.name;
+    },
+    updateTradeName: (state, payload) => {
+      state.tradeName = payload.tradeName;
+    },
+    updateAddress: (state, payload) => {
+      state.address = payload.address;
+    },
+    updateCity: (state, payload) => {
+      state.city = payload.city;
+    },
+    updateState: (state, payload) => {
+      state.state = payload.state;
+    },
+    updateZip: (state, payload) => {
+      state.zip = payload.zip;
+    },
+    updateForeignCountryName: (state, payload) => {
+      state.foreignCountryName = payload.foreignCountryName;
+    },
+    updateForeignCountryProvince: (state, payload) => {
+      state.foreignCountryProvince = payload.foreignCountryProvince;
+    },
+    updateForeignCountryZip: (state, payload) => {
+      state.foreignCountryZip = payload.foreignCountryZip;
+    },
+    updateCalendarYear: (state, payload) => {
+      state.calendarYear = payload.calendarYear;
+    },
+    updateQuarterRadio: (state, payload) => {
+      state.reportForThisQuarter = parseInt(payload.radioSelected);
+    },
+    storeForm941Line5AColumn2: (state, payload) => {
+      state.form941Line5AColumn2 = parseFloat(payload.amount);
+    },
+    storeForm941Line5BColumn2: (state, payload) => {
+      state.form941Line5BColumn2 = parseFloat(payload.amount);
+    },
+    storeForm8974Line12: (state, payload) => {
+      state.form8974Line12 = parseFloat(payload.amount);
+    },
+    storeFormScheduleBTaxLiabilityMonthOne: (state, payload) => {
+      state.formScheduleBTaxLiabilityMonthOne = parseFloat(payload.amount);
+    },
+    storeFormScheduleBTaxLiabilityMonthTwo: (state, payload) => {
+      state.formScheduleBTaxLiabilityMonthTwo = parseFloat(payload.amount);
+    },
+    storeFormScheduleBTaxLiabilityMonthThree: (state, payload) => {
+      state.formScheduleBTaxLiabilityMonthThree = parseFloat(payload.amount);
+    },
+    storeFormScheduleBTotalQuarterLiability: (state, payload) => {
+      state.formScheduleBTotalQuarterLiability = parseFloat(payload.amount);
+    },
+    storeFormInitiatedMeta: ((state, payload) => {
+      state.formMeta = {...payload};
+    })
   },
   actions: {
     setSelectedMenu: (context, payload) => {
       context.commit('setSelectedMenu', {selected: parseInt(payload)})
     },
     setCompaniesList: (context, payload) => {
-      console.warn('Action setCompaniesList ', payload);
       context.commit('setCompaniesList', payload);
     },
     handleSelectedCompany: (context, payload) => {
@@ -249,18 +381,15 @@ export default new Vuex.Store({
     },
     requestLatestCompanyEvents: async (context) => {
       const requestedEvents = await axios.get('/api/company/events');
-      console.log('requestLatestCompanyEvents ', requestedEvents.data);
       context.commit('requestLatestCompanyEvents', requestedEvents.data);
     },
     requestPaginatedLatestCompanyEvents: async (context, payload) => {
       const nextSetResults = await axios.get(payload);
-      console.log('requestPaginatedLatestCompanyEvents ', nextSetResults);
     },
     storeNewSingleCompanyAlert: (context, payload) => {
       context.commit('storeNewSingleCompanyAlert', payload);
     },
     updateExistingCompanyObject: (context, payload) => {
-      console.warn('Action updateExistingCompanyObject ', payload);
       context.commit('updateExistingCompanyObject', payload);
     },
     updateCompanyWithNewCreditAndForm: (context, payload) => {
@@ -296,12 +425,71 @@ export default new Vuex.Store({
     },
     onDeleteCompanyForm: async (context, payload) => {
       let key = (!('file_one_url' in payload)) ? payload.file_two_url : payload.file_one_url;
-      console.log('Action: onDeleteCompanyForm ', key);
       const record = await axios.post(`/api/company/form/${payload.id}`, {
         selected: payload.selected,
         f: key
       });
       context.commit('onDeleteCompanyForm', record.data);
+    },
+    updateEIN: (context, payload) => {
+      context.commit('updateEIN', {employerIdentificationNumber: payload})
+    },
+    updateName: (context, payload) => {
+      context.commit('updateName', {name: payload})
+    },
+    updateTradeName: (context, payload) => {
+      context.commit('updateTradeName', {tradeName: payload})
+    },
+    updateAddress: (context, payload) => {
+      context.commit('updateAddress', {address: payload})
+    },
+    updateCity: (context, payload) => {
+      context.commit('updateCity', {city: payload})
+    },
+    updateState: (context, payload) => {
+      context.commit('updateState', {state: payload})
+    },
+    updateZip: (context, payload) => {
+      context.commit('updateZip', {zip: payload})
+    },
+    updateForeignCountryName: (context, payload) => {
+      context.commit('updateForeignCountryName', {foreignCountryName: payload})
+    },
+    updateForeignCountryProvince: (context, payload) => {
+      context.commit('updateForeignCountryProvince', {foreignCountryProvince: payload})
+    },
+    updateForeignCountryZip: (context, payload) => {
+      context.commit('updateForeignCountryZip', {foreignCountryZip: payload})
+    },
+    updateCalendarYear: (context, payload) => {
+      context.commit('updateCalendarYear', {calendarYear: payload})
+    },
+    updateQuarterRadio: (context, payload) => {
+      context.commit('updateQuarterRadio', {radioSelected: parseInt(payload)})
+    },
+    storeForm941Line5AColumn2: (context, payload) => {
+      context.commit('storeForm941Line5AColumn2', {amount: parseFloat(payload)})
+    },
+    storeForm941Line5BColumn2: (context, payload) => {
+      context.commit('storeForm941Line5BColumn2', {amount: parseFloat(payload)})
+    },
+    storeForm8974Line12: (context, payload) => {
+      context.commit('storeForm8974Line12', {amount: parseFloat(payload)})
+    },
+    storeFormScheduleBTaxLiabilityMonthOne: (context, payload) => {
+      context.commit('storeFormScheduleBTaxLiabilityMonthOne', {amount: parseFloat(payload)})
+    },
+    storeFormScheduleBTaxLiabilityMonthTwo: (context, payload) => {
+      context.commit('storeFormScheduleBTaxLiabilityMonthTwo', {amount: parseFloat(payload)})
+    },
+    storeFormScheduleBTaxLiabilityMonthThree: (context, payload) => {
+      context.commit('storeFormScheduleBTaxLiabilityMonthThree', {amount: parseFloat(payload)})
+    },
+    storeFormScheduleBTotalQuarterLiability: (context, payload) => {
+      context.commit('storeFormScheduleBTotalQuarterLiability', {amount: parseFloat(payload)})
+    },
+    storeFormInitiatedMeta: (context, payload) => {
+      context.commit('storeFormInitiatedMeta', payload) // { id: Number, fileColumn: 1 or 2 : Number }
     }
 
   }

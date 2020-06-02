@@ -23,10 +23,14 @@
             <span>Forms</span>
           </el-menu-item>
           <el-menu-item index="5">
+            <i class="el-icon-document"></i>
+            <span>IRS Forms</span>
+          </el-menu-item>
+          <el-menu-item index="6">
             <i class="el-icon-user-solid"></i>
             <span>Profile</span>
           </el-menu-item>
-          <el-menu-item index="6">
+          <el-menu-item index="7">
             <i class="el-icon-s-tools"></i>
             <span>Setup</span>
           </el-menu-item>

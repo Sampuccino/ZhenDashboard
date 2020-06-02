@@ -55,7 +55,7 @@
         this.renderChart({
           labels: ['Total Credits', 'Credits Filed', 'Credits Recieved'],
             datasets: [{
-            label: "Company Dollar Amount",
+            label: "",
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
               'rgba(54, 162, 235, 0.2)',
@@ -75,7 +75,7 @@
           maintainAspectRatio: true,
           title: {
             display: true,
-            text: 'Company Credits Chart'
+            text: 'Credits Overview'
           }
         },
         )
