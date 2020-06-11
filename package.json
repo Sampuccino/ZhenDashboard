@@ -24,14 +24,17 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "apexcharts": "^3.19.2",
         "base64-arraybuffer": "^0.2.0",
         "chart.js": "^2.9.3",
         "downloadjs": "^1.4.7",
         "element-ui": "^2.13.1",
         "flatpickr": "^4.6.3",
+        "html-to-image": "^0.1.1",
         "moment": "^2.24.0",
         "node-sass": "^4.14.1",
         "pdf-lib": "^1.7.0",
+        "vue-apexcharts": "^1.5.3",
         "vue-chartjs": "^3.5.0",
         "vuex": "^3.2.0"
     }
