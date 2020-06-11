@@ -340,8 +340,8 @@
     },
     data: function () {
       return {
-        // url: 'http://irs-8974.us-west-1.elasticbeanstalk.com/Form-8974.pdf',
-        url: 'https://zhendash.dev/Form-8974.pdf',
+        url: 'http://creditracker.us-west-1.elasticbeanstalk.com/Form-8974.pdf',
+        // url: 'https://zhendash.dev/Form-8974.pdf',
         /* MAIN FORM FIELDS ######################## */
         ein: '',
         creditTypeBox: null,

@@ -43,6 +43,8 @@ Route::prefix('company')->group(function () {
   Route::put('/update-rdc/{credit}', 'RDCreditsController@update');
 
   Route::post('/form-upload/{form}', 'FormController@store');
+  Route::post('/b64-upload', 'FormController@decodeBase64ImageAndStore');
+
   // Delete
   Route::post('/form/{form}', 'FormController@destroyFile');
 });
