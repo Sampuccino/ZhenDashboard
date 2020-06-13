@@ -39,4 +39,8 @@ class Company extends Model
     return $this->hasMany(Alert::class);
   }
 
+  public function attorneystatements(){
+    return $this->hasMany(AttorneyandWork::class);
+  }
+
 }

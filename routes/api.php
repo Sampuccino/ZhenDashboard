@@ -45,6 +45,10 @@ Route::prefix('company')->group(function () {
   Route::post('/form-upload/{form}', 'FormController@store');
   Route::post('/b64-upload', 'FormController@decodeBase64ImageAndStore');
 
+  // Attorney and Work Forms
+  Route::post('/attorney-work/{company}', 'AttorneyandWorkController@store');
+  Route::delete('/attorney-work/{attorneyandWork}', 'AttorneyandWorkController@destroy');
+
   // Delete
   Route::post('/form/{form}', 'FormController@destroyFile');
 });

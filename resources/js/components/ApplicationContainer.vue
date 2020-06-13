@@ -9,7 +9,7 @@
     <research-and-development-credits-component v-if="this.returnSelectedMenu === 3 && this.returnCurrentActiveCompany !== null"/>
 
     <!--Forms-->
-    <forms-component v-if="this.returnSelectedMenu === 4 && this.returnCurrentActiveCompany !== null"
+    <forms-component v-if="this.returnSelectedMenu === 4.1 && this.returnCurrentActiveCompany !== null"
                      :ty_8974="t_8974"
                      :ty_941="t_941"
                      :ty_941_url="t_941_url"
@@ -22,6 +22,8 @@
                      :ty_3523="t_3523"
                      :ty_3523_url="t_3523_url"
     />
+
+    <p-o-wand-s-o-w-component v-if="this.returnSelectedMenu === 4.2 && this.returnCurrentActiveCompany !== null"/>
 
     <!--IRS Forms-->
     <select-form-template v-if="this.returnSelectedMenu === 5"
@@ -55,6 +57,7 @@
   import ResearchAndDevelopmentCreditsComponent from "./ResearchAndDevelopmentCreditsComponent";
   import FormsComponent from "./FormsComponent";
   import SelectFormTemplate from "./SelectFormTemplate";
+  import POWandSOWComponent from "./POWandSOWComponent";
 
   export default {
     name: "ApplicationContainer",
@@ -72,6 +75,7 @@
       t_3523_url: String
     },
     components: {
+      POWandSOWComponent,
       SelectFormTemplate,
       FormsComponent,
       ResearchAndDevelopmentCreditsComponent,

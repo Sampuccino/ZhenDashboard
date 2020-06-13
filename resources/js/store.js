@@ -12,6 +12,7 @@ export default new Vuex.Store({
     company: {},
     companyRaD: [], // Array of Objects
     companyForms: [], // Array of Objects,
+    powerAttorneyStatementWorkForms: [], // Array of Objects,
     allCompanyEvents: [], // Array of Objects
     creditsAvailable: 0,
     creditsClaimed: 0,
@@ -202,6 +203,9 @@ export default new Vuex.Store({
     },
     returnFormInitiatedMeta: state => {
       return state.formMeta;
+    },
+    returnPowerAttorneyStatementWorkForms: state => {
+      return state.powerAttorneyStatementWorkForms;
     }
 
   },
@@ -228,6 +232,8 @@ export default new Vuex.Store({
 
       //Set company Alerts
       state.allCompanyEvents = c[0].alerts || [];
+
+      state.powerAttorneyStatementWorkForms = c[0].attorneystatements || [];
 
       // Update Header Name
       document.getElementById('activeName').innerText = state.company.name;
@@ -360,11 +366,19 @@ export default new Vuex.Store({
     },
     storeFormInitiatedMeta: ((state, payload) => {
       state.formMeta = {...payload};
-    })
+    }),
+    storeNewPowerAttorneyOrWorkStatementObject: (state, payload) => {
+      state.powerAttorneyStatementWorkForms.push(payload);
+    },
+    deletePowerAttorneyOrWorkStatementObject: (state, payload) => {
+      // Delete
+      const currentAttorneyIndex = state.powerAttorneyStatementWorkForms.findIndex(( obj => obj.id === payload));
+      state.powerAttorneyStatementWorkForms.splice(currentAttorneyIndex,1);
+    }
   },
   actions: {
     setSelectedMenu: (context, payload) => {
-      context.commit('setSelectedMenu', {selected: parseInt(payload)})
+      context.commit('setSelectedMenu', {selected: parseFloat(payload)})
     },
     setCompaniesList: (context, payload) => {
       context.commit('setCompaniesList', payload);
@@ -490,6 +504,13 @@ export default new Vuex.Store({
     },
     storeFormInitiatedMeta: (context, payload) => {
       context.commit('storeFormInitiatedMeta', payload) // { id: Number, fileColumn: 1 or 2 : Number }
+    },
+    storeNewPowerAttorneyOrWorkStatementObject: (context, payload) => {
+      context.commit('storeNewPowerAttorneyOrWorkStatementObject', payload)
+    },
+    deletePowerAttorneyOrWorkStatementObject: async (context, payload) => {
+      await axios.delete(`api/company/attorney-work/${payload}`);
+      context.commit('deletePowerAttorneyOrWorkStatementObject', payload)
     }
 
   }
