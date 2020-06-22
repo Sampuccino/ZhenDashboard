@@ -12,6 +12,7 @@ export default new Vuex.Store({
     company: {},
     companyRaD: [], // Array of Objects
     companyForms: [], // Array of Objects,
+    companyChecklist: [],
     powerAttorneyStatementWorkForms: [], // Array of Objects,
     allCompanyEvents: [], // Array of Objects
     creditsAvailable: 0,
@@ -50,7 +51,7 @@ export default new Vuex.Store({
   },
   getters: {
     returnIntro: state => {
-        return state.intro;
+      return state.intro;
     },
     returnSelectedMenu: state => {
       return state.selectedMenu;
@@ -65,7 +66,7 @@ export default new Vuex.Store({
       return state.companies;
     },
     returnCompanyNameAndEID: state => {
-      return (Object.keys(state.company).length === 0) ? [] : [state.company.name, state.company.ein] ;
+      return (Object.keys(state.company).length === 0) ? [] : [state.company.name, state.company.ein];
     },
     returnActiveCompanyResearchAndDevelopmentData: state => {
       return state.companyRaD;
@@ -76,8 +77,10 @@ export default new Vuex.Store({
     returnTotalCompanyCreditsAvailable: state => {
       if (state.companyRaD.length) {
         const creditsAvailableArr = [];
-        const creditsArr = state.companyRaD.forEach( c => { (parseFloat(c.credit_available)) ? creditsAvailableArr.push(parseFloat(c.credit_available)) : '' });
-        return creditsAvailableArr.reduce((a,b) => a+b,0) || 0.00;
+        const creditsArr = state.companyRaD.forEach(c => {
+          (parseFloat(c.credit_available)) ? creditsAvailableArr.push(parseFloat(c.credit_available)) : ''
+        });
+        return creditsAvailableArr.reduce((a, b) => a + b, 0) || 0.00;
       }
 
       return 0;
@@ -90,20 +93,24 @@ export default new Vuex.Store({
     },
     returnTotalCompanyCreditsClaimed: state => {
       if (state.companyRaD.length) {
-      // credit_claimed:
+        // credit_claimed:
         const creditsClaimedArr = [];
-        const creditsArr = state.companyRaD.forEach( c => {  (parseFloat(c.credit_claimed)) ? creditsClaimedArr.push(parseFloat(c.credit_claimed)) : '' });
-        return creditsClaimedArr.reduce((a,b) => a+b,0) || 0.00;
+        const creditsArr = state.companyRaD.forEach(c => {
+          (parseFloat(c.credit_claimed)) ? creditsClaimedArr.push(parseFloat(c.credit_claimed)) : ''
+        });
+        return creditsClaimedArr.reduce((a, b) => a + b, 0) || 0.00;
       }
 
       return 0;
     },
     returnTotalCompanyCreditsReceived: state => {
       if (state.companyRaD.length) {
-      // credit_received:
+        // credit_received:
         const creditsReceivedArr = [];
-        const creditsArr = state.companyRaD.forEach( c => { (parseFloat(c.credit_received)) ? creditsReceivedArr.push(parseFloat(c.credit_received)) : '' });
-        return creditsReceivedArr.reduce((a,b) => a+b,0) || 0.00;
+        const creditsArr = state.companyRaD.forEach(c => {
+          (parseFloat(c.credit_received)) ? creditsReceivedArr.push(parseFloat(c.credit_received)) : ''
+        });
+        return creditsReceivedArr.reduce((a, b) => a + b, 0) || 0.00;
       }
 
       return 0;
@@ -111,8 +118,10 @@ export default new Vuex.Store({
     returnTotalCompanyCreditsAmount: state => {
       if (state.companyRaD.length) {
         const creditsAmountArr = [];
-        const creditsArr = state.companyRaD.forEach( c => { (parseFloat(c.credit_amount)) ? creditsAmountArr.push(parseFloat(c.credit_amount)) : '' });
-        return creditsAmountArr.reduce((a,b) => a+b,0) || 0.00;
+        const creditsArr = state.companyRaD.forEach(c => {
+          (parseFloat(c.credit_amount)) ? creditsAmountArr.push(parseFloat(c.credit_amount)) : ''
+        });
+        return creditsAmountArr.reduce((a, b) => a + b, 0) || 0.00;
       }
 
       return 0;
@@ -206,11 +215,14 @@ export default new Vuex.Store({
     },
     returnPowerAttorneyStatementWorkForms: state => {
       return state.powerAttorneyStatementWorkForms;
+    },
+    returnCompanyChecklist: state => {
+      return state.companyChecklist
     }
 
   },
   mutations: {
-    setSelectedMenu:  (state, payload) => {
+    setSelectedMenu: (state, payload) => {
       state.selectedMenu = payload.selected;
     },
     setCompaniesList: (state, payload) => {
@@ -218,7 +230,7 @@ export default new Vuex.Store({
     },
     handleSelectedCompany: (state, payload) => {
       /* Filtering done based on ein payload. Returns a Array with object inside */
-      const c = state.companies.filter( c => {
+      const c = state.companies.filter(c => {
         return c.ein === payload;
       });
 
@@ -234,6 +246,8 @@ export default new Vuex.Store({
       state.allCompanyEvents = c[0].alerts || [];
 
       state.powerAttorneyStatementWorkForms = c[0].attorneystatements || [];
+
+      state.companyChecklist = c[0].checklists || [];
 
       // Update Header Name
       document.getElementById('activeName').innerText = state.company.name;
@@ -261,8 +275,8 @@ export default new Vuex.Store({
       // companies
       // company
       state.company = payload;
-      const currentCompanyIndex = state.companies.findIndex(( obj => obj.id === payload.id));
-      state.companies.splice(currentCompanyIndex,1,payload);
+      const currentCompanyIndex = state.companies.findIndex((obj => obj.id === payload.id));
+      state.companies.splice(currentCompanyIndex, 1, payload);
     },
     updateCompanyWithNewCreditAndForm: (state, payload) => {
       state.companyRaD.push(payload[0]);
@@ -271,21 +285,21 @@ export default new Vuex.Store({
     updateCompanyFormsWithUpdatedCompany: (state, payload) => {
       // Filter for Form Index,
       // Replace @ index
-      const currentFormIndex = state.companyForms.findIndex(( obj => obj.id === payload.id));
-      state.companyForms.splice(currentFormIndex,1,payload);
+      const currentFormIndex = state.companyForms.findIndex((obj => obj.id === payload.id));
+      state.companyForms.splice(currentFormIndex, 1, payload);
     },
     deleteResearchRecord: (state, payload) => {
       // Use payload to remove R&D record from State
-      const currentRDIndex = state.companyRaD.findIndex(( obj => obj.id === payload.id));
-      state.companyRaD.splice(currentRDIndex,1);
+      const currentRDIndex = state.companyRaD.findIndex((obj => obj.id === payload.id));
+      state.companyRaD.splice(currentRDIndex, 1);
     },
     onUpdateResearchAndDevelopmentCredit: (state, payload) => {
-      const currentFormIndex = state.companyRaD.findIndex(( obj => obj.id === payload.id));
-      state.companyRaD.splice(currentFormIndex,1,payload);
+      const currentFormIndex = state.companyRaD.findIndex((obj => obj.id === payload.id));
+      state.companyRaD.splice(currentFormIndex, 1, payload);
     },
     onDeleteCompany: (state, payload) => {
-      const currentCompanyIndex = state.companies.findIndex(( obj => obj.id === payload.id));
-      state.companies.splice(currentCompanyIndex,1);
+      const currentCompanyIndex = state.companies.findIndex((obj => obj.id === payload.id));
+      state.companies.splice(currentCompanyIndex, 1);
       // Reset State
       state.company = {};
       state.companyRaD = [];
@@ -299,13 +313,13 @@ export default new Vuex.Store({
     },
     onDeleteCompanyMessage: (state, payload) => {
       // Delete from state
-      const currentEvIndex = state.allCompanyEvents.findIndex(( obj => obj.id === payload.id));
-      state.allCompanyEvents.splice(currentEvIndex,1);
+      const currentEvIndex = state.allCompanyEvents.findIndex((obj => obj.id === payload.id));
+      state.allCompanyEvents.splice(currentEvIndex, 1);
     },
     onDeleteCompanyForm: (state, payload) => {
       // Remove file from state
-      const currentCompanyIndex = state.companyForms.findIndex(( obj => obj.id === payload.id));
-      state.companyForms.splice(currentCompanyIndex,1, payload);
+      const currentCompanyIndex = state.companyForms.findIndex((obj => obj.id === payload.id));
+      state.companyForms.splice(currentCompanyIndex, 1, payload);
     },
     updateEIN: (state, payload) => {
       state.employerIdentificationNumber = payload.employerIdentificationNumber;
@@ -372,8 +386,31 @@ export default new Vuex.Store({
     },
     deletePowerAttorneyOrWorkStatementObject: (state, payload) => {
       // Delete
-      const currentAttorneyIndex = state.powerAttorneyStatementWorkForms.findIndex(( obj => obj.id === payload));
-      state.powerAttorneyStatementWorkForms.splice(currentAttorneyIndex,1);
+      const currentAttorneyIndex = state.powerAttorneyStatementWorkForms.findIndex((obj => obj.id === payload));
+      state.powerAttorneyStatementWorkForms.splice(currentAttorneyIndex, 1);
+    },
+    updateCompanyChecklistItem: async (state, payload) => {
+
+      console.warn('Item ID ', payload);
+
+      const currentCLItemIndex = state.companyChecklist.findIndex((obj => obj.id === payload));
+
+      // Update Checklist Object
+      if (state.companyChecklist[currentCLItemIndex].completed === 0)
+        state.companyChecklist[currentCLItemIndex].completed = 1;
+      else
+        state.companyChecklist[currentCLItemIndex].completed = 0;
+
+      await axios.put(`api/company/checklist/${payload}`, {
+        completed: Number.parseInt(state.companyChecklist[currentCLItemIndex].completed)
+      });
+    },
+    onSubmitNewChecklistItem: (state, payload) => {
+      state.companyChecklist.push(payload);
+    },
+    onDeleteChecklistID: (state, payload) => {
+      const currentCLIIndex = state.companyChecklist.findIndex((obj => obj.id === payload));
+      state.companyChecklist.splice(currentCLIIndex, 1);
     }
   },
   actions: {
@@ -511,6 +548,19 @@ export default new Vuex.Store({
     deletePowerAttorneyOrWorkStatementObject: async (context, payload) => {
       await axios.delete(`api/company/attorney-work/${payload}`);
       context.commit('deletePowerAttorneyOrWorkStatementObject', payload)
+    },
+    updateCompanyChecklistItem: (context, payload) => {
+      context.commit('updateCompanyChecklistItem', payload)
+    },
+    onSubmitNewChecklistItem: async (context, payload) => {
+      // Post new item
+      // Pass on and insert into State @ top api/company/checklist
+      const { data } = await axios.post('api/company/checklist', {...payload});
+      context.commit('onSubmitNewChecklistItem', data);
+    },
+    onDeleteChecklistID: async (context, payload) => {
+      await axios.delete(`api/company/checklist/${payload}`);
+      context.commit('onDeleteChecklistID', payload);
     }
 
   }

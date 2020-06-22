@@ -43,4 +43,8 @@ class Company extends Model
     return $this->hasMany(AttorneyandWork::class);
   }
 
+  public function checklists(){
+    return $this->hasMany(Checklist::class);
+  }
+
 }

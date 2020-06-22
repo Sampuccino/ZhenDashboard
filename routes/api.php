@@ -49,6 +49,13 @@ Route::prefix('company')->group(function () {
   Route::post('/attorney-work/{company}', 'AttorneyandWorkController@store');
   Route::delete('/attorney-work/{attorneyandWork}', 'AttorneyandWorkController@destroy');
 
+  // Checklist PUT / Update Checklist item
+  Route::put('/checklist/{checklist}', 'ChecklistController@update');
+  // Checklist POST Checklist item
+  Route::post('/checklist', 'ChecklistController@store');
+  // Checklist DELETE Checklist item
+  Route::delete('/checklist/{checklist}', 'ChecklistController@destroy');
+
   // Delete
   Route::post('/form/{form}', 'FormController@destroyFile');
 });

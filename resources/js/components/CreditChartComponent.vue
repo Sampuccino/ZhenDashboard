@@ -2,49 +2,45 @@
   <div>
     <div id="capture">
       <div class="row">
-        <div class="col-4 text-center my-auto">
-          <h6 class="font-weight-bold text-danger">Total Credits</h6>
+        <div class="col-12">
+          <canvas class="mx-auto" ref="canvas" id="myChart" height="400" width="400" :options="{ legend: { display: false }}"></canvas>
+        </div>
+        <div class="col-lg-4 col-12 text-center my-auto">
+          <h6 class="font-weight-bold text-danger mt-4">Total Credits</h6>
           <h4 class="text-danger">{{ returnFormattedCompanyCreditsAvailable }}</h4>
         </div>
-        <div class="col-4 text-center my-auto">
-          <h6 class="font-weight-bold text-primary">Credits Filed</h6>
+        <div class="col-lg-4 col-12 text-center my-auto">
+          <h6 class="font-weight-bold text-primary mt-4">Credits Filed</h6>
           <h4 class="text-primary">{{ returnFormattedCompanyCreditsClaimed }}</h4>
         </div>
-        <div class="col-4 text-center my-auto">
-          <h6 class="font-weight-bold text-success">Credits Received</h6>
+        <div class="col-lg-4 col-12 text-center my-auto">
+          <h6 class="font-weight-bold text-success mt-4">Credits Received</h6>
           <h4 class="text-success">{{ returnFormattedCompanyCreditsReceived }}</h4>
         </div>
       </div>
+    </div>
 
-      <canvas ref="canvas" id="myChart" width="400" height="400" :options="{ legend: { display: false }}"></canvas>
-      <!--    <apexchart type="bar" ref="canvas" id="myChart" height="500" width="500" :options="chartOptions" :series="series"/>-->
-      </div>
 
     <div>
       <el-button type="primary" class="mt-3" @click="capture">Download Report</el-button>
     </div>
 
-    </div>
+  </div>
 </template>
 
 <script>
   import {PDFDocument, rgb, StandardFonts} from 'pdf-lib';
   import {Bar} from 'vue-chartjs'
-  import VueApexCharts from 'vue-apexcharts'
   import htmlToImage from 'html-to-image';
   import download from "downloadjs";
+  import moment from "moment";
   import axios from "axios";
   import {mapGetters} from "vuex";
   import NumberFormatter from "../../utilities/NumberFormatter";
 
-  // Vue.component('apexchart', VueApexCharts);
-
   export default {
     extends: Bar,
     name: "CreditsChartComponent",
-    components: {
-      apexchart: VueApexCharts,
-    },
     data() {
       return {
         series: [{
@@ -52,8 +48,7 @@
         }],
         chartOptions: {
           chart: {
-            type: 'bar',
-            height: 350
+            type: 'bar'
           },
           plotOptions: {
             bar: {
@@ -122,7 +117,7 @@
             maintainAspectRatio: true,
             title: {
               display: true,
-              text: `Credits Overview ${(this.returnCurrentActiveCompany !== null) ? 'for ' + this.returnCurrentActiveCompany.name : ''}`
+              text: `${(this.returnCurrentActiveCompany !== null) ? this.returnCurrentActiveCompany.name : ''}`
             }
           },
         )
@@ -132,7 +127,7 @@
         htmlToImage.toPng(document.getElementById('capture'))
         .then(async function (dataUrl) {
 
-          const { data } = await axios.post('/api/company/b64-upload', {b64: dataUrl});
+          const {data} = await axios.post('/api/company/b64-upload', {b64: dataUrl});
 
           // Returns Base64 encoded Image
           // Send to server to decode and store
@@ -163,52 +158,107 @@
             color: COLOR,
           };
 
-          // page.drawText('You can create PDFs!');
+          const baseOptionsTitle = {
+            size: 15,
+            font: helveticaFont,
+            color: COLOR,
+          };
+
+          /* Draw Title*/
+          page.drawText('Summary Report', {
+            x: page.getWidth() / 2 - 75,
+            y: page.getHeight() / 2 + 400,
+            width: (pngDims.width) / 1.25,
+            height: (pngDims.height) / 1.25,
+            ...baseOptionsTitle
+          });
+
 
           /* Draw Image */
           page.drawImage(pngImage, {
-            x: page.getWidth() / 2 - pngDims.width / 2 + 100,
-            y: page.getHeight() / 2 - pngDims.height + 500,
+            // y: page.getHeight() / 2 - pngDims.height + 450,
+            // y: page.getHeight() / 2 - 75,
+            // x: page.getWidth() / 2 - 300,
+            // y: page.getHeight() / 2 - 25,
+            x: page.getWidth() / 2 - pngDims.width / 2 + 65,
+            y: page.getHeight() / 2 - pngDims.height / 2 + 225,
             width: (pngDims.width) / 1.25,
             height: (pngDims.height) / 1.25,
+          });
+
+          page.drawRectangle({
+            x: page.getWidth() / 2 - 275,
+            // y: page.getHeight() / 2 - pngDims.height + 430,
+            y: page.getHeight() / 2 - 65,
+            width: 550,
+            height: .5,
+            color: rgb(0, 0, 0),
           });
 
           /* Draw Company Messages : Latest 5
           * Already orders from latest @ top
           * */
           const company_events = that.returnStoredCompanyEvents;
-          console.warn(company_events.length, company_events);
+          // console.warn(company_events.length, company_events);
 
-          if (company_events.length > 0) {
-            company_events.forEach(el => {
-              let idx = 0;
+                    if (company_events.length > 0) {
+                        let idx = 0;
+                        company_events.forEach(el => {
 
-              // Title
-              page.drawText(el.title, {
-                x: page.getWidth() / 2 - pngDims.width / 2 + 100,
-                y: page.getHeight() / 2 - pngDims.height + (480 - (idx * 30)),
-                width: (pngDims.width) / 1.25,
-                height: (pngDims.height) / 1.25,
-                ...baseOptionsHeading
-              });
+                          if (idx < 5) {
+                            // Date
+                            page.drawText((moment(el.created_at).format('MM-DD-YYYY')).toString(), {
+                              // x: page.getWidth() / 2 - pngDims.width / 2 + 100,
+                              // y: page.getHeight() / 2 - 325 + (410 - (idx * 50)),
+                              x: page.getWidth() / 2 - 275,
+                              y: page.getHeight() / 2 - 85 - (idx * 50),
+                              width: (pngDims.width) / 1.25,
+                              height: (pngDims.height) / 1.25,
+                              ...baseOptions
+                            });
 
-              // Body
-              page.drawText(el.body, {
-                x: page.getWidth() / 2 - pngDims.width / 2 + 100,
-                y: page.getHeight() / 2 - pngDims.height + (470 - (idx * 30)),
-                width: (pngDims.width) / 1.25,
-                height: (pngDims.height) / 1.25,
-                ...baseOptions
-              });
+                            // Title
+                            page.drawText(el.title, {
+                              // x: page.getWidth() / 2 - pngDims.width / 2 + 100,
+                              // y: page.getHeight() / 2 - pngDims.height + (400 - (idx * 50)),
+                              x: page.getWidth() / 2 - 275,
+                              y: page.getHeight() / 2 - 95 - (idx * 50),
+                              width: (pngDims.width) / 1.25,
+                              height: (pngDims.height) / 1.25,
+                              ...baseOptions
+                            });
 
-              idx++;
-            })
-          }
+                            // Body
+                            page.drawText(el.body, {
+                              // x: page.getWidth() / 2 - pngDims.width / 2 + 100,
+                              // y: page.getHeight() / 2 - pngDims.height + (390 - (idx * 50)),
+                              x: page.getWidth() / 2 - 275,
+                              y: page.getHeight() / 2 - 105 - (idx * 50),
+                              width: (pngDims.width) / 1.25,
+                              height: (pngDims.height) / 1.25,
+                              ...baseOptions
+                            });
+
+                            // Blank
+                            page.drawRectangle({
+                              // x: page.getWidth() / 2 - pngDims.width / 2 + 100,
+                              // y: page.getHeight() / 2 - pngDims.height + (385 - (idx * 50)),
+                              x: page.getWidth() / 2 - 275,
+                              y: page.getHeight() / 2 - 115 - (idx * 50),
+                              width: 250,
+                              height: .01,
+                              color: rgb(0, 0, 0),
+                            });
+                          } else return;
+
+                          idx += 1;
+                        })
+                    }
 
 
           const pdfBytes = await pdfDoc.save();
 
-          download(pdfBytes, Date.now()+'.pdf', "application/pdf");
+          download(pdfBytes, `Summary Report` + '.pdf', "application/pdf");
 
           that.$notify({
             title: 'Success',

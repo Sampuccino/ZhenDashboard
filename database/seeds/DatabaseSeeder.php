@@ -1,6 +1,7 @@
 <?php
 
 use App\Alert;
+use App\Checklist;
 use App\Company;
 use App\Form;
 use App\RDCredit;
@@ -36,6 +37,13 @@ class DatabaseSeeder extends Seeder
                   ]);
 
           for ($j=0; $j < 5; $j++) {
+
+            Checklist::create([
+              'company_id' => $company->id,
+              'item' => $faker->sentence,
+              'completed' => 0
+            ]);
+
             RDCredit::create([
               'company_id' => $company->id,
               'return_type' => '1040',

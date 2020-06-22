@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h6>Recent Events</h6>
+    <h5 class="font-weight-bolder">Recent Events</h5>
     <section data-placement="parent">
 
       <section>
         <article v-for="(ev, index) in this.returnActiveCompanyAlerts" :key="index">
-          <u><i>{{ new Date(ev.created_at).toDateString() }}</i></u>
+          <u><i>{{ returnConvertedDate(ev.created_at) }}</i></u>
           <h6>{{ ev.title }}</h6>
           {{ ev.body }}
           <br>
@@ -20,6 +20,7 @@
 
 <script>
   import {mapActions, mapGetters} from "vuex";
+  import moment from "moment";
 
   export default {
     name: "RecentEventsComponent",
@@ -43,6 +44,11 @@
       ...mapActions(['requestLatestCompanyEvents', 'requestPaginatedLatestCompanyEvents', 'onDeleteCompanyMessage']),
       deleteAlert(ev) {
         this.onDeleteCompanyMessage(ev);
+      },
+      returnConvertedDate(timestamp) {
+        // new Date(ev.created_at).toDateString()
+        // return moment(timestamp).toLocaleString();
+        return moment(timestamp).format('MM-DD-YYYY');
       }
     }
   }

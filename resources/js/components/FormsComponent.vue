@@ -20,7 +20,7 @@
           <td>{{ form.year }}</td>
           <td>{{ form.period }}</td>
           <td>
-            <section v-if="form.file_one_url !== null">
+            <section v-if="form.file_one_url !== null && form.file_one_url !== undefined">
               <a :href="form.file_one_url" target="_blank">
                 {{ clipFileName(form.file_one_url) }}
               </a>
@@ -54,7 +54,7 @@
             <!--<el-button class="mt-2" @click="initializeCustomForm(form.id, 1)">Use Custom Form</el-button>-->
           </td>
           <td v-if="form.form_type === '941' || form.form_type === '941X' || form.form_type === '1120'">
-            <section v-if="form.file_two_url !== null">
+            <section v-if="form.file_two_url !== null && form.file_two_url !== undefined">
               <a :href="form.file_two_url" target="_blank">
                 {{ clipFileName(form.file_two_url) }}
               </a>
@@ -149,7 +149,7 @@
 
       },
       clipFileName(file) {
-        return file.substring(76);
+        return (file !== undefined) ? file.substring(76) : 'No file found';
       },
       onDeleteF1(form) {
         this.onDeleteCompanyForm({id: form.id, file_one_url: form.file_one_url.substr(66), selected: 1});
