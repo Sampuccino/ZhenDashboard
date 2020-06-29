@@ -32,7 +32,7 @@
 
         </div>
 
-        <div v-if="isFillingOut">
+        <!--<div v-if="isFillingOut">
 
             <div class="row">
                 <div class="col-3">
@@ -101,7 +101,7 @@
               </div>
             </div>
 
-        </div>
+        </div>-->
 
         <div class="col-12" id="formScrollToPlaceholder"></div>
 
@@ -111,6 +111,7 @@
         <form_941-x v-show="activeForm_941X && !isFillingOut" :formUrl="type_941x_url" />
         <form_6765 v-show="activeForm_6765 && !isFillingOut" :formUrl="type_6765_url"/>
         <form_3523 v-show="activeForm_3523 && !isFillingOut" :formUrl="type_3523_url"/>
+        <form_8821 v-show="activeForm_8821 && !isFillingOut" :formUrl="type_8821_url"/>
 
     </div>
 </template>
@@ -125,9 +126,10 @@
   import PersonalDetails from "./IRS Forms/common/PersonalDetails";
   import Form_6765 from "./IRS Forms/Form_6765";
   import Form_3523 from "./IRS Forms/Form_3523";
+  import Form_8821 from "./IRS Forms/Form_8821";
 
   export default {
-    components: {Form_3523, Form_6765, Form_941X, PersonalDetails, Form_941, Form_8974, Form_941S},
+    components: {Form_8821, Form_3523, Form_6765, Form_941X, PersonalDetails, Form_941, Form_8974, Form_941S},
     props: {
       type_8974: String,
       type_941: String,
@@ -139,7 +141,9 @@
       type_6765: String,
       type_6765_url: String,
       type_3523: String,
-      type_3523_url: String
+      type_3523_url: String,
+      type_8821: String,
+      type_8821_url: String
     },
     data: function() {
       return {
@@ -179,6 +183,12 @@
           imageSource: this.type_3523,
           name: "Research Credit",
           code: '3523'
+        },
+        {
+          title: 'Form 8821',
+          imageSource: this.type_8821,
+          name: "Tax Information Authorization",
+          code: '8821'
         }
         ],
         activeForm_8974: false,
@@ -187,6 +197,7 @@
         activeForm_941_Schedule_B: false,
         activeForm_6765: false,
         activeForm_3523: false,
+        activeForm_8821: false,
         checkedForms: [],
         isFillingOut: false,
         showPersonal: true,
@@ -197,6 +208,7 @@
             t941SB: false,
             t6765: false,
             t3523: false,
+            t8821: false,
         },
         errors: {
           form8974: false,
@@ -215,7 +227,7 @@
         switch (arg) {
           case '8974':
             this.activeForm_8974 = !this.activeForm_8974;
-            this.activeForm_941 = this.activeForm_941_Schedule_B = this.activeForm_941X = this.showPersonal = false;
+            this.activeForm_941 = this.activeForm_941_Schedule_B = this.activeForm_941X = this.activeForm_8821 = this.showPersonal = false;
             break;
           case 't8974':
             this.setActive.t8974 = !this.setActive.t8974;
@@ -224,7 +236,7 @@
           case '941':
             console.log('941');
             this.activeForm_941 = !this.activeForm_941;
-            this.activeForm_8974 = this.activeForm_941_Schedule_B = this.activeForm_941X = this.showPersonal = false;
+            this.activeForm_8974 = this.activeForm_941_Schedule_B = this.activeForm_941X = this.activeForm_8821 = this.showPersonal = false;
             break;
           case 't941':
             console.log('t941');
@@ -234,8 +246,7 @@
           case '941X':
             console.log('941X');
             this.activeForm_941X = !this.activeForm_941X;
-            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941_Schedule_B =
-            this.showPersonal = false;
+            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941_Schedule_B = this.activeForm_8821 = this.showPersonal = false;
             break;
           case 't941X':
             console.log('t941X');
@@ -245,7 +256,7 @@
           case '941SB':
             console.log('941SB');
             this.activeForm_941_Schedule_B = !this.activeForm_941_Schedule_B;
-            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.showPersonal = false;
+            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_8821 = this.showPersonal = false;
             break;
           case 't941SB':
             console.log('t941SB');
@@ -254,7 +265,7 @@
             break;
           case '6765': // code key from forms array object
               this.activeForm_6765 = !this.activeForm_6765;
-              this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.showPersonal = false;
+              this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.activeForm_8821 = this.showPersonal = false;
               break;
           case 't6765': // active state
             this.setActive.t6765 = !this.setActive.t6765;
@@ -262,11 +273,19 @@
             break;
           case '3523': // code key from forms array object
               this.activeForm_3523 = !this.activeForm_3523;
-              this.activeForm_6765 = this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.showPersonal = false;
+              this.activeForm_6765 = this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.activeForm_8821 = this.showPersonal = false;
               break;
           case 't3523': // active state
             this.setActive.t3523 = !this.setActive.t3523;
             this.setActive.t6765 = this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.showPersonal = false;
+            break;
+          case '8821': // code key from forms array object
+            this.activeForm_8821 = !this.activeForm_8821;
+            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.activeForm_6765 = this.activeForm_3523 = this.showPersonal = false;
+            break;
+          case 't8821': // active state
+            this.setActive.t8821 = !this.setActive.t8821;
+            this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.showPersonal = false;
             break;
           case 'Personal':
             console.log('Personal');

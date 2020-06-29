@@ -561,7 +561,6 @@
     name: "Form_941",
     props: {
       formUrl: String,
-      disableDownload: String
     },
     mounted(){
       this.url = this.formUrl;
