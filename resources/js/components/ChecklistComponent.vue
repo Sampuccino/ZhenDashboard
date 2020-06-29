@@ -3,12 +3,12 @@
     <h5 class="font-weight-bolder">Checklist <small>click row to complete and cross out</small></h5>
     <div class="row" v-for="(listItem, index) in this.returnCompanyChecklist" :key="index">
       <div
-        class="col-10 bg-light p-3 mb-2 checklistItem" @click="toggleChecklistItem(listItem.id)">
+        class="col-9 bg-light p-3 mb-2 checklistItem" @click="toggleChecklistItem(listItem.id)">
         <s v-if="listItem.completed === 1" class="text-danger">{{ listItem.item }}</s>
         <b v-else>{{ listItem.item }}</b>
       </div>
-      <div class="col-2">
-        <el-button type="danger" @click="deleteChecklistItem(listItem.id)">x</el-button>
+      <div class="col-3 my-auto">
+        <el-button class="d-block" type="danger" @click="deleteChecklistItem(listItem.id)">x</el-button>
       </div>
     </div>
   </div>

@@ -14,7 +14,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="2.1">Overview</el-menu-item>
-          <el-menu-item index="2.2">Companies</el-menu-item>
+          <el-menu-item index="2.2">Company</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 

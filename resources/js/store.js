@@ -13,6 +13,7 @@ export default new Vuex.Store({
     companyRaD: [], // Array of Objects
     companyForms: [], // Array of Objects,
     companyChecklist: [],
+    companyKeyDates: [],
     powerAttorneyStatementWorkForms: [], // Array of Objects,
     allCompanyEvents: [], // Array of Objects
     creditsAvailable: 0,
@@ -242,8 +243,10 @@ export default new Vuex.Store({
       const claimedSum =  claimed.reduce((a,b) => Number.parseFloat(a) + Number.parseFloat(b), 0);
 
       return [totalSum.toFixed(2), receivedSum.toFixed(2), claimedSum.toFixed(2)]
+    },
+    returnCompanyKeyDueDates: state => {
+      return state.companyKeyDates
     }
-
   },
   mutations: {
     setSelectedMenu: (state, payload) => {
@@ -272,6 +275,8 @@ export default new Vuex.Store({
       state.powerAttorneyStatementWorkForms = c[0].attorneystatements || [];
 
       state.companyChecklist = c[0].checklists || [];
+
+      state.companyKeyDates = c[0].keydates.reverse() || [];
 
       // Update Header Name
       document.getElementById('activeName').innerText = state.company.name;
@@ -435,6 +440,13 @@ export default new Vuex.Store({
     onDeleteChecklistID: (state, payload) => {
       const currentCLIIndex = state.companyChecklist.findIndex((obj => obj.id === payload));
       state.companyChecklist.splice(currentCLIIndex, 1);
+    },
+    addNewCompanyKeyDueDate: (state, payload) => {
+      state.companyKeyDates.unshift(payload);
+    },
+    onDeleteCompanyKeyDueDate: (state, payload) => {
+      const currentKDDIndex = state.companyKeyDates.findIndex((obj => obj.id === payload));
+      state.companyKeyDates.splice(currentKDDIndex, 1);
     }
   },
   actions: {
@@ -585,6 +597,13 @@ export default new Vuex.Store({
     onDeleteChecklistID: async (context, payload) => {
       await axios.delete(`api/company/checklist/${payload}`);
       context.commit('onDeleteChecklistID', payload);
+    },
+    addNewCompanyKeyDueDate: (context, payload) => {
+      context.commit('addNewCompanyKeyDueDate', payload);
+    },
+    onDeleteCompanyKeyDueDate: async (context, payload) => {
+      await axios.delete(`/api/company/kdd/${payload}`);
+      context.commit('onDeleteCompanyKeyDueDate', payload);
     }
 
   }

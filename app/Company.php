@@ -56,4 +56,8 @@ class Company extends Model
     return $this->hasMany(Checklist::class);
   }
 
+  public function keydates(){
+    return $this->hasMany(KeyDueDates::class);
+  }
+
 }

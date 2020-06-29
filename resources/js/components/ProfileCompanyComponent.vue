@@ -13,6 +13,61 @@
               <el-button type="danger" @click="deleteCompany">Delete Company</el-button>
             </div>
           </div>
+
+          <div class="col-6 pr-0">
+            <div class="bg-white p-4 mb-3">
+              <h6 class="text-primary font-weight-bolder">Payroll Service Provider</h6>
+
+              <div class="form-group">
+                <label>Company Name</label>
+                <el-input type="text" placeholder="Please input" v-model="ps_company.input" id="ps_company" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Individual Name</label>
+                <el-input type="text" placeholder="Please input" v-model="ps_individual.input" id="ps_individual" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Email</label>
+                <el-input type="email" placeholder="Please input" v-model="ps_email.input" id="ps_email" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Phone</label>
+                <el-input type="text" placeholder="Please input" v-model="ps_phone.input" id="ps_phone" maxlength="10" minlength="10" show-word-limit></el-input>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="bg-white p-4 mb-3">
+              <h6 class="text-primary font-weight-bolder">Tax Return Service Provider</h6>
+
+              <div class="form-group">
+                <label>Company Name</label>
+                <el-input type="text" placeholder="Please input" v-model="trs_company.input" id="trs_company" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Individual Name</label>
+                <el-input type="text" placeholder="Please input" v-model="trs_individual.input" id="trs_individual" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Email</label>
+                <el-input type="email" placeholder="Please input" v-model="trs_email.input" id="trs_email" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Phone</label>
+                <el-input type="text" placeholder="Please input" v-model="trs_phone.input" id="trs_phone" maxlength="10" minlength="10" show-word-limit></el-input>
+              </div>
+
+            </div>
+          </div>
+
           <div class="col-7 pr-0">
 
             <div class="bg-white p-4">
@@ -105,60 +160,7 @@
           </div>
 
           <div class="col-5">
-            <div class="bg-white p-4 mb-3">
-              <h6 class="text-primary font-weight-bolder">Payroll Service Provider</h6>
-
-              <div class="form-group">
-                <label>Company Name</label>
-                <el-input type="text" placeholder="Please input" v-model="ps_company.input" id="ps_company" maxlength="75" show-word-limit></el-input>
-              </div>
-
-              <div class="form-group">
-                <label>Individual Name</label>
-                <el-input type="text" placeholder="Please input" v-model="ps_individual.input" id="ps_individual" maxlength="75" show-word-limit></el-input>
-              </div>
-
-              <div class="form-group">
-                <label>Email</label>
-                <el-input type="email" placeholder="Please input" v-model="ps_email.input" id="ps_email" maxlength="75" show-word-limit></el-input>
-              </div>
-
-              <div class="form-group">
-                <label>Phone</label>
-                <el-input type="text" placeholder="Please input" v-model="ps_phone.input" id="ps_phone" maxlength="10" minlength="10" show-word-limit></el-input>
-              </div>
-
-            </div>
-
-            <div class="bg-white p-4 mb-3">
-              <h6 class="text-primary font-weight-bolder">Tax Return Service Provider</h6>
-
-              <div class="form-group">
-                <label>Company Name</label>
-                <el-input type="text" placeholder="Please input" v-model="trs_company.input" id="trs_company" maxlength="75" show-word-limit></el-input>
-              </div>
-
-              <div class="form-group">
-                <label>Individual Name</label>
-                <el-input type="text" placeholder="Please input" v-model="trs_individual.input" id="trs_individual" maxlength="75" show-word-limit></el-input>
-              </div>
-
-              <div class="form-group">
-                <label>Email</label>
-                <el-input type="email" placeholder="Please input" v-model="trs_email.input" id="trs_email" maxlength="75" show-word-limit></el-input>
-              </div>
-
-              <div class="form-group">
-                <label>Phone</label>
-                <el-input type="text" placeholder="Please input" v-model="trs_phone.input" id="trs_phone" maxlength="10" minlength="10" show-word-limit></el-input>
-              </div>
-
-            </div>
-
-            <div class="bg-white p-4 mb-3">
-              <h6 class="text-primary font-weight-bolder">Key Due Dates</h6>
-            </div>
-
+            <key-due-dates-component/>
           </div>
 
         </div>
@@ -172,10 +174,13 @@
   import LastYearYouCanClaimPayrollCalculatorComponent from "./LastYearYouCanClaimPayrollCalculatorComponent";
   import Flatpickr from "./Calendar/Flatpickr";
   import LastYearYouCanClaimPayrollComponent from "./LastYearYouCanClaimPayrollComponent";
+  import KeyDueDatesComponent from "./KeyDueDatesComponent";
 
   export default {
     name: "ProfileCompanyComponent",
-    components: {LastYearYouCanClaimPayrollComponent, Flatpickr, LastYearYouCanClaimPayrollCalculatorComponent},
+    components: {
+      KeyDueDatesComponent,
+      LastYearYouCanClaimPayrollComponent, Flatpickr, LastYearYouCanClaimPayrollCalculatorComponent},
     data(){
       return {
         recordError: {

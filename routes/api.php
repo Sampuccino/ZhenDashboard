@@ -61,4 +61,8 @@ Route::prefix('company')->group(function () {
 
   // Delete
   Route::post('/form/{form}', 'FormController@destroyFile');
+
+  // Store Key Due Date
+  Route::post('/kdd', 'KeyDueDatesController@store');
+  Route::delete('/kdd/{keyDueDate}', 'KeyDueDatesController@destroy');
 });

@@ -4,6 +4,7 @@ use App\Alert;
 use App\Checklist;
 use App\Company;
 use App\Form;
+use App\KeyDueDates;
 use App\RDCredit;
 use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
@@ -71,6 +72,13 @@ class DatabaseSeeder extends Seeder
               'company_ein' => $company->ein,
               'title' => $faker->title,
               'body' => $faker->sentence
+            ]);
+
+            KeyDueDates::create([
+              'company_id' => $company->id,
+              'date' => '01/01/2020',
+              'title' => $faker->sentence(5),
+              'description' => $faker->sentence(10),
             ]);
 
           }

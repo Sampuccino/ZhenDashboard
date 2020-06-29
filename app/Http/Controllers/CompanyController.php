@@ -19,7 +19,7 @@ class CompanyController extends Controller
     public function index()
     {
       return response()->json(
-        Company::with(['research_and_development', 'forms', 'alerts', 'attorneystatements', 'checklists'])
+        Company::with(['research_and_development', 'forms', 'alerts', 'attorneystatements', 'checklists', 'keydates'])
         ->get(), 200);
     }
 
