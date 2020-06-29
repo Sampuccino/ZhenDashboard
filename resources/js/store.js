@@ -7,7 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     intro: 'Welcome to Application Container',
-    selectedMenu: 2,
+    selectedMenu: 2.1,
     companies: [], // Array of Objects
     company: {},
     companyRaD: [], // Array of Objects
@@ -218,6 +218,30 @@ export default new Vuex.Store({
     },
     returnCompanyChecklist: state => {
       return state.companyChecklist
+    },
+    returnConsolidatedTotalCredits: state => {
+      /*
+      * Return all credits accumulated
+      * */
+      const total = [];
+      const received = [];
+      const claimed = [];
+      state.companies.forEach( company => {
+        if (company.research_and_development.length > 0) {
+          company.research_and_development.forEach( credit => {
+           total.push(credit.credit_amount);
+            received.push(credit.credit_received);
+           claimed.push(credit.credit_claimed);
+          })
+        }
+      });
+
+      // Sum
+      const totalSum = total.reduce((a,b) => Number.parseFloat(a) + Number.parseFloat(b), 0);
+      const receivedSum =  received.reduce((a,b) => Number.parseFloat(a) + Number.parseFloat(b), 0);
+      const claimedSum =  claimed.reduce((a,b) => Number.parseFloat(a) + Number.parseFloat(b), 0);
+
+      return [totalSum.toFixed(2), receivedSum.toFixed(2), claimedSum.toFixed(2)]
     }
 
   },

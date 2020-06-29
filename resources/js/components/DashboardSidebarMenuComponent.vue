@@ -1,16 +1,22 @@
 <template>
   <div>
     <el-menu
-      default-active="2"
+      default-active="2.1"
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
       @select="handleSelect">
 
-      <el-menu-item index="2">
-        <i class="el-icon-odometer"></i>
-        <span>Dashboard</span>
-      </el-menu-item>
+      <el-submenu index="2">
+        <template slot="title">
+          <i class="el-icon-odometer"></i>
+          <span>Dashboard</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="2.1">Overview</el-menu-item>
+          <el-menu-item index="2.2">Companies</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
 
       <el-menu-item index="3">
         <i class="el-icon-paperclip"></i>

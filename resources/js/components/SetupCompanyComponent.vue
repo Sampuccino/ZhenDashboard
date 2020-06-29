@@ -64,6 +64,12 @@
         </div>
 
         <div class="form-group">
+          <label>Address</label>
+          <el-input placeholder="Please input" v-model="address.input"></el-input>
+          <small class="text-danger" v-show="address.error">Enter address</small>
+        </div>
+
+        <div class="form-group">
           <label>Phone</label>
           <el-input
             type="text"
@@ -141,6 +147,10 @@
           input: '',
           error: false
         },
+        address: {
+          input: '',
+          error: false
+        },
         officer: {
           input: '',
           error: false
@@ -176,7 +186,8 @@
             companyType: this.companyType,
             email: this.email.input,
             phone: this.phone.input,
-            officer: this.officer.input
+            officer: this.officer.input,
+            address: this.address.input
           })
           .then(res => {
 

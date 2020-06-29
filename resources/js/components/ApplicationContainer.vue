@@ -2,8 +2,11 @@
   <section>
     <client-details-header-component/>
 
+    <!--Overview-->
+    <overview-component v-if="this.returnSelectedMenu === 2.1"/>
+
     <!--Dashboard-->
-    <dashboard-component v-if="this.returnSelectedMenu === 2"/>
+    <dashboard-component v-if="this.returnSelectedMenu === 2.2"/>
 
     <!--Research and Development-->
     <research-and-development-credits-component v-if="this.returnSelectedMenu === 3 && this.returnCurrentActiveCompany !== null"/>
@@ -58,6 +61,7 @@
   import FormsComponent from "./FormsComponent";
   import SelectFormTemplate from "./SelectFormTemplate";
   import POWandSOWComponent from "./POWandSOWComponent";
+  import OverviewComponent from "./OverviewComponent";
 
   export default {
     name: "ApplicationContainer",
@@ -75,6 +79,7 @@
       t_3523_url: String
     },
     components: {
+      OverviewComponent,
       POWandSOWComponent,
       SelectFormTemplate,
       FormsComponent,

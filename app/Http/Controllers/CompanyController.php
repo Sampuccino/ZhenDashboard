@@ -65,7 +65,8 @@ class CompanyController extends Controller
           'company_type' => $request->companyType,
           'email' => $request->email,
           'phone' => $request->phone,
-          'officer' => $request->officer
+          'officer' => $request->officer,
+          'address' => $request->address,
         ]);
 
         $c->save();

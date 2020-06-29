@@ -35,9 +35,9 @@
     data: function () {
       return {
         companies: [],
-        companyName: 'John Doe Incorporated',
-        phone: '111-111-1111',
-        email: 'jd@email.com',
+        companyName: 'Select a company',
+        phone: 'phone number',
+        email: 'email address',
 
       }
     },
@@ -85,6 +85,16 @@
           document.getElementById('profile-phone').value = this.returnCurrentActiveCompany.phone;
           document.getElementById('profile-officer').value = this.returnCurrentActiveCompany.officer;
           document.getElementById('profile-company').innerText = this.returnCurrentActiveCompany.company_type;
+          document.getElementById('profile-address').value = this.returnCurrentActiveCompany.address;
+
+          document.getElementById('ps_company').value = this.returnCurrentActiveCompany.payroll_provider_company_name;
+          document.getElementById('ps_individual').value = this.returnCurrentActiveCompany.payroll_provider_individual_name;
+          document.getElementById('ps_email').value = this.returnCurrentActiveCompany.payroll_provider_email;
+          document.getElementById('ps_phone').value = this.returnCurrentActiveCompany.payroll_provider_phone;
+          document.getElementById('trs_company').value = this.returnCurrentActiveCompany.tax_provider_company_name;
+          document.getElementById('trs_individual').value = this.returnCurrentActiveCompany.tax_provider_individual_name;
+          document.getElementById('trs_email').value = this.returnCurrentActiveCompany.tax_provider_email;
+          document.getElementById('trs_phone').value = this.returnCurrentActiveCompany.tax_provider_phone;
         }, 1000)
 
       }

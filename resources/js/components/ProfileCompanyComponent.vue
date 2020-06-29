@@ -3,17 +3,17 @@
     <div>
 
         <div class="row justify-content-between">
-          <div class="col-8 pr-0">
+          <div class="col-7 pr-0">
             <div class="bg-white p-4 mb-3">
               <last-year-you-can-claim-payroll-component/>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-5">
             <div class="bg-white p-4 mb-3">
               <el-button type="danger" @click="deleteCompany">Delete Company</el-button>
             </div>
           </div>
-          <div class="col-12">
+          <div class="col-7 pr-0">
 
             <div class="bg-white p-4">
 
@@ -91,6 +91,11 @@
                 <el-input placeholder="Please input" v-model="officer.input" id="profile-officer"></el-input>
               </div>
 
+              <div class="form-group">
+                <label>Address</label>
+                <el-input placeholder="Please input" v-model="address.input" id="profile-address"></el-input>
+              </div>
+
               <p v-show="recordError.duplicate" class="text-danger font-weight-bolder mb-2 mt-2">No duplicate companies allowed (Name or TaxID already taken). Change Company Name / TaxID and try again.</p>
 
               <el-button type="primary" @click="onSubmit">Update</el-button>
@@ -98,6 +103,64 @@
             </div>
 
           </div>
+
+          <div class="col-5">
+            <div class="bg-white p-4 mb-3">
+              <h6 class="text-primary font-weight-bolder">Payroll Service Provider</h6>
+
+              <div class="form-group">
+                <label>Company Name</label>
+                <el-input type="text" placeholder="Please input" v-model="ps_company.input" id="ps_company" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Individual Name</label>
+                <el-input type="text" placeholder="Please input" v-model="ps_individual.input" id="ps_individual" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Email</label>
+                <el-input type="email" placeholder="Please input" v-model="ps_email.input" id="ps_email" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Phone</label>
+                <el-input type="text" placeholder="Please input" v-model="ps_phone.input" id="ps_phone" maxlength="10" minlength="10" show-word-limit></el-input>
+              </div>
+
+            </div>
+
+            <div class="bg-white p-4 mb-3">
+              <h6 class="text-primary font-weight-bolder">Tax Return Service Provider</h6>
+
+              <div class="form-group">
+                <label>Company Name</label>
+                <el-input type="text" placeholder="Please input" v-model="trs_company.input" id="trs_company" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Individual Name</label>
+                <el-input type="text" placeholder="Please input" v-model="trs_individual.input" id="trs_individual" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Email</label>
+                <el-input type="email" placeholder="Please input" v-model="trs_email.input" id="trs_email" maxlength="75" show-word-limit></el-input>
+              </div>
+
+              <div class="form-group">
+                <label>Phone</label>
+                <el-input type="text" placeholder="Please input" v-model="trs_phone.input" id="trs_phone" maxlength="10" minlength="10" show-word-limit></el-input>
+              </div>
+
+            </div>
+
+            <div class="bg-white p-4 mb-3">
+              <h6 class="text-primary font-weight-bolder">Key Due Dates</h6>
+            </div>
+
+          </div>
+
         </div>
       </div>
   </div>
@@ -156,6 +219,34 @@
         officer: {
           input: '',
           error: false
+        },
+        address: {
+          input: '',
+          error: false
+        },
+        ps_company: {
+          input: '',
+        },
+        ps_individual: {
+          input: '',
+        },
+        ps_email: {
+          input: '',
+        },
+        ps_phone: {
+          input: '',
+        },
+        trs_company: {
+          input: '',
+        },
+        trs_individual: {
+          input: '',
+        },
+        trs_email: {
+          input: '',
+        },
+        trs_phone: {
+          input: '',
         },
         companyType: ''
       }
@@ -256,16 +347,69 @@
           modified: this.officer.input,
           equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.officer, this.officer.input),
         };
+        const compAddress = {
+          current: this.returnCurrentActiveCompany.address,
+          modified: this.address.input,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.address, this.address.input),
+        };
 
-        console.log('First Income Year ', income);
-        console.log('Start Date ', startDate);
-        console.log('Year End Date ', endDate);
-        console.log('Company Type ', compType);
-        console.log('Company Name ', compName);
-        console.log('Tax ID ', compTax);
-        console.log('Email ', compEmail);
-        console.log('Phone ', compPhone);
-        console.log('Officer ', compOfficer);
+        const compPSCompanyName = {
+          current: this.returnCurrentActiveCompany.payroll_provider_company_name,
+          modified: this.ps_company.input,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.payroll_provider_company_name, this.ps_company.input),
+        };
+
+        const compPSIndividual = {
+          current: this.returnCurrentActiveCompany.payroll_provider_individual_name,
+          modified: this.ps_individual.input,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.payroll_provider_individual_name, this.ps_individual.input),
+        };
+
+        const compPSEmail = {
+          current: this.returnCurrentActiveCompany.payroll_provider_email,
+          modified: this.ps_email.input,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.payroll_provider_email, this.ps_email.input),
+        };
+
+        const compPSPhone = {
+          current: this.returnCurrentActiveCompany.payroll_provider_phone,
+          modified: this.ps_phone.input,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.payroll_provider_phone, this.ps_phone.input),
+        };
+
+        const compTRSCompany = {
+          current: this.returnCurrentActiveCompany.tax_provider_company_name,
+          modified: this.trs_company.input,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.tax_provider_company_name, this.trs_company.input),
+        };
+
+        const compTRSIndividual = {
+          current: this.returnCurrentActiveCompany.tax_provider_individual_name,
+          modified: this.trs_individual.input,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.tax_provider_individual_name, this.trs_individual.input),
+        };
+
+        const compTRSEmail = {
+          current: this.returnCurrentActiveCompany.tax_provider_email,
+          modified: this.trs_email.input,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.tax_provider_email, this.trs_email.input),
+        };
+
+        const compTRSPhone = {
+          current: this.returnCurrentActiveCompany.tax_provider_phone,
+          modified: this.trs_phone.input,
+          equal: this.returnValueToBeUpdated(this.returnCurrentActiveCompany.tax_provider_phone, this.trs_phone.input),
+        };
+
+        // console.log('First Income Year ', income);
+        // console.log('Start Date ', startDate);
+        // console.log('Year End Date ', endDate);
+        // console.log('Company Type ', compType);
+        // console.log('Company Name ', compName);
+        // console.log('Tax ID ', compTax);
+        // console.log('Email ', compEmail);
+        // console.log('Phone ', compPhone);
+        // console.log('Officer ', compOfficer);
 
         axios.put(`/api/company/update/${this.returnCurrentActiveCompany.id}`, {
           name: compName.equal,
@@ -277,7 +421,16 @@
           company_type: compType.equal,
           email: compEmail.equal,
           phone: compPhone.equal,
-          officer: compOfficer.equal
+          officer: compOfficer.equal,
+          address: compAddress.equal,
+          payroll_provider_company_name: compPSCompanyName.equal,
+          payroll_provider_individual_name: compPSIndividual.equal,
+          payroll_provider_email: compPSEmail.equal,
+          payroll_provider_phone: compPSPhone.equal,
+          tax_provider_company_name: compTRSCompany.equal,
+          tax_provider_individual_name: compTRSIndividual.equal,
+          tax_provider_email: compTRSEmail.equal,
+          tax_provider_phone: compTRSPhone.equal,
         })
         .then(res => {
 

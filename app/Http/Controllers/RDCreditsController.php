@@ -15,7 +15,11 @@ class RDCreditsController extends Controller
      */
     public function index()
     {
-        //
+      return response()->json([
+       'total' => RDCredit::all()->sum('credit_amount'),
+       'filed' => RDCredit::all()->sum('credit_claimed'),
+       'received' => RDCredit::all()->sum('credit_received')
+      ]);
     }
 
     /**
