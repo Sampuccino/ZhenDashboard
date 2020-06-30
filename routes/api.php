@@ -24,6 +24,9 @@ Route::prefix('company')->group(function () {
   Route::post('/', 'CompanyController@store');
   Route::delete('/{company}', 'CompanyController@destroy');
 
+  // Consolidated Company Info
+  Route::get('/consolidated', 'RDCreditsController@index');
+
   // Claim Calculation
 //  Route::post('/claim-calculation/{date}/{endDate}', 'CompanyController@claimCalculation');
   Route::post('/claim-calculation', 'CompanyController@claimCalculation');
@@ -45,6 +48,21 @@ Route::prefix('company')->group(function () {
   Route::post('/form-upload/{form}', 'FormController@store');
   Route::post('/b64-upload', 'FormController@decodeBase64ImageAndStore');
 
+  // Attorney and Work Forms
+  Route::post('/attorney-work/{company}', 'AttorneyandWorkController@store');
+  Route::delete('/attorney-work/{attorneyandWork}', 'AttorneyandWorkController@destroy');
+
+  // Checklist PUT / Update Checklist item
+  Route::put('/checklist/{checklist}', 'ChecklistController@update');
+  // Checklist POST Checklist item
+  Route::post('/checklist', 'ChecklistController@store');
+  // Checklist DELETE Checklist item
+  Route::delete('/checklist/{checklist}', 'ChecklistController@destroy');
+
   // Delete
   Route::post('/form/{form}', 'FormController@destroyFile');
+
+  // Store Key Due Date
+  Route::post('/kdd', 'KeyDueDatesController@store');
+  Route::delete('/kdd/{keyDueDate}', 'KeyDueDatesController@destroy');
 });

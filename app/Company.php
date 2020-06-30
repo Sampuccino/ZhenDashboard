@@ -23,7 +23,16 @@ class Company extends Model
     'email',
     'phone',
     'officer',
-    'override_date'
+    'override_date',
+    'address',
+    'payroll_provider_company_name',
+    'payroll_provider_individual_name',
+    'payroll_provider_email',
+    'payroll_provider_phone',
+    'tax_provider_company_name',
+    'tax_provider_individual_name',
+    'tax_provider_email',
+    'tax_provider_phone',
   ];
   protected $table = 'company';
 
@@ -37,6 +46,18 @@ class Company extends Model
 
   public function alerts(){
     return $this->hasMany(Alert::class);
+  }
+
+  public function attorneystatements(){
+    return $this->hasMany(AttorneyandWork::class);
+  }
+
+  public function checklists(){
+    return $this->hasMany(Checklist::class);
+  }
+
+  public function keydates(){
+    return $this->hasMany(KeyDueDates::class);
   }
 
 }

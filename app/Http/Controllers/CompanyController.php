@@ -18,7 +18,9 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        return response()->json(Company::with(['research_and_development', 'forms', 'alerts'])->get(), 200);
+      return response()->json(
+        Company::with(['research_and_development', 'forms', 'alerts', 'attorneystatements', 'checklists', 'keydates'])
+        ->get(), 200);
     }
 
     /**
@@ -63,7 +65,8 @@ class CompanyController extends Controller
           'company_type' => $request->companyType,
           'email' => $request->email,
           'phone' => $request->phone,
-          'officer' => $request->officer
+          'officer' => $request->officer,
+          'address' => $request->address,
         ]);
 
         $c->save();
