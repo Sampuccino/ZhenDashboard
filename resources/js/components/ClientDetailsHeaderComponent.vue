@@ -27,14 +27,15 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import {mapActions, mapGetters} from "vuex";
+    import axios from 'axios';
+    import {mapActions, mapGetters} from "vuex";
 
-  export default {
+    export default {
     name: "ClientDetailsHeaderComponent",
     data: function () {
       return {
         companies: [],
+        associatedTo: {company_id: '', company_name: ''},
         companyName: 'Select a company',
         phone: 'phone number',
         email: 'email address',
@@ -43,14 +44,29 @@
     },
     async created() {
       const companyList = await axios.get('/api/company');
-      this.companies = companyList.data;
+      const {data} = await axios.get('/association');
+
+      this.associatedTo.company_id = data.company_id;
+      this.associatedTo.company_name = data.company_name;
+
+      // Filter out if NOT Admin to Assigned Company
+      if (this.returnActiveUser.status !== 'Admin') {
+          const found = companyList.data.findIndex((obj => obj.id === data.company_id));
+          this.companies = [companyList.data[found]];
+          console.warn('Filtering Done ', this.companies);
+      } else {
+          this.companies = companyList.data;
+      }
+
       this.setCompaniesList(companyList.data);
+      this.setCompanyAssociation(data);
+
     },
     computed: {
-      ...mapGetters(['returnCurrentActiveCompany'])
+      ...mapGetters(['returnCurrentActiveCompany', 'returnActiveUser'])
     },
     methods: {
-      ...mapActions(['setCompaniesList', 'handleSelectedCompany']),
+      ...mapActions(['setCompaniesList', 'handleSelectedCompany', 'setCompanyAssociation']),
       handleCommand(command) {
         this.companyName = command[1];
         this.phone = command[2];

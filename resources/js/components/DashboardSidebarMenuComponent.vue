@@ -1,11 +1,16 @@
 <template>
   <div>
     <el-menu
-      default-active="2.1"
+      :default-active="(this.returnActiveUser.status === 'Admin') ? '2.1' : '2'"
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
       @select="handleSelect">
+
+      <el-menu-item index="1" v-if="this.returnActiveUser.status === 'Admin'">
+        <i class="el-icon-key"></i>
+        <span>Users</span>
+      </el-menu-item>
 
       <el-submenu index="2">
         <template slot="title">
@@ -13,7 +18,7 @@
           <span>Dashboard</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="2.1">Overview</el-menu-item>
+          <el-menu-item index="2.1"  v-if="this.returnActiveUser.status === 'Admin'">Overview</el-menu-item>
           <el-menu-item index="2.2">Company</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -44,7 +49,7 @@
         <span>Profile</span>
       </el-menu-item>
 
-      <el-menu-item index="7">
+      <el-menu-item index="7" v-if="this.returnActiveUser.status === 'Admin'">
         <i class="el-icon-s-tools"></i>
         <span>Setup</span>
       </el-menu-item>
@@ -54,10 +59,13 @@
 </template>
 
 <script>
-  import {mapActions} from "vuex";
+    import {mapActions, mapGetters} from "vuex";
 
-  export default {
+    export default {
     name: "DashboardSidebarMenuComponent",
+    computed:{
+      ...mapGetters(['returnActiveUser'])
+    },
     methods: {
       ...mapActions(['setSelectedMenu']),
       handleOpen(key, keyPath) {

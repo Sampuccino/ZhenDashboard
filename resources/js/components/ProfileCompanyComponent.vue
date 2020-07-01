@@ -8,7 +8,7 @@
               <last-year-you-can-claim-payroll-component/>
             </div>
           </div>
-          <div class="col-5">
+          <div class="col-5" v-show="this.returnActiveUser === 'Admin'">
             <div class="bg-white p-4 mb-3">
               <el-button type="danger" @click="deleteCompany">Delete Company</el-button>
             </div>
@@ -169,14 +169,14 @@
 </template>
 
 <script>
-  import {mapActions, mapGetters} from "vuex";
-  import axios from 'axios';
-  import LastYearYouCanClaimPayrollCalculatorComponent from "./LastYearYouCanClaimPayrollCalculatorComponent";
-  import Flatpickr from "./Calendar/Flatpickr";
-  import LastYearYouCanClaimPayrollComponent from "./LastYearYouCanClaimPayrollComponent";
-  import KeyDueDatesComponent from "./KeyDueDatesComponent";
+    import {mapActions, mapGetters} from "vuex";
+    import axios from 'axios';
+    import LastYearYouCanClaimPayrollCalculatorComponent from "./LastYearYouCanClaimPayrollCalculatorComponent";
+    import Flatpickr from "./Calendar/Flatpickr";
+    import LastYearYouCanClaimPayrollComponent from "./LastYearYouCanClaimPayrollComponent";
+    import KeyDueDatesComponent from "./KeyDueDatesComponent";
 
-  export default {
+    export default {
     name: "ProfileCompanyComponent",
     components: {
       KeyDueDatesComponent,
@@ -263,7 +263,7 @@
         'returnFiscalYearEnd',
         'returnFirstIncomeYear',
         'returnFiscalTypeCalculations',
-        'checkIfDOMNodeExist'
+        'checkIfDOMNodeExist', 'returnActiveUser'
       ])
     },
     methods: {

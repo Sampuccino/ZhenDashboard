@@ -59,5 +59,4 @@ class Company extends Model
   public function keydates(){
     return $this->hasMany(KeyDueDates::class);
   }
-
 }

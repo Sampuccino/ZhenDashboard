@@ -13,5 +13,6 @@
                          :t_3523="'{{ asset('img/form_3523.png') }}'"
                          :t_3523_url="'{{ asset('forms/Form_3523.pdf') }}'"
                          :t_8821="'{{ asset('img/Form 8821.png') }}'"
-                         :t_8821_url="'{{ asset('forms/Form_8821.pdf') }}'"/>
+                         :t_8821_url="'{{ asset('forms/Form_8821.pdf') }}'"
+                         :auth_object="{{ Auth()->user() }}" />
 @endsection

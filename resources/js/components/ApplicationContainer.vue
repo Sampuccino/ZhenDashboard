@@ -2,6 +2,8 @@
   <section>
     <client-details-header-component/>
 
+    <user-accounts-component v-if="this.returnSelectedMenu === 1 && this.auth_object === 'Admin'"/>
+
     <!--Overview-->
     <overview-component v-if="this.returnSelectedMenu === 2.1"/>
 
@@ -55,19 +57,20 @@
 </template>
 
 <script>
-  import {mapGetters} from "vuex";
-  import SetupCompanyComponent from "./SetupCompanyComponent";
-  import ProfileCompanyComponent from "./ProfileCompanyComponent";
-  import DashboardComponent from "./DashboardComponent";
-  import ClientDetailsHeaderComponent from "./ClientDetailsHeaderComponent";
-  import ResearchAndDevelopmentCreditsComponent from "./ResearchAndDevelopmentCreditsComponent";
-  import FormsComponent from "./FormsComponent";
-  import SelectFormTemplate from "./SelectFormTemplate";
-  import POWandSOWComponent from "./POWandSOWComponent";
-  import OverviewComponent from "./OverviewComponent";
-  import Form_8821 from "./IRS Forms/Form_8821";
+    import {mapActions, mapGetters} from "vuex";
+    import SetupCompanyComponent from "./SetupCompanyComponent";
+    import ProfileCompanyComponent from "./ProfileCompanyComponent";
+    import DashboardComponent from "./DashboardComponent";
+    import ClientDetailsHeaderComponent from "./ClientDetailsHeaderComponent";
+    import ResearchAndDevelopmentCreditsComponent from "./ResearchAndDevelopmentCreditsComponent";
+    import FormsComponent from "./FormsComponent";
+    import SelectFormTemplate from "./SelectFormTemplate";
+    import POWandSOWComponent from "./POWandSOWComponent";
+    import OverviewComponent from "./OverviewComponent";
+    import Form_8821 from "./IRS Forms/Form_8821";
+    import UserAccountsComponent from "./UserAccountsComponent";
 
-  export default {
+    export default {
     name: "ApplicationContainer",
     props: {
       t_8974: String,
@@ -82,9 +85,11 @@
       t_3523: String,
       t_3523_url: String,
       t_8821: String,
-      t_8821_url: String
+      t_8821_url: String,
+      auth_object: Object
     },
     components: {
+      UserAccountsComponent,
       Form_8821,
       OverviewComponent,
       POWandSOWComponent,
@@ -94,6 +99,12 @@
       ClientDetailsHeaderComponent, DashboardComponent, ProfileCompanyComponent, SetupCompanyComponent},
     computed: {
       ...mapGetters(['returnSelectedMenu', 'returnCurrentActiveCompany']),
+    },
+    methods: {
+      ...mapActions(['setActiveUser'])
+    },
+    mounted() {
+      this.setActiveUser(this.auth_object);
     }
   }
 </script>
