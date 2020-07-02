@@ -54,6 +54,11 @@
         <span>Setup</span>
       </el-menu-item>
 
+      <el-menu-item index="8">
+        <i class="el-icon-s-tools"></i>
+        <span>Settings</span>
+      </el-menu-item>
+
     </el-menu>
   </div>
 </template>

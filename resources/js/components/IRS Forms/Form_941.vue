@@ -25,7 +25,7 @@
                 <button class="btn btn-danger d-inline clear">Clear</button>
             </div>
 
-            <div v-show="disableDownload !== 'Y'">
+            <div>
                 <button class="btn btn-primary d-inline export" @click="exportToPDF">Export</button>
             </div>
         </div>
@@ -553,11 +553,11 @@
 </template>
 
 <script>
-  import {PDFDocument, rgb, StandardFonts} from 'pdf-lib';
-  import download from 'downloadjs';
-  import {mapActions, mapGetters} from "vuex";
+    import {PDFDocument, rgb, StandardFonts} from 'pdf-lib';
+    import download from 'downloadjs';
+    import {mapActions, mapGetters} from "vuex";
 
-  export default {
+    export default {
     name: "Form_941",
     props: {
       formUrl: String,
@@ -566,24 +566,24 @@
       this.url = this.formUrl;
     },
     beforeUpdate() {
-      if (this.disableDownload === 'Y') {
-        this.employerIdentificationNumber = this.returnEmployerIdentificationNumber();
-        this.name = this.returnName();
-        this.tradeName = this.returnTradeName();
-        this.address = this.returnAddress();
-        this.city = this.returnCity();
-        this.state = this.returnState();
-        this.zip = this.returnZip();
-        this.f_countryName = this.returnForeignName();
-        this.f_countryProvince = this.returnForeignProvince();
-        this.f_countryZIP = this.returnForeignZip();
-        this.qualifiedSmallBusinessPayroll = this.returnForm8974Line12();
+      // if (this.disableDownload === 'Y') {
+        // this.employerIdentificationNumber = this.returnEmployerIdentificationNumber();
+        // this.name = this.returnName();
+        // this.tradeName = this.returnTradeName();
+        // this.address = this.returnAddress();
+        // this.city = this.returnCity();
+        // this.state = this.returnState();
+        // this.zip = this.returnZip();
+        // this.f_countryName = this.returnForeignName();
+        // this.f_countryProvince = this.returnForeignProvince();
+        // this.f_countryZIP = this.returnForeignZip();
+        // this.qualifiedSmallBusinessPayroll = this.returnForm8974Line12();
         /*Disabled as they are only meant for Part 2 Checkbox #3.*/
         // this.month1 = this.returnScheduleBMonthOneTaxLiability;
         // this.month2 = this.returnScheduleBMonthTwoTaxLiability;
         // this.month3 = this.returnScheduleBMonthThreeTaxLiability;
         // this.reportForThisQuarter = this.returnQuarterSelected();
-      }
+      // }
     },
     data(){
       return {

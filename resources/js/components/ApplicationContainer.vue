@@ -1,8 +1,9 @@
 <template>
   <section>
+
     <client-details-header-component/>
 
-    <user-accounts-component v-if="this.returnSelectedMenu === 1 && this.auth_object === 'Admin'"/>
+    <user-accounts-component v-if="this.returnSelectedMenu === 1 && this.auth_object.status === 'Admin'"/>
 
     <!--Overview-->
     <overview-component v-if="this.returnSelectedMenu === 2.1"/>
@@ -53,6 +54,8 @@
     <!--Setup-->
     <setup-company-component v-if="this.returnSelectedMenu === 7"/>
 
+    <settings-component v-if="this.returnSelectedMenu === 8"/>
+
   </section>
 </template>
 
@@ -69,6 +72,7 @@
     import OverviewComponent from "./OverviewComponent";
     import Form_8821 from "./IRS Forms/Form_8821";
     import UserAccountsComponent from "./UserAccountsComponent";
+    import SettingsComponent from "./SettingsComponent";
 
     export default {
     name: "ApplicationContainer",
@@ -89,6 +93,7 @@
       auth_object: Object
     },
     components: {
+        SettingsComponent,
       UserAccountsComponent,
       Form_8821,
       OverviewComponent,

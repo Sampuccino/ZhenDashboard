@@ -69,4 +69,7 @@ Route::prefix('company')->group(function () {
   // Association
   Route::get('/association', 'HomeController@usersWithAssociation');
   Route::post('/association', 'AssociationController@store');
+
+  //Update user password
+  Route::post('/user/{user}', 'UserController@update');
 });

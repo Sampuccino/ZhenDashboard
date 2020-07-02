@@ -105,30 +105,30 @@
 
         <div class="col-12" id="formScrollToPlaceholder"></div>
 
-        <form_8974 v-show="activeForm_8974 && !isFillingOut"/>
-        <form_941  v-show="activeForm_941 && !isFillingOut" :formUrl="type_941_url"/>
-        <form_941-s v-show="activeForm_941_Schedule_B && !isFillingOut" :formUrl="type_941s_url"/>
-        <form_941-x v-show="activeForm_941X && !isFillingOut" :formUrl="type_941x_url" />
-        <form_6765 v-show="activeForm_6765 && !isFillingOut" :formUrl="type_6765_url"/>
-        <form_3523 v-show="activeForm_3523 && !isFillingOut" :formUrl="type_3523_url"/>
-        <form_8821 v-show="activeForm_8821 && !isFillingOut" :formUrl="type_8821_url"/>
+        <form_8974 v-show="activeForm_8974 && !isFillingOut" :disableDownload="'N'"/>
+        <form_941  v-show="activeForm_941 && !isFillingOut" :formUrl="type_941_url" :disableDownload="'N'"/>
+        <form_941-s v-show="activeForm_941_Schedule_B && !isFillingOut" :formUrl="type_941s_url" :disableDownload="'N'"/>
+        <form_941-x v-show="activeForm_941X && !isFillingOut" :formUrl="type_941x_url"  :disableDownload="'N'"/>
+        <form_6765 v-show="activeForm_6765 && !isFillingOut" :formUrl="type_6765_url" :disableDownload="'N'"/>
+        <form_3523 v-show="activeForm_3523 && !isFillingOut" :formUrl="type_3523_url" :disableDownload="'N'"/>
+        <form_8821 v-show="activeForm_8821 && !isFillingOut" :formUrl="type_8821_url" :disableDownload="'N'"/>
 
     </div>
 </template>
 
 <script>
-  import {mapGetters} from "vuex"
+    import {mapGetters} from "vuex"
 
-  import Form_8974 from "./IRS Forms/Form_8974";
-  import Form_941 from "./IRS Forms/Form_941";
-  import Form_941S from "./IRS Forms/Form_941S";
-  import Form_941X from "./IRS Forms/Form_941X";
-  import PersonalDetails from "./IRS Forms/common/PersonalDetails";
-  import Form_6765 from "./IRS Forms/Form_6765";
-  import Form_3523 from "./IRS Forms/Form_3523";
-  import Form_8821 from "./IRS Forms/Form_8821";
+    import Form_8974 from "./IRS Forms/Form_8974";
+    import Form_941 from "./IRS Forms/Form_941";
+    import Form_941S from "./IRS Forms/Form_941S";
+    import Form_941X from "./IRS Forms/Form_941X";
+    import PersonalDetails from "./IRS Forms/common/PersonalDetails";
+    import Form_6765 from "./IRS Forms/Form_6765";
+    import Form_3523 from "./IRS Forms/Form_3523";
+    import Form_8821 from "./IRS Forms/Form_8821";
 
-  export default {
+    export default {
     components: {Form_8821, Form_3523, Form_6765, Form_941X, PersonalDetails, Form_941, Form_8974, Form_941S},
     props: {
       type_8974: String,
