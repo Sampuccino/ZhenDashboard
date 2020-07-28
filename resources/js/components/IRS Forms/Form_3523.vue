@@ -255,12 +255,12 @@
 </template>
 
 <script>
-  import {PDFDocument, rgb, StandardFonts} from 'pdf-lib';
-  import download from 'downloadjs';
+    import {PDFDocument, rgb, StandardFonts} from 'pdf-lib';
+    import download from 'downloadjs';
 
-  import NumberFormatter from "../../utilities/NumberFormatter";
+    import NumberFormatter from "../../utilities/NumberFormatter";
 
-  export default {
+    export default {
     name: "Form_3523",
     props: {
       formUrl: String,

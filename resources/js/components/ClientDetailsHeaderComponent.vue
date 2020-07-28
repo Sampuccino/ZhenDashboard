@@ -23,6 +23,15 @@
         <i class="el-icon-message"></i> {{ email || 'example@example.com' }}
       </div>
     </div>
+
+  <div class="row bg-white p-4 mb-3" v-if="this.returnActiveUser.status === 'Admin' && this.returnSelectedMenu === 2">
+
+    Toggle Company Overview Dashboard <el-switch v-model="showOverview" class="ml-3"/>
+
+    <overview-component v-if="this.showOverview"></overview-component>
+  </div>
+
+
   </div>
 </template>
 
@@ -39,6 +48,7 @@
         companyName: 'Select a company',
         phone: 'phone number',
         email: 'email address',
+        showOverview: false
 
       }
     },
@@ -75,15 +85,21 @@
 
     },
     computed: {
-      ...mapGetters(['returnCurrentActiveCompany', 'returnActiveUser'])
+      ...mapGetters(['returnCurrentActiveCompany', 'returnActiveUser', 'returnSelectedMenu'])
     },
     methods: {
       ...mapActions(['setCompaniesList', 'handleSelectedCompany', 'setCompanyAssociation']),
       handleCommand(command) {
-        this.companyName = command[1];
-        this.phone = command[2];
-        this.email = command[3];
-        this.handleSelectedCompany(command[0]);
+
+        if(command === 'overview') {
+          // alert('Overview')
+        } else {
+          this.companyName = command[1];
+          this.phone = command[2];
+          this.email = command[3];
+          this.handleSelectedCompany(command[0]);
+        }
+
       },
       reformatDate(d) {
         return d.split('-');

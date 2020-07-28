@@ -5,11 +5,8 @@
 
     <user-accounts-component v-if="this.returnSelectedMenu === 1 && this.auth_object.status === 'Admin'" :env_type="this.environment_type"/>
 
-    <!--Overview-->
-    <overview-component v-if="this.returnSelectedMenu === 2.1"/>
-
     <!--Dashboard-->
-    <dashboard-component v-if="this.returnSelectedMenu === 2.2"/>
+    <dashboard-component v-if="this.returnSelectedMenu === 2"/>
 
     <!--Research and Development-->
     <research-and-development-credits-component v-if="this.returnSelectedMenu === 3 && this.returnCurrentActiveCompany !== null"/>

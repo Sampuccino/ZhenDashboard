@@ -483,13 +483,13 @@
 </template>
 
 <script>
-  import {PDFDocument, rgb, StandardFonts} from 'pdf-lib';
-  import download from 'downloadjs';
-  import {mapGetters} from "vuex";
+    import {PDFDocument, rgb, StandardFonts} from 'pdf-lib';
+    import download from 'downloadjs';
+    import {mapGetters} from "vuex";
 
-  import NumberFormatter from "../../utilities/NumberFormatter";
+    import NumberFormatter from "../../utilities/NumberFormatter";
 
-  export default {
+    export default {
         props: {
           formUrl: String,
           disableDownload: String
