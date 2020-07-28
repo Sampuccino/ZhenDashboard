@@ -46,20 +46,32 @@
       const companyList = await axios.get('/api/company');
       const {data} = await axios.get('/association');
 
-      this.associatedTo.company_id = data.company_id;
-      this.associatedTo.company_name = data.company_name;
 
       // Filter out if NOT Admin to Assigned Company
       if (this.returnActiveUser.status !== 'Admin') {
-          const found = companyList.data.findIndex((obj => obj.id === data.company_id));
-          this.companies = [companyList.data[found]];
-          console.warn('Filtering Done ', this.companies);
+
+          if ('company_id' in data[0]) {
+              this.associatedTo.company_id = data[0].company_id;
+              this.associatedTo.company_name = data[0].company_name;
+
+              /** ------------------------ */
+
+              const found = companyList.data.findIndex((obj => obj.id === data[0].company_id));
+              this.companies = [companyList.data[found]];
+              console.warn('Filtering Done ', this.companies);
+
+          } else {
+              console.warn('Client Details Header : Could not retrieve association. ', data[0])
+          }
+
       } else {
           this.companies = companyList.data;
       }
 
       this.setCompaniesList(companyList.data);
-      this.setCompanyAssociation(data);
+      if ('company_id' in data) {
+        this.setCompanyAssociation(data);
+      }
 
     },
     computed: {

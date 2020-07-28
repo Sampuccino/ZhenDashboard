@@ -34,28 +34,7 @@ class HomeController extends Controller
 
     public function usersWithAssociation()
     {
-      $usersWithAssociation = User::select('id','name')->with(['associations'])->get();
+      $usersWithAssociation = User::select('id','name', 'email')->with(['associations'])->get();
       return response()->json($usersWithAssociation, 200);
-    }
-
-  public function test(){
-
-      $user = User::create([
-        'uid' => uniqid(),
-        'name' => 'Peanut',
-        'email' => 'Peanut@email.com',
-        'photoURL' => 'some-url',
-        'description' => 'A short bio',
-        'registration_date' => time(),
-        'points' => '0',
-        'status' => 'Admin',
-        'online' => false,
-        'signup_procedure' => 'app',
-        'disabled' => false,
-        'email_verified_at' => time(),
-      ]);
-
-      return response()->json($user);
-
     }
 }

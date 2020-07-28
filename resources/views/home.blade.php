@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
   <application-container :t_8974="'{{ asset('FORM_8974.png') }}'"
                          :t_941="'{{ asset('img/Form_941.png') }}'"
                          :t_941_url="'{{ asset('forms/FORM_941.pdf') }}'"
@@ -14,5 +15,9 @@
                          :t_3523_url="'{{ asset('forms/Form_3523.pdf') }}'"
                          :t_8821="'{{ asset('img/Form 8821.png') }}'"
                          :t_8821_url="'{{ asset('forms/Form_8821.pdf') }}'"
-                         :auth_object="{{ Auth()->user() }}" />
+                         :t_941_2020="'{{ asset('img/form_941_2020.png') }}'"
+                         :t_941_2020_url="'{{ asset('forms/Form _941_2020.pdf') }}'"
+                         :auth_object="{{ Auth()->user() }}"
+                         environment_type="production"/>
+
 @endsection

@@ -112,6 +112,7 @@
         <form_6765 v-show="activeForm_6765 && !isFillingOut" :formUrl="type_6765_url" :disableDownload="'N'"/>
         <form_3523 v-show="activeForm_3523 && !isFillingOut" :formUrl="type_3523_url" :disableDownload="'N'"/>
         <form_8821 v-show="activeForm_8821 && !isFillingOut" :formUrl="type_8821_url" :disableDownload="'N'"/>
+        <form_941_2020_-component v-show="activeForm_941_2020 && !isFillingOut" :formUrl="type_941_2020_url" :disableDownload="'N'"/>
 
     </div>
 </template>
@@ -127,9 +128,12 @@
     import Form_6765 from "./IRS Forms/Form_6765";
     import Form_3523 from "./IRS Forms/Form_3523";
     import Form_8821 from "./IRS Forms/Form_8821";
+    import Form_941_2020_Component from "./IRS Forms/Form_941_2020_Component";
 
     export default {
-    components: {Form_8821, Form_3523, Form_6765, Form_941X, PersonalDetails, Form_941, Form_8974, Form_941S},
+    components: {
+        Form_941_2020_Component,
+        Form_8821, Form_3523, Form_6765, Form_941X, PersonalDetails, Form_941, Form_8974, Form_941S},
     props: {
       type_8974: String,
       type_941: String,
@@ -143,7 +147,9 @@
       type_3523: String,
       type_3523_url: String,
       type_8821: String,
-      type_8821_url: String
+      type_8821_url: String,
+      type_941_2020: String,
+      type_941_2020_url: String
     },
     data: function() {
       return {
@@ -189,6 +195,12 @@
           imageSource: this.type_8821,
           name: "Tax Information Authorization",
           code: '8821'
+        },
+        {
+          title: 'Form 941 2020',
+          imageSource: this.type_941_2020,
+          name: "Tax Information Authorization",
+          code: '941_2020'
         }
         ],
         activeForm_8974: false,
@@ -198,6 +210,7 @@
         activeForm_6765: false,
         activeForm_3523: false,
         activeForm_8821: false,
+        activeForm_941_2020: false,
         checkedForms: [],
         isFillingOut: false,
         showPersonal: true,
@@ -209,6 +222,7 @@
             t6765: false,
             t3523: false,
             t8821: false,
+            t941_2020: false,
         },
         errors: {
           form8974: false,
@@ -227,66 +241,80 @@
         switch (arg) {
           case '8974':
             this.activeForm_8974 = !this.activeForm_8974;
-            this.activeForm_941 = this.activeForm_941_Schedule_B = this.activeForm_941X = this.activeForm_8821 = this.showPersonal = false;
+            this.activeForm_941 = this.activeForm_941_Schedule_B = this.activeForm_941X = this.activeForm_8821 = this.activeForm_941_2020 = this.showPersonal = false;
             break;
           case 't8974':
             this.setActive.t8974 = !this.setActive.t8974;
-            this.setActive.t941 = this.setActive.t941SB = this.setActive.t941X = this.showPersonal = false;
+            this.setActive.t941 = this.setActive.t941SB = this.setActive.t941X = this.setActive.t941_2020 = this.showPersonal = false;
             break;
           case '941':
             console.log('941');
             this.activeForm_941 = !this.activeForm_941;
-            this.activeForm_8974 = this.activeForm_941_Schedule_B = this.activeForm_941X = this.activeForm_8821 = this.showPersonal = false;
+            this.activeForm_8974 = this.activeForm_941_Schedule_B = this.activeForm_941X = this.activeForm_8821 = this.activeForm_941_2020 = this.showPersonal = false;
             break;
           case 't941':
             console.log('t941');
                 this.setActive.t941 = !this.setActive.t941;
-                this.setActive.t8974 = this.setActive.t941SB = this.setActive.t941X = this.showPersonal = false;
+                this.setActive.t8974 = this.setActive.t941SB = this.setActive.t941X = this.setActive.t941_2020 = this.showPersonal = false;
             break;
           case '941X':
             console.log('941X');
             this.activeForm_941X = !this.activeForm_941X;
-            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941_Schedule_B = this.activeForm_8821 = this.showPersonal = false;
+            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941_Schedule_B = this.activeForm_8821 = this.activeForm_941_2020 = this.showPersonal = false;
             break;
           case 't941X':
             console.log('t941X');
             this.setActive.t941X = !this.setActive.t941X;
-            this.activeForm_941 = this.setActive.t8974 = this.setActive.t941SB = this.showPersonal = false;
+            this.activeForm_941 = this.setActive.t8974 = this.setActive.t941SB = this.setActive.t941_2020 = this.showPersonal = false;
             break;
           case '941SB':
             console.log('941SB');
             this.activeForm_941_Schedule_B = !this.activeForm_941_Schedule_B;
-            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_8821 = this.showPersonal = false;
+            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_8821 = this.activeForm_941_2020 = this.showPersonal = false;
             break;
           case 't941SB':
             console.log('t941SB');
               this.setActive.t941SB = !this.setActive.t941SB;
-              this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.showPersonal = false;
+              this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.setActive.t941_2020 = this.showPersonal = false;
             break;
           case '6765': // code key from forms array object
               this.activeForm_6765 = !this.activeForm_6765;
-              this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.activeForm_8821 = this.showPersonal = false;
+              this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.activeForm_8821 = this.activeForm_941_2020 = this.showPersonal = false;
               break;
           case 't6765': // active state
             this.setActive.t6765 = !this.setActive.t6765;
-            this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.showPersonal = false;
+            this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.setActive.t941_2020 = this.showPersonal = false;
             break;
           case '3523': // code key from forms array object
               this.activeForm_3523 = !this.activeForm_3523;
-              this.activeForm_6765 = this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.activeForm_8821 = this.showPersonal = false;
+              this.activeForm_6765 = this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.activeForm_8821 = this.activeForm_941_2020 = this.showPersonal = false;
               break;
           case 't3523': // active state
             this.setActive.t3523 = !this.setActive.t3523;
-            this.setActive.t6765 = this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.showPersonal = false;
+            this.setActive.t6765 = this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.setActive.t941_2020 = this.showPersonal = false;
             break;
           case '8821': // code key from forms array object
             this.activeForm_8821 = !this.activeForm_8821;
-            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.activeForm_6765 = this.activeForm_3523 = this.showPersonal = false;
+            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.activeForm_6765 = this.activeForm_3523 = this.activeForm_941_2020 = this.showPersonal = false;
             break;
           case 't8821': // active state
             this.setActive.t8821 = !this.setActive.t8821;
-            this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.showPersonal = false;
+            this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.setActive.t941_2020 = this.showPersonal = false;
             break;
+
+            /*
+            * t941_2020
+            * */
+
+          case '941_2020': // code key from forms array object
+            this.activeForm_941_2020 = !this.activeForm_941_2020;
+            this.activeForm_941 = this.activeForm_8974 = this.activeForm_941X = this.activeForm_941_Schedule_B = this.activeForm_6765 = this.activeForm_3523 = this.activeForm_8821 = this.showPersonal = false;
+            break;
+          case 't941_2020': // active state
+            this.setActive.t941_2020 = !this.setActive.t941_2020;
+            this.setActive.t8974 = this.setActive.t941 = this.setActive.t941X = this.setActive.t8821 = this.showPersonal = false;
+            break;
+
           case 'Personal':
             console.log('Personal');
             this.showPersonal = !this.showPersonal;
