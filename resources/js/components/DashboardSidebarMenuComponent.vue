@@ -12,16 +12,12 @@
         <span>Users</span>
       </el-menu-item>
 
-      <el-submenu index="2">
+      <el-menu-item index="2">
         <template slot="title">
           <i class="el-icon-odometer"></i>
           <span>Dashboard</span>
         </template>
-        <el-menu-item-group>
-          <el-menu-item index="2.1"  v-if="this.returnActiveUser.status === 'Admin'">Overview</el-menu-item>
-          <el-menu-item index="2.2">Company</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
+      </el-menu-item>
 
       <el-menu-item index="3">
         <i class="el-icon-paperclip"></i>

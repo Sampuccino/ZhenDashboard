@@ -23,6 +23,15 @@
         <i class="el-icon-message"></i> {{ email || 'example@example.com' }}
       </div>
     </div>
+
+  <div class="row bg-white p-4 mb-3" v-if="this.returnActiveUser.status === 'Admin' && this.returnSelectedMenu === 2">
+
+    Toggle Company Overview Dashboard <el-switch v-model="showOverview" class="ml-3"/>
+
+    <overview-component v-if="this.showOverview"></overview-component>
+  </div>
+
+
   </div>
 </template>
 
@@ -39,6 +48,7 @@
         companyName: 'Select a company',
         phone: 'phone number',
         email: 'email address',
+        showOverview: false
 
       }
     },
@@ -46,32 +56,50 @@
       const companyList = await axios.get('/api/company');
       const {data} = await axios.get('/association');
 
-      this.associatedTo.company_id = data.company_id;
-      this.associatedTo.company_name = data.company_name;
 
       // Filter out if NOT Admin to Assigned Company
       if (this.returnActiveUser.status !== 'Admin') {
-          const found = companyList.data.findIndex((obj => obj.id === data.company_id));
-          this.companies = [companyList.data[found]];
-          console.warn('Filtering Done ', this.companies);
+
+          if ('company_id' in data[0]) {
+              this.associatedTo.company_id = data[0].company_id;
+              this.associatedTo.company_name = data[0].company_name;
+
+              /** ------------------------ */
+
+              const found = companyList.data.findIndex((obj => obj.id === data[0].company_id));
+              this.companies = [companyList.data[found]];
+              console.warn('Filtering Done ', this.companies);
+
+          } else {
+              console.warn('Client Details Header : Could not retrieve association. ', data[0])
+          }
+
       } else {
           this.companies = companyList.data;
       }
 
       this.setCompaniesList(companyList.data);
-      this.setCompanyAssociation(data);
+      if ('company_id' in data) {
+        this.setCompanyAssociation(data);
+      }
 
     },
     computed: {
-      ...mapGetters(['returnCurrentActiveCompany', 'returnActiveUser'])
+      ...mapGetters(['returnCurrentActiveCompany', 'returnActiveUser', 'returnSelectedMenu'])
     },
     methods: {
       ...mapActions(['setCompaniesList', 'handleSelectedCompany', 'setCompanyAssociation']),
       handleCommand(command) {
-        this.companyName = command[1];
-        this.phone = command[2];
-        this.email = command[3];
-        this.handleSelectedCompany(command[0]);
+
+        if(command === 'overview') {
+          // alert('Overview')
+        } else {
+          this.companyName = command[1];
+          this.phone = command[2];
+          this.email = command[3];
+          this.handleSelectedCompany(command[0]);
+        }
+
       },
       reformatDate(d) {
         return d.split('-');

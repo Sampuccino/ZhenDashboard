@@ -6,6 +6,7 @@ use App\Association;
 use App\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AssociationController extends Controller
 {
@@ -17,7 +18,7 @@ class AssociationController extends Controller
     public function index()
     {
         // Return user Association
-      return response()->json(Association::findOrFail(Auth()->id()), 200);
+      return response()->json(Association::where('user_id', '=', Auth()->id())->get(), 200);
     }
 
     /**

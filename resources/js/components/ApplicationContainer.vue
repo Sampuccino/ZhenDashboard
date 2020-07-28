@@ -3,13 +3,10 @@
 
     <client-details-header-component/>
 
-    <user-accounts-component v-if="this.returnSelectedMenu === 1 && this.auth_object.status === 'Admin'"/>
-
-    <!--Overview-->
-    <overview-component v-if="this.returnSelectedMenu === 2.1"/>
+    <user-accounts-component v-if="this.returnSelectedMenu === 1 && this.auth_object.status === 'Admin'" :env_type="this.environment_type"/>
 
     <!--Dashboard-->
-    <dashboard-component v-if="this.returnSelectedMenu === 2.2"/>
+    <dashboard-component v-if="this.returnSelectedMenu === 2"/>
 
     <!--Research and Development-->
     <research-and-development-credits-component v-if="this.returnSelectedMenu === 3 && this.returnCurrentActiveCompany !== null"/>
@@ -28,7 +25,9 @@
                      :ty_3523="t_3523"
                      :ty_3523_url="t_3523_url"
                      :ty_8821="t_8821"
-                     :ty_8821_url="t_8821_url" />
+                     :ty_8821_url="t_8821_url"
+                     :type_941_2020="t_941_2020"
+                     :type_941_2020_url="t_941_2020_url"/>
 
     <p-o-wand-s-o-w-component v-if="this.returnSelectedMenu === 4.2 && this.returnCurrentActiveCompany !== null"/>
 
@@ -46,7 +45,9 @@
                           :type_3523="t_3523"
                           :type_3523_url="t_3523_url"
                           :type_8821="t_8821"
-                          :type_8821_url="t_8821_url"/>
+                          :type_8821_url="t_8821_url"
+                          :type_941_2020="t_941_2020"
+                          :type_941_2020_url="t_941_2020_url"/>
 
     <!--Profile-->
     <profile-company-component v-show="this.returnSelectedMenu === 6 && this.returnCurrentActiveCompany !== null"/>
@@ -73,6 +74,7 @@
     import Form_8821 from "./IRS Forms/Form_8821";
     import UserAccountsComponent from "./UserAccountsComponent";
     import SettingsComponent from "./SettingsComponent";
+    import Form_941_2020_Component from "./IRS Forms/Form_941_2020_Component";
 
     export default {
     name: "ApplicationContainer",
@@ -90,9 +92,13 @@
       t_3523_url: String,
       t_8821: String,
       t_8821_url: String,
-      auth_object: Object
+      t_941_2020: String,
+      t_941_2020_url: String,
+      auth_object: Object,
+      environment_type: String
     },
     components: {
+        Form_941_2020_Component,
         SettingsComponent,
       UserAccountsComponent,
       Form_8821,

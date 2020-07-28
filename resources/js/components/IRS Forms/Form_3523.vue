@@ -97,7 +97,17 @@
           <td>
             <div class="form-group">
               <el-tag v-show="field11.error" type="danger" class="mb-1">Error!</el-tag>
-              <el-input type="text" v-model="field11.value" placeholder="0"></el-input>
+              <label for="">Year 1</label>
+              <el-input type="text" v-model="field11InputYears.value_1" placeholder="0"></el-input>
+              <label for="">Year 2</label>
+              <el-input type="text" v-model="field11InputYears.value_2" placeholder="0"></el-input>
+              <label for="">Year 3</label>
+              <el-input type="text" v-model="field11InputYears.value_3" placeholder="0"></el-input>
+              <label for="">Year 4</label>
+              <el-input type="text" v-model="field11InputYears.value_4" placeholder="0"></el-input>
+
+              <hr>
+              {{ returnField11Average }}
             </div>
           </td>
         </tr>
@@ -162,12 +172,12 @@
             <b>17b</b> Reduced regular credit under IRC Section 280C(c). Multiply line 17a by the applicable
             percentage below:
             <br>
-            <el-radio v-model="field17RadioBtn" label="a">87.7% (.877) for individuals, estates, and trusts</el-radio>
-            <br>
-            <el-radio v-model="field17RadioBtn" label="b">91.16% (.9116) for corporations</el-radio>
-            <br>
-            <el-radio v-model="field17RadioBtn" label="c">98.5% (.985) for S corporations</el-radio>
-            <br>
+            <el-radio-group v-model="field17RadioBtn">
+              <el-radio label="a">87.7% (.877) for individuals, estates, and trusts</el-radio>
+              <el-radio label="b">91.16% (.9116) for corporations</el-radio>
+              <el-radio label="c">98.5% (.985) for S corporations</el-radio>
+              <el-radio label="d">Leave blank</el-radio>
+            </el-radio-group>>
             Enter the reduced credit amount. See instructions
           </td>
           <td>
@@ -245,12 +255,12 @@
 </template>
 
 <script>
-  import {PDFDocument, rgb, StandardFonts} from 'pdf-lib';
-  import download from 'downloadjs';
+    import {PDFDocument, rgb, StandardFonts} from 'pdf-lib';
+    import download from 'downloadjs';
 
-  import NumberFormatter from "../../utilities/NumberFormatter";
+    import NumberFormatter from "../../utilities/NumberFormatter";
 
-  export default {
+    export default {
     name: "Form_3523",
     props: {
       formUrl: String,
@@ -282,7 +292,13 @@
           value: 0,
           error: false
         },
-        field17RadioBtn: 'a',
+        field11InputYears: {
+          value_1: 0,
+          value_2: 0,
+          value_3: 0,
+          value_4: 0,
+        },
+        field17RadioBtn: '',
         field45: {
           value: 0,
           error: false
@@ -331,6 +347,8 @@
             return (this.lineSeventeenACalculation * .9116).toFixed(2);
           case "c":
             return (this.lineSeventeenACalculation * .985).toFixed(2);
+          case "d":
+                return 0;
         }
       },
       lineFortySixTotalCalculation(){
@@ -340,7 +358,13 @@
       line49Calculation(){
         // Subtract lines 47 and 48 from line 46
         return (this.lineFortySixTotalCalculation - NumberFormatter.parseNumber(this.field47.value).toFixed(2));
-      }
+      },
+        returnField11Average() {
+          const _n = [parseFloat(this.field11InputYears.value_1), parseFloat(this.field11InputYears.value_2), parseFloat(this.field11InputYears.value_3), parseFloat(this.field11InputYears.value_4)];
+          const _avg = ((_n.reduce((a, b) => a + b, 0) || 0) / 4 ).toFixed(2)
+          this.field11.value = _avg;
+          return _avg;
+        }
     },
     methods: {
       validation(){
