@@ -20,3 +20,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/account', 'HomeController@account')->name('account');
+
+Route::get('/association', 'AssociationController@index');

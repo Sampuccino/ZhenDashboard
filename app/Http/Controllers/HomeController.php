@@ -1,6 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
+
+use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -11,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-//        $this->middleware('auth');
+        $this->middleware('auth')->except(['usersWithAssociation']);
     }
 
     /**
@@ -22,5 +24,17 @@ class HomeController extends Controller
     public function index()
     {
       return view('home');
+    }
+
+    /****/
+    public function account() {
+      $user = User::findOrFail(Auth::id());
+      return view('account')->with(['user' => $user]);
+    }
+
+    public function usersWithAssociation()
+    {
+      $usersWithAssociation = User::select('id','name', 'email')->with(['associations'])->get();
+      return response()->json($usersWithAssociation, 200);
     }
 }

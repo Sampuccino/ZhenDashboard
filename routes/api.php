@@ -65,4 +65,11 @@ Route::prefix('company')->group(function () {
   // Store Key Due Date
   Route::post('/kdd', 'KeyDueDatesController@store');
   Route::delete('/kdd/{keyDueDate}', 'KeyDueDatesController@destroy');
+
+  // Association
+  Route::get('/association', 'HomeController@usersWithAssociation');
+  Route::post('/association', 'AssociationController@store');
+
+  //Update user password
+  Route::post('/user/{user}', 'UserController@update');
 });

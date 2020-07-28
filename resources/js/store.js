@@ -6,8 +6,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    // Logged in User
+    user: {},
+    companyAssociatedTo: {},
     intro: 'Welcome to Application Container',
-    selectedMenu: 2.1,
+    selectedMenu: 2,
     companies: [], // Array of Objects
     company: {},
     companyRaD: [], // Array of Objects
@@ -16,6 +19,7 @@ export default new Vuex.Store({
     companyKeyDates: [],
     powerAttorneyStatementWorkForms: [], // Array of Objects,
     allCompanyEvents: [], // Array of Objects
+    userNamesAndAssociations: [] , // Array of Objects
     creditsAvailable: 0,
     creditsClaimed: 0,
     creditsReceived: 0,
@@ -246,6 +250,9 @@ export default new Vuex.Store({
     },
     returnCompanyKeyDueDates: state => {
       return state.companyKeyDates
+    },
+    returnActiveUser: state => {
+      return state.user;
     }
   },
   mutations: {
@@ -447,6 +454,34 @@ export default new Vuex.Store({
     onDeleteCompanyKeyDueDate: (state, payload) => {
       const currentKDDIndex = state.companyKeyDates.findIndex((obj => obj.id === payload));
       state.companyKeyDates.splice(currentKDDIndex, 1);
+    },
+    onInitialUsersWithAssociations: (state, payload) => {
+      state.userNamesAndAssociations = payload;
+    },
+    onStoreNewUserAndAssociationLink: (state, payload) => {
+      //     userNamesAndAssociations
+      // Check if User ID Exists
+      // If YES, push if NO add new
+      const exists = state.userNamesAndAssociations.findIndex((obj => obj.id === 100));
+      // 0 = index
+      // -1 is NOT FOUND
+
+      if (exists > -1) {
+        state.userNamesAndAssociations[exists].association.push(payload.association);
+      } else {
+        state.userNamesAndAssociations.push({
+          id: payload.id,
+          name: payload.name,
+          associations: [payload.association]
+        })
+      }
+
+    },
+    setActiveUser: (state, payload) => {
+      state.user = payload;
+    },
+    setCompanyAssociation: (state, payload) => {
+      state.companyAssociatedTo = payload;
     }
   },
   actions: {
@@ -604,6 +639,18 @@ export default new Vuex.Store({
     onDeleteCompanyKeyDueDate: async (context, payload) => {
       await axios.delete(`/api/company/kdd/${payload}`);
       context.commit('onDeleteCompanyKeyDueDate', payload);
+    },
+    onInitialUsersWithAssociations: (context, payload) => {
+      context.commit('onInitialUsersWithAssociations', payload)
+    },
+    onStoreNewUserAndAssociationLink: (context, payload) => {
+      context.commit('onStoreNewUserAndAssociationLink', payload)
+    },
+    setActiveUser: (context, payload) => {
+      context.commit('setActiveUser', payload);
+    },
+    setCompanyAssociation: (context, payload) => {
+      context.commit('setCompanyAssociation', payload);
     }
 
   }

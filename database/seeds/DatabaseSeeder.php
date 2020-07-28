@@ -1,11 +1,13 @@
 <?php
 
 use App\Alert;
+use App\Association;
 use App\Checklist;
 use App\Company;
 use App\Form;
 use App\KeyDueDates;
 use App\RDCredit;
+use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 
@@ -37,6 +39,21 @@ class DatabaseSeeder extends Seeder
                     'officer' => $faker->firstName,
                   ]);
 
+        $user = User::create([
+                              'uid' => uniqid(),
+                              'name' => $faker->firstName,
+                              'email' => $faker->email,
+                              'photoURL' => 'some-url',
+                              'description' => 'A short bio',
+                              'registration_date' => time(),
+                              'points' => '0',
+                              'status' => ($i===0) ? 'Admin' : 'User',
+                              'online' => false,
+                              'signup_procedure' => 'app',
+                              'disabled' => false,
+                              'email_verified_at' => time(),
+                            ]);
+
           for ($j=0; $j < 5; $j++) {
 
             Checklist::create([
@@ -44,6 +61,14 @@ class DatabaseSeeder extends Seeder
               'item' => $faker->sentence,
               'completed' => 0
             ]);
+
+              if ($j === 0) {
+                Association::create([
+                  'user_id' => $user->id,
+                  'company_name' => $company->name,
+                  'company_id' => $company->id
+                ]);
+              }
 
             RDCredit::create([
               'company_id' => $company->id,
@@ -84,6 +109,7 @@ class DatabaseSeeder extends Seeder
           }
 
         $company->save();
+        $user->save();
       }
 
       // R&D Credits

@@ -723,7 +723,7 @@
         lineThirtySixCalculation: function () {
           // Subtract line 35 from line 17 or line 34 (whichever applies). If zero or less, enter -0-
           // Return based on which side of the form is active
-          if (this.sectionA)
+          if (this.toggleSectionA)
             return this.lineSeventeenCalculation;
           else
             return this.lineThirtyFourCalculation;
