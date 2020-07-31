@@ -72,4 +72,9 @@ Route::prefix('company')->group(function () {
 
   //Update user password
   Route::post('/user/{user}', 'UserController@update');
+
+
+  // Analyzer API endpoints
+  Route::post('/analyzer/qq/{year}', 'QualifyingQuestionsYearsController@store');
+  Route::get('/analyzer/qq/{companyId}', 'QualifyingQuestionsYearsController@index');
 });
