@@ -53,6 +53,9 @@ export default new Vuex.Store({
     formScheduleBTaxLiabilityMonthThree: 0,
     formScheduleBTotalQuarterLiability: 0,
 
+    // Analyzer
+    qualifyingQuestionsClaimYears: [] // [ { year: String } ... ]
+
   },
   getters: {
     returnIntro: state => {
@@ -253,6 +256,15 @@ export default new Vuex.Store({
     },
     returnActiveUser: state => {
       return state.user;
+    },
+    returnAnalyzerYearEnds: state => {
+      return state.qualifyingQuestionsClaimYears
+    },
+    returnYearEndsAsYearsArray: (state, payload) => {
+      const yearArr = state.qualifyingQuestionsClaimYears.map( function(element){
+        return element.year
+      }); // [ "year", ... ]
+      return (Array.isArray(yearArr)) ? yearArr : null ;
     }
   },
   mutations: {
@@ -284,6 +296,9 @@ export default new Vuex.Store({
       state.companyChecklist = c[0].checklists || [];
 
       state.companyKeyDates = c[0].keydates.reverse() || [];
+
+      // Reset Claim Years
+      state.qualifyingQuestionsClaimYears = [];
 
       // Update Header Name
       document.getElementById('activeName').innerText = state.company.name;
@@ -482,7 +497,15 @@ export default new Vuex.Store({
     },
     setCompanyAssociation: (state, payload) => {
       state.companyAssociatedTo = payload;
-    }
+    },
+    setAnalyzerYearEnds: (state, payload) => {
+      state.qualifyingQuestionsClaimYears.push(...payload); // [{ year: String }...]
+    },
+    getAnalyzerYearEnds: (state, payload) => {
+      // console.warn('Mutation : getAnalyzerYearEnds ', payload);
+      console.warn('Getter : getAnalyzerYearEnds');
+      state.qualifyingQuestionsClaimYears = payload; // [{ year: String }...]
+    },
   },
   actions: {
     setSelectedMenu: (context, payload) => {
@@ -651,6 +674,21 @@ export default new Vuex.Store({
     },
     setCompanyAssociation: (context, payload) => {
       context.commit('setCompanyAssociation', payload);
+    },
+    setAnalyzerYearEnds: async (context, payload) => {
+      let records = [];
+      await Promise.all( payload.options.map(async el => {
+        const {data} = await axios.post(`api/company/analyzer/qq/${el}`, {companyId: payload.cid});
+        records.push(data);
+      }))
+
+      console.log(records);
+      context.commit('setAnalyzerYearEnds', records);
+    },
+    getAnalyzerYearEnds: async (context, payload) => {
+      // Get all results for the current Company
+      const {data} = await axios.get(`api/company/analyzer/qq/${payload}`);
+      context.commit('getAnalyzerYearEnds', data);
     }
 
   }

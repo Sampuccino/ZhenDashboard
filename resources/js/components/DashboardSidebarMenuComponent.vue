@@ -55,6 +55,20 @@
         <span>Settings</span>
       </el-menu-item>
 
+      <el-submenu index="9">
+        <template slot="title">
+          <i class="el-icon-s-opportunity"></i>
+          <span>Analyzer</span>
+        </template>
+        <el-menu-item-group title="Getting Started">
+          <el-menu-item index="9.1">Qualifying Questions</el-menu-item>
+          <el-menu-item index="9.2">Financial Data</el-menu-item>
+          <el-menu-item index="9.3">Qualifying Percentages</el-menu-item>
+          <el-menu-item index="9.3">Project Documentation</el-menu-item>
+          <el-menu-item index="9.3">Reports</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+
     </el-menu>
   </div>
 </template>
