@@ -26,7 +26,7 @@
     "dependencies": {
         "apexcharts": "^3.19.2",
         "base64-arraybuffer": "^0.2.0",
-        "chart.js": "^2.9.3",
+        "chart.js": "^2.9.4",
         "downloadjs": "^1.4.7",
         "element-ui": "^2.13.1",
         "flatpickr": "^4.6.3",
